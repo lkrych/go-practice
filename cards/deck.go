@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
-	"os"
 	"math/rand"
+	"os"
 	"strings"
 	"time"
 )
@@ -14,11 +14,11 @@ type deck []string
 
 func newDeck() deck {
 	cards := deck{}
-	cardSuits := []string{ "Spades", "Hearts", "Diamonds", "Clubs"}
-	cardValues := []string{ "Ace", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King"}
+	cardSuits := []string{"Spades", "Hearts", "Diamonds", "Clubs"}
+	cardValues := []string{"Ace", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King"}
 	for _, suit := range cardSuits {
 		for _, value := range cardValues {
-			cards = append(cards, value + " of " + suit)
+			cards = append(cards, value+" of "+suit)
 		}
 	}
 
@@ -57,9 +57,9 @@ func (d deck) shuffle() {
 	source := rand.NewSource(time.Now().UnixNano())
 	r := rand.New(source)
 	cardIndices := r.Perm(52)
-	
+
 	for i := range d {
 		newPosition := cardIndices[i]
-		d[i], d[newPosition] = d[newPosition], d[i]	
+		d[i], d[newPosition] = d[newPosition], d[i]
 	}
 }
