@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"math/rand"
 	"strings"
+	"time"
 )
 
 // A "deck" is a type, a modified slice of strings
@@ -49,4 +51,15 @@ func newDeckFromFile(filename string) deck {
 	}
 	stringSlice := strings.Split(string(bs), ",")
 	return deck(stringSlice)
+}
+
+func (d deck) shuffle() {
+	source := rand.NewSource(time.Now().UnixNano())
+	r := rand.New(source)
+	cardIndices := r.Perm(52)
+	
+	for i := range d {
+		newPosition := cardIndices[i]
+		d[i], d[newPosition] = d[newPosition], d[i]	
+	}
 }
