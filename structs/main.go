@@ -22,9 +22,20 @@ func main() {
 			zip:   94000,
 		},
 	}
+	jimPointer := &jim
+	jim.print()
+	jim.updateName("Barry")
+	jim.print()
+	fmt.Println("Why doesn't this work?")
+	// why doesn't this work? see pointers.go
+	jimPointer.updateNamePointer("Barry")
 	jim.print()
 }
 
 func (p person) print() {
 	fmt.Printf("%+v", p)
+}
+
+func (p person) updateName(newFirstName string) {
+	p.firstName = newFirstName
 }
