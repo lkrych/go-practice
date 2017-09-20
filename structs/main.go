@@ -14,15 +14,13 @@ type contactInfo struct {
 }
 
 func main() {
-	var alex person
-	var alexContact contactInfo
-
-	alex.firstName = "Alex"
-	alex.lastName = "Anderson"
-	alex.contact = alexContact
-	alex.contact.email = "alex@glad.com"
-	alex.contact.zip = 11111
-
-	fmt.Println(alex)
-	fmt.Printf("%+v", alex)
+	jim := person{
+		firstName: "Jim",
+		lastName:  "Party",
+		contact: contactInfo{
+			email: "jim@gmail.com",
+			zip:   94000,
+		},
+	}
+	fmt.Printf("%+v", jim)
 }
