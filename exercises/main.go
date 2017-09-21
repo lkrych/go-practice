@@ -5,8 +5,6 @@ import (
 )
 
 func main() {
-	reversed := reverse("reversed")
-	longest := longestWord("This is a long sentence with many lengthy words")
-	fmt.Println(reversed)
-	fmt.Println("The longest word in the sentence is,", longest)
+	potato := countVowels("potato")
+	fmt.Println("the number of vowels in potato is", potato)
 }
