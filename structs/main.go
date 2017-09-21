@@ -22,14 +22,18 @@ func main() {
 			zip:   94000,
 		},
 	}
-	jimPointer := &jim
-	// Gives memory address of the value this variable is pointing to
+	// jimPointer := &jim
+	// & operator gives memory address of the value this variable is pointing to
 	jim.print()
 	jim.updateName("Barry")
 	jim.print()
 	fmt.Println("Why doesn't this work?")
 	// why doesn't this work? see pointers.go
-	jimPointer.updateNamePointer("Barry")
+	// jimPointer.updateNamePointer("Barry")
+
+	//you can use a shortcut if you don't want to use &,
+	//if you define a receiver with a pointer, Golang will convert to pointer
+	jim.updateNamePointer("B-MON")
 	jim.print()
 }
 
@@ -39,4 +43,10 @@ func (p person) print() {
 
 func (p person) updateName(newFirstName string) {
 	p.firstName = newFirstName
+}
+
+func (pointerToPerson *person) updateNamePointer(newFirstName string) {
+	(*pointerToPerson).firstName = newFirstName
+	//the star operator asks for the value at the memory address, this will be the person struct
+	//the star in front of the type is a type description
 }
