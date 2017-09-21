@@ -1,6 +1,7 @@
 package main
 
 import (
+	"math"
 	"strconv"
 	"strings"
 )
@@ -104,4 +105,41 @@ func twoSum(arr []int) []int {
 		}
 	}
 	return idxs
+}
+
+func isPowerOfTwo(n float64) bool {
+	power := float64(0)
+	value := math.Exp2(power)
+	for value <= n {
+		if value == n {
+			return true
+		}
+		power++
+		value = math.Exp2(power)
+	}
+	return false
+}
+
+func thirdGreatest(arr []int) int {
+	var first int
+	var second int
+	var third int
+
+	for _, el := range arr {
+		if el >= first {
+			third = second
+			second = first
+			first = el
+			continue
+		}
+		if el >= second {
+			third = second
+			second = el
+			continue
+		}
+		if el >= third {
+			third = el
+		}
+	}
+	return third
 }
