@@ -1,6 +1,7 @@
 package main
 
 import (
+	"reflect"
 	"testing"
 )
 
@@ -106,4 +107,71 @@ func TestCountVowels(t *testing.T) {
 	if test3 != 6 {
 		t.Errorf("Expected countVowels of mom to be 6, not %v", test3)
 	}
+}
+
+func TestIsPalindrome(t *testing.T) {
+	test1 := isPalindrome("abc")
+	test2 := isPalindrome("racecar")
+	test3 := isPalindrome("z")
+
+	if test1 != false {
+		t.Errorf("Expected isPalindrome of abc to be false, not %v", test1)
+	}
+
+	if test2 != true {
+		t.Errorf("Expected isPalindrome of racecar to be true, not %v", test2)
+	}
+
+	if test3 != true {
+		t.Errorf("Expected isPalindrome of z to be true, not %v", test3)
+	}
+}
+
+func TestNearbyAZ(t *testing.T) {
+	test1 := nearbyAZ("baz")
+	test2 := nearbyAZ("abz")
+	test3 := nearbyAZ("abcz")
+	test4 := nearbyAZ("a")
+	test5 := nearbyAZ("z")
+	test6 := nearbyAZ("za")
+
+	if test1 != true {
+		t.Errorf("Expected nearbyAZ of baz to be false, not %v", test1)
+	}
+
+	if test2 != true {
+		t.Errorf("Expected nearbyAZ of abz to be true, not %v", test2)
+	}
+
+	if test3 != true {
+		t.Errorf("Expected nearbyAZ of abcz to be true, not %v", test3)
+	}
+
+	if test4 != false {
+		t.Errorf("Expected nearbyAZ of a to be false, not %v", test4)
+	}
+
+	if test5 != false {
+		t.Errorf("Expected nearbyAZ of z to be false, not %v", test5)
+	}
+
+	if test6 != false {
+		t.Errorf("Expected nearbyAZ of za to be false, not %v", test6)
+	}
+}
+
+func TestTwoSum(t *testing.T) {
+	test1 := twoSum([]int{1, 3, 5, -3})
+	ans1 := []int{1, 3}
+	test2 := twoSum([]int{1, 3, 5})
+	ans2 := []int{}
+
+	if reflect.DeepEqual(test1, ans1) {
+		t.Errorf("Expected twoSum of [1,3,5,-3] to be [1,3], not %v", test1)
+	}
+
+	if reflect.DeepEqual(test2, ans2) {
+		t.Errorf("Expected twoSum of [1,3,5] to be [], not %v", test2)
+	}
+
 }
