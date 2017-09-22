@@ -97,14 +97,37 @@ func nearbyAZ(word string) bool {
 
 func twoSum(arr []int) []int {
 	idxs := []int{}
-	for i := range arr {
-		for j := range arr[i+1:] {
-			if i+j == 0 {
-				idxs = append(idxs, i, j)
+	for i, val1 := range arr {
+		for j, val2 := range arr[i+1:] {
+			if val1+val2 == 0 {
+				//bc you are iterating with modified slice
+				//you need to take into account correct j index
+				idxs = append(idxs, i, j+i+1)
 			}
 		}
 	}
 	return idxs
+}
+
+func twoSumOptimized(arr []int) []int {
+	sums := []int{}
+	idxs := map[int]int{}
+	//fill map
+	for i, val := range arr {
+		idxs[val] = i
+	}
+	//search for correct factors to negate the key
+	//add conditional to make sure values haven't been found
+	found := map[int]bool{}
+	for key, val := range idxs {
+		search := 0 - key
+		if searchIdx, exists := idxs[search]; exists && !found[searchIdx] {
+			sums = append(sums, val, searchIdx)
+			found[val] = true
+			found[searchIdx] = true
+		}
+	}
+	return sums
 }
 
 func isPowerOfTwo(n float64) bool {
