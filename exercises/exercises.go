@@ -168,7 +168,19 @@ func thirdGreatest(arr []int) int {
 }
 
 func dasherizeNumber(n int) string {
-
+	dasherized := []string{}
+	for i, el := strings.Split(string,"") {
+		if i == 0 || i == len(string) -1 {
+			continue
+		}
+		else if el % 2 == 0 {
+			append(dasherized, el)
+		}
+		else {
+			append(dasherized, "-", el, "-")
+		}
+	}
+	return string.Join(dasherized,"")
 }
 
 func mostCommonLetter(sentence string) map[string]int {
