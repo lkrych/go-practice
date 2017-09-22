@@ -169,16 +169,17 @@ func thirdGreatest(arr []int) int {
 
 func dasherizeNumber(n int) string {
 	dasherized := []string{}
-	for i, el := range strings.Split(strconv.Itoa(n), "") {
-		if i == 0 || i == len(string)-1 {
-			continue
-		} else if int, err := strconv.Atoi(el); int%2 == 0 {
-			append(dasherized, el)
+	toString := strconv.Itoa(n)
+	for i, el := range strings.Split(toString, "") {
+		if i == 0 || i == len(toString)-1 {
+			dasherized = append(dasherized, el)
+		} else if int, _ := strconv.Atoi(el); int%2 == 0 {
+			dasherized = append(dasherized, el)
 		} else {
-			append(dasherized, "-", el, "-")
+			dasherized = append(dasherized, "-", el, "-")
 		}
 	}
-	return string.Join(dasherized, "")
+	return strings.Join(dasherized, "")
 }
 
 func mostCommonLetter(sentence string) map[string]int {
