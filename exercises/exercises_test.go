@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"testing"
+
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestReverse(t *testing.T) {
@@ -293,5 +295,55 @@ func TestThirdGreatest(t *testing.T) {
 
 	if test3 != 3 {
 		t.Errorf("Expected thirdGreatest of [2, 3, 4, 7] to be 3, not %v", test3)
+	}
+}
+
+func TestDasherizeNumber(t *testing.T) {
+	test1 := dasherizeNumber(203)
+	test2 := dasherizeNumber(303)
+	test3 := dasherizeNumber(333)
+	test4 := dasherizeNumber(3223)
+
+	if test1 != "20-3" {
+		t.Errorf("Expected dasherizeNumber of 203  to be 20-3, not %v", test1)
+	}
+
+	if test2 != "3-0-3" {
+		t.Errorf("Expected dasherizeNumber of 303  to be 3-0-3, not %v", test2)
+	}
+
+	if test3 != "3-3-3" {
+		t.Errorf("Expected dasherizeNumber of 333 to be 3-3-3, not %v", test3)
+	}
+
+	if test4 != "3-22-3" {
+		t.Errorf("Expected dasherizeNumber of 3223  to be 3-22-3, not %v", test4)
+	}
+}
+
+func TestMostCommonLetter(t *testing.T) {
+	test1 := mostCommonLetter("abca")
+	ans1 := map[string]int{
+		"a": 2,
+	}
+	test2 := mostCommonLetter("abbab")
+	ans2 := map[string]int{
+		"b": 3,
+	}
+	test3 := mostCommonLetter("guernsey was here")
+	ans3 := map[string]int{
+		"e": 4,
+	}
+
+	if !cmp.Equal(test1, ans1) {
+		t.Errorf("Expected mostCommonLetter of abca to be a with a count of 2, not %v", test1)
+	}
+
+	if !cmp.Equal(test2, ans2) {
+		t.Errorf("Expected mostCommonLetter of abbab to be b with a count of 3, not %v", test2)
+	}
+
+	if !cmp.Equal(test3, ans3) {
+		t.Errorf("Expected mostCommonLetter of guernsey was here to be e with a count of 4, not %v", test3)
 	}
 }

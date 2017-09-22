@@ -166,3 +166,11 @@ func thirdGreatest(arr []int) int {
 	}
 	return third
 }
+
+func dasherizeNumber(n int) string {
+
+}
+
+func mostCommonLetter(sentence string) map[string]int {
+
+}
