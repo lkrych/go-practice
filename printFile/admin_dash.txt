@@ -1,0 +1,17 @@
+mark [5:33 PM] 
+Spec for Dashboard:
+-  Uploads by Partner (Enrolls / & Auths) by Day, by Week or by Month (default is Week)
+- Total Uploads (Enroll / Auth)
+- # of Successful Auths
+- Ave Confidence Score
+- # of Unsuccessful Auths 
+- Ave Confidence Score
+- Number of errors / failures,
+
+
+[5:33] 
+by type
+
+
+[5:34] 
+- Ave time for Auth response
