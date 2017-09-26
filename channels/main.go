@@ -19,7 +19,10 @@ func main() {
 	for _, link := range links {
 		go makeRequest(link, c)
 	}
-	fmt.Println(<-c)
+
+	for i := 0; i < len(links); i++ {
+		fmt.Println(<-c)
+	}
 }
 
 func makeRequest(link string, c chan string) {
@@ -27,9 +30,9 @@ func makeRequest(link string, c chan string) {
 
 	if err != nil {
 		fmt.Println(link, "might be down!")
-		c <- "The link might be down"
+		c <- "I guess I have to make this channel call"
 		return
 	}
 	fmt.Println(link, "is responding to http requests")
-	c <- "The link is responding to http requests"
+	c <- "Do I have to make this channel call?"
 }
