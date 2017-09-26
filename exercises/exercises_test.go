@@ -323,16 +323,16 @@ func TestDasherizeNumber(t *testing.T) {
 
 func TestMostCommonLetter(t *testing.T) {
 	test1 := mostCommonLetter("abca")
-	ans1 := map[string]int{
-		"a": 2,
+	ans1 := []string{
+		"a", "2",
 	}
 	test2 := mostCommonLetter("abbab")
-	ans2 := map[string]int{
-		"b": 3,
+	ans2 := []string{
+		"b", "3",
 	}
 	test3 := mostCommonLetter("guernsey was here")
-	ans3 := map[string]int{
-		"e": 4,
+	ans3 := []string{
+		"e", "4",
 	}
 
 	if !cmp.Equal(test1, ans1) {
