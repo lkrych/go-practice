@@ -28,7 +28,7 @@ func main() {
 	jim.updateName("Barry")
 	jim.print()
 	fmt.Println("Why doesn't this work?")
-	// why doesn't this work? see pointers.go
+	// why doesn't this work?
 	// jimPointer.updateNamePointer("Barry")
 
 	//you can use a shortcut if you don't want to use &,
