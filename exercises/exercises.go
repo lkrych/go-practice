@@ -171,15 +171,21 @@ func dasherizeNumber(n int) string {
 	dasherized := []string{}
 	toString := strconv.Itoa(n)
 	for i, el := range strings.Split(toString, "") {
-		if i == 0 || i == len(toString)-1 {
-			dasherized = append(dasherized, el)
-		} else if int, _ := strconv.Atoi(el); int%2 == 0 {
-			dasherized = append(dasherized, el)
+
+		if int, _ := strconv.Atoi(el); int%2 != 0 {
+			if i == 0 {
+				dasherized = append(dasherized, el, "-")
+			} else if i == len(toString)-1 {
+				dasherized = append(dasherized, "-", el)
+			} else {
+				dasherized = append(dasherized, "-", el, "-")
+			}
 		} else {
-			dasherized = append(dasherized, "-", el, "-")
+			dasherized = append(dasherized, el)
 		}
 	}
-	return strings.Join(dasherized, "")
+	joined := strings.Join(dasherized, "")
+	return strings.Replace(joined, "--", "-", -1)
 }
 
 func mostCommonLetter(sentence string) []string {
@@ -203,4 +209,8 @@ func mostCommonLetter(sentence string) []string {
 		}
 	}
 	return mostCommon
+}
+
+func capitalizeWords(sentence string) string {
+	return strings.Title(sentence)
 }

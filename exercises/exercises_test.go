@@ -347,3 +347,21 @@ func TestMostCommonLetter(t *testing.T) {
 		t.Errorf("Expected mostCommonLetter of guernsey was here to be e with a count of 4, not %v", test3)
 	}
 }
+
+func TestCapitalizeWords(t *testing.T) {
+	test1 := capitalizeWords("this is a sentence")
+	test2 := capitalizeWords("mike bloomfield")
+	test3 := capitalizeWords("lawrence of arabia")
+
+	if test1 != "This Is A Sentence" {
+		t.Errorf("Expected capitalizeWords of this is a sentence to be This Is A Sentence, not %v", test1)
+	}
+
+	if test2 != "Mike Bloomfield" {
+		t.Errorf("Expected capitalizeWords of mike bloomfield to be Mike Bloomfield, not %v", test2)
+	}
+
+	if test3 != "Lawrence Of Arabia" {
+		t.Errorf("Expected capitalizeWords of lawrence of arabia to be Lawrence Of Arabia, not %v", test3)
+	}
+}
