@@ -23,13 +23,14 @@ func main() {
 
 	//range function grabs link from channel
 	for l := range c {
-		go makeRequest(l, c)
+		go func(link string) {
+			time.Sleep(3 * time.Second)
+			makeRequest(link, c)
+		}(l)
 	}
 }
 
 func makeRequest(link string, c chan string) {
-	//add sleep to prevent spamming
-	time.Sleep(3 * time.Second)
 	_, err := http.Get(link)
 
 	if err != nil {
