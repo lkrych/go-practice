@@ -20,9 +20,9 @@ func main() {
 		go makeRequest(link, c)
 	}
 
-	//infinite loop
-	for {
-		go makeRequest(<-c, c)
+	//range function grabs link from channel
+	for l := range c {
+		go makeRequest(l, c)
 	}
 }
 
