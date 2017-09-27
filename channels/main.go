@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"time"
 )
 
 func main() {
@@ -27,6 +28,8 @@ func main() {
 }
 
 func makeRequest(link string, c chan string) {
+	//add sleep to prevent spamming
+	time.Sleep(3 * time.Second)
 	_, err := http.Get(link)
 
 	if err != nil {
