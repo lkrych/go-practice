@@ -365,3 +365,44 @@ func TestCapitalizeWords(t *testing.T) {
 		t.Errorf("Expected capitalizeWords of lawrence of arabia to be Lawrence Of Arabia, not %v", test3)
 	}
 }
+
+func TestScrambleString(t *testing.T) {
+	test1 := scrambleString("abcd", [3,1,2,0])
+	test2 := scrambleString("markov", [5,3,1,4,2,0])
+
+	if test1 != "dcba" {
+		t.Errorf("Expected scrambleString of 'abcd' with inputs [3,1,2,0] to be 'dcba', not %v", test1)
+	}
+
+	if test2 != "vkaorm" {
+		t.Errorf("Expected scrambleString of 'markov' with inputs [5,3,1,4,2,0] to be 'vkaorm', not %v", test2)
+	}
+}
+
+func TestIsPrime(t *testing.T) {
+	test1 := isPrime(2)
+	test2 := isPrime(3)
+	test3 := isPrime(4)
+	test4 := isPrime(9)
+	test5:= isPrime(227)
+
+	if test1 != true {
+		t.Errorf("Expected isPrime of 2 to be true, not false")
+	}
+
+	if test2 != true {
+		t.Errorf("Expected isPrime of 3 to be true, not false")
+	}
+
+	if test3 != false {
+		t.Errorf("Expected isPrime of 4 to be false, not true")
+	}
+
+	if test4 != false {
+		t.Errorf("Expected isPrime of 9 to be false, not true")
+	}
+
+	if test5 != true {
+		t.Errorf("Expected isPrime of 227 to be true, not false")
+	}
+)
