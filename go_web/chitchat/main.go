@@ -7,10 +7,13 @@ import (
 
 func main() {
 
+	//init mux and handle static assets
 	mux := http.NewServeMux()
 	files := http.FileServer(http.Dir("/public"))
 	mux.Handle("/static/", http.StripPrefix("/static", files))
 
+	//all route patterns matched here
+	//defined in route files
 	mux.HandleFunc("/", index)
 	mux.HandleFunc("/err", err)
 
