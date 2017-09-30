@@ -244,3 +244,82 @@ func nthPrime(nth int) int {
 	}
 	return n - 1
 }
+
+func longestPalindrome(sentence string) string {
+	startIdx := 0
+	longest := ""
+	for startIdx < len(sentence)-1 {
+		for endIdx := len(sentence) - 1; endIdx > startIdx; endIdx-- {
+			subString := sentence[startIdx : endIdx+1]
+			if subString == reverse(subString) && len(subString) > len(longest) {
+				longest = subString
+			}
+		}
+		startIdx++
+	}
+	return longest
+}
+
+func greatestCommonFactor(n1 int, n2 int) int {
+	var smaller int
+	var larger int
+	if n1 > n2 {
+		smaller = n2
+		larger = n1
+	} else {
+		smaller = n1
+		larger = n2
+	}
+
+	for i := 1; i <= smaller; i++ {
+		if smaller%i == 0 {
+			factor := smaller / i
+			if larger%factor == 0 {
+				return factor
+			}
+		}
+	}
+	//if no factors are found, the GCF is 1
+	return 1
+}
+
+func caesarCipher(shift int, sentence string) string {
+	shifted := []string{}
+	for _, ascii := range []byte(sentence) {
+		if ascii == 32 {
+			shifted = append(shifted, " ")
+		} else {
+			shifted = append(shifted, shiftChar(shift, ascii))
+		}
+	}
+	return strings.Join(shifted, "")
+}
+
+func shiftChar(shift int, ascii byte) string {
+	newChar := int(ascii) + (shift % 26)
+	if newChar > 122 {
+		newChar = 96 + (newChar % 122)
+	}
+	return string(newChar)
+}
+
+func numRepeats(word string) int {
+	lettersMap := map[string]int{}
+	for _, ch := range strings.Split(word, "") {
+		if ch == " " {
+			continue
+		}
+		if lettersMap[ch] >= 1 {
+			lettersMap[ch]++
+		} else {
+			lettersMap[ch] = 1
+		}
+	}
+	count := 0
+	for _, v := range lettersMap {
+		if v > 1 {
+			count++
+		}
+	}
+	return count
+}

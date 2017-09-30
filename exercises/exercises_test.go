@@ -434,3 +434,85 @@ func TestNthPrime(t *testing.T) {
 		t.Errorf("Expected nthPrime of 77 to be 389, not %v", test5)
 	}
 }
+
+func TestLongestPalindrome(t *testing.T) {
+	test1 := longestPalindrome("abcbd")
+	test2 := longestPalindrome("abba")
+	test3 := longestPalindrome("abcbdeffe")
+
+	if test1 != "bcb" {
+		t.Errorf("Expected longestPalindrome of abcbd to be bcb, not %v", test1)
+	}
+
+	if test2 != "abba" {
+		t.Errorf("Expected longestPalindrome of abba to be abba, not %v", test2)
+	}
+
+	if test3 != "effe" {
+		t.Errorf("Expected longestPalindrome of abcbdeffe to be effe, not %v", test3)
+	}
+}
+
+func TestGreatestCommonFactor(t *testing.T) {
+	test1 := greatestCommonFactor(3, 9)
+	test2 := greatestCommonFactor(16, 24)
+	test3 := greatestCommonFactor(7, 38)
+
+	if test1 != 3 {
+		t.Errorf("Expected greatestCommonFactor of 3 and 9 to be 3, not %v", test1)
+	}
+
+	if test2 != 8 {
+		t.Errorf("Expected greatestCommonFactor of 16 and 24 to be 8, not %v", test2)
+	}
+
+	if test3 != 1 {
+		t.Errorf("Expected greatestCommonFactor of 7 and 38 to be 1, not %v", test3)
+	}
+}
+
+func TestCaesarCipher(t *testing.T) {
+	test1 := caesarCipher(3, "abc")
+	test2 := caesarCipher(3, "abc xyz")
+	test3 := caesarCipher(29, "abc xyz")
+
+	if test1 != "def" {
+		t.Errorf("Expected caesarCipher with a shift of 3 and input of abc to be def, not %v", test1)
+	}
+
+	if test2 != "def abc" {
+		t.Errorf("Expected caesarCipher with a shift of 3 and input of abc xyz to be def abc, not %v", test2)
+	}
+
+	if test3 != "def abc" {
+		t.Errorf("Expected caesarCipher with a shift of 29 and input of abc xyz to be def abc, not %v", test3)
+	}
+}
+
+func TestNumRepeats(t *testing.T) {
+	test1 := numRepeats("abdbc")
+	test2 := numRepeats("aaa")
+	test3 := numRepeats("abab")
+	test4 := numRepeats("cadac")
+	test5 := numRepeats("abcde")
+
+	if test1 != 1 {
+		t.Errorf("Expected numRepeats of abdbc to be 1, not %v", test1)
+	}
+
+	if test2 != 1 {
+		t.Errorf("Expected numRepeats of aaa to be 1, not %v", test2)
+	}
+
+	if test3 != 2 {
+		t.Errorf("Expected numRepeats of abab to be 2, not %v", test3)
+	}
+
+	if test4 != 2 {
+		t.Errorf("Expected numRepeats of cadac to be 2, not %v", test4)
+	}
+
+	if test5 != 0 {
+		t.Errorf("Expected numRepeats of abcde to be 0, not %v", test5)
+	}
+}
