@@ -16,3 +16,13 @@ func session(writer http.ResponseWriter, request *http.Request) (sess data.Sessi
 	}
 	return
 }
+
+func generateHTML(writer http.ResponseWriter, data interface{}, filesnames ...string) {
+	files := []string
+	for _, file := range filenames {
+		files = append(files, fmt.Sprintf("templates/%s.html", file))
+	}
+
+	templates := template.Must(template.ParseFiles(files...))
+	templates.executeTemplate(writer, "layout", data)
+}
