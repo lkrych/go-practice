@@ -2,11 +2,6 @@ package main
 
 import "net/http"
 
-func login(writer http.ResponseWriter, request *http.Request) {
-	t := parseTemplateFiles("login.layout", "public.navbar", "login")
-	t.Execute(writer, nil)
-}
-
 func authenticate(writer http.ResponseWriter, request *http.Request) {
 	err := request.ParseForm()
 	user, err := data.UserByEmail(request.PostFormValue("email"))
