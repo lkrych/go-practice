@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"math"
 	"strconv"
 	"strings"
@@ -322,4 +323,50 @@ func numRepeats(word string) int {
 		}
 	}
 	return count
+}
+
+func baseConverter(n int, base int) string {
+	base16 := map[int]string{
+		10: "a",
+		11: "b",
+		12: "c",
+		13: "d",
+		14: "e",
+		15: "f"}
+	answer := []string{}
+	for n > 0 {
+		answer = append(answer, strconv.Itoa(n%base))
+		n = n / base
+	}
+	if base == 16 {
+		for i, el := range answer {
+			intEl, err := strconv.Atoi(el)
+			if err != nil {
+				fmt.Println("There was an error!")
+			}
+			if hex, exists := base16[intEl]; exists {
+				answer[i] = hex
+			}
+		}
+	}
+	return reverse(strings.Join(answer, ""))
+}
+
+func binarySearch(arr []int, toFind int) int {
+	if len(arr) < 1 {
+		return -1
+	}
+	midIdx := len(arr) / 2
+	if toFind == arr[midIdx] {
+		return midIdx
+	} else if toFind > arr[midIdx] {
+		search := binarySearch(arr[midIdx+1:], toFind)
+		if search != -1 {
+			return search + midIdx + 1
+		}
+		return search
+	} else {
+		return binarySearch(arr[0:midIdx], toFind)
+	}
+
 }

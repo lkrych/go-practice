@@ -516,3 +516,52 @@ func TestNumRepeats(t *testing.T) {
 		t.Errorf("Expected numRepeats of abcde to be 0, not %v", test5)
 	}
 }
+
+func TestBaseConverter(t *testing.T) {
+	test1 := baseConverter(5, 2)
+	test2 := baseConverter(1239449, 16)
+	test3 := baseConverter(112, 2)
+	test4 := baseConverter(112, 16)
+
+	if test1 != "101" {
+		t.Errorf("Expected baseConverter of 5 to base 2 to equal 101, not %v", test1)
+	}
+	if test2 != "12e999" {
+		t.Errorf("Expected baseConverter of 1239449 to base 16 to be 12e999, not %v", test2)
+	}
+
+	if test3 != "1110000" {
+		t.Errorf("Expected baseConverter of 112 to base 2 to be 1110000, not %v", test3)
+	}
+
+	if test4 != "70" {
+		t.Errorf("Expected baseConverter of 112 to base 16 to be 70, not %v", test4)
+	}
+}
+
+func TestBinarySearch(t *testing.T) {
+	test1 := binarySearch([]int{0, 1, 2, 3, 4, 5}, 3)
+	test2 := binarySearch([]int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, 9)
+	test3 := binarySearch([]int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, 0)
+	test4 := binarySearch([]int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, 10)
+	test5 := binarySearch([]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, 0)
+
+	if test1 != 3 {
+		t.Errorf("Expected binarySearch to find the index of 3 at 4, not %v", test1)
+	}
+	if test2 != 9 {
+		t.Errorf("Expected binarySearch to find the index of 9 at 10, not %v", test2)
+	}
+
+	if test3 != 0 {
+		t.Errorf("Expected binarySearch to find the index of 0 at 0, not %v", test3)
+	}
+
+	if test4 != -1 {
+		t.Errorf("Expected binarySearch to find the index of 10 at -1, not %v", test4)
+	}
+
+	if test5 != -1 {
+		t.Errorf("Expected binarySearch to find the index of 0 at -1, not %v", test4)
+	}
+}
