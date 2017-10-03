@@ -42,3 +42,5 @@ func main() {
 	pem.Encode(keyOut, &pem.Block{Type: "RSA PRIVATE KEY", Bytes: x509.MarshalPKCS1PrivateKey(pk)})
 	keyOut.Close()
 }
+
+//creates certificates you can find in http2 directory
