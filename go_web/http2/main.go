@@ -10,6 +10,7 @@ import (
 type MyHandler struct{}
 
 func (h *MyHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("HTTP2 server hit!")
 	fmt.Fprintf(w, "Hello World!")
 }
 
