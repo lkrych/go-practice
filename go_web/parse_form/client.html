@@ -7,10 +7,11 @@
         <form 
             action=http://127.0.0.1:8080/process?hello=world&thread=123 
             method="post"
-            enctype="application/x-www-form-urlencoded">
+            enctype="multipart/form-data">
 
             <input type="text" name="hello" value="Leland Noodle" />
             <input type="text" name="post" value="456" />
+            <input type="file" name="uploaded">
             <input type="submit" />
         </form>
     </body>
