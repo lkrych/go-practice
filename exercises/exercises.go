@@ -446,3 +446,13 @@ func quickSort(arr []int) []int {
 	answer = append(answer, sortedRight...)
 	return answer
 }
+
+func exponent(base int, exp int) int {
+	if exp == 1 {
+		return base
+	}
+	if exp < 0 {
+		return 1 / (base * exponent(base, (exp*-1)-1))
+	}
+	return base * exponent(base, exp-1)
+}

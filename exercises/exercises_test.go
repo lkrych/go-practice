@@ -688,3 +688,35 @@ func TestQuickSort(t *testing.T) {
 		t.Errorf("Expected quickSort to sort the array %v, instead you got %v", ans5, test5)
 	}
 }
+
+func TestExponent(t *testing.T) {
+	test1 := exponent(11, 3)
+	test2 := exponent(10, 2)
+	test3 := exponent(2, 16)
+	test4 := exponent(7, 6)
+	test5 := exponent(9, 3)
+	test6 := exponent(5, -3)
+
+	if test1 != 1331 {
+		t.Errorf("Expected exponent to raise 11 to 3 to be 1331, not %v", test1)
+	}
+	if test2 != 100 {
+		t.Errorf("Expected exponent to raise 10 to 2 to be 100, not %v", test2)
+	}
+
+	if test3 != 65536 {
+		t.Errorf("Expected exponent to raise 2 to 16 to be 65536, not %v", test3)
+	}
+
+	if test4 != 117649 {
+		t.Errorf("Expected exponent to raise 7 to 6 to be 117649, not %v", test4)
+	}
+
+	if test5 != 729 {
+		t.Errorf("Expected exponent to raise 9 to 3 to be 729, not %v", test5)
+	}
+
+	if test6 != 1/125 {
+		t.Errorf("Expected exponent to raise 5 to -3 to be 1/125, not %v", test6)
+	}
+}
