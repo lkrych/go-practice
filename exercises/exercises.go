@@ -96,11 +96,11 @@ func nearbyAZ(word string) bool {
 	return false
 }
 
-func twoSum(arr []int) []int {
+func twoSum(arr []int, find int) []int {
 	idxs := []int{}
 	for i, val1 := range arr {
 		for j, val2 := range arr[i+1:] {
-			if val1+val2 == 0 {
+			if val1+val2 == find {
 				//bc you are iterating with modified slice
 				//you need to take into account correct j index
 				idxs = append(idxs, i, j+i+1)
@@ -110,7 +110,7 @@ func twoSum(arr []int) []int {
 	return idxs
 }
 
-func twoSumOptimized(arr []int) []int {
+func twoSumOptimized(arr []int, find int) []int {
 	sums := []int{}
 	idxs := map[int]int{}
 	//fill map
@@ -119,13 +119,11 @@ func twoSumOptimized(arr []int) []int {
 	}
 	//search for correct factors to negate the key
 	//add conditional to make sure values haven't been found
-	found := map[int]bool{}
 	for key, val := range idxs {
-		search := 0 - key
-		if searchIdx, exists := idxs[search]; exists && !found[searchIdx] {
+		search := find - key
+		if searchIdx, exists := idxs[search]; exists {
 			sums = append(sums, val, searchIdx)
-			found[val] = true
-			found[searchIdx] = true
+			return sums
 		}
 	}
 	return sums
