@@ -118,7 +118,6 @@ func twoSumOptimized(arr []int, find int) []int {
 		idxs[val] = i
 	}
 	//search for correct factors to negate the key
-	//add conditional to make sure values haven't been found
 	for key, val := range idxs {
 		search := find - key
 		if searchIdx, exists := idxs[search]; exists {
