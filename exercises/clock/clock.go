@@ -7,25 +7,11 @@ import (
 const testVersion = 4
 
 type Clock struct {
-	hour   int
-	minute int
+	hour, minute int
 }
 
 func New(hour, minute int) Clock {
-
-	//catch negative values by looping until positive
-	for minute < 0 {
-		minute += 60
-		hour--
-	}
-	for hour < 0 {
-		hour += 24
-	}
-	//catch hours higher than 23 and minutes higher than 60 with modulus
-	return Clock{
-		hour:   (hour + minute/60) % 24,
-		minute: minute % 60,
-	}
+	return Clock{hour, minute}.formatTime()
 }
 
 func (c Clock) String() string {
@@ -33,9 +19,13 @@ func (c Clock) String() string {
 }
 
 func (c Clock) Add(minutes int) Clock {
+	c.minute += minutes
+	return c.formatTime()
+}
 
-	if minutes < 0 {
-		c.minute += minutes
+func (c Clock) formatTime() Clock {
+	//catch negative values by looping until positive
+	if c.minute < 0 || c.hour < 0 {
 		for c.minute < 0 {
 			c.minute += 60
 			c.hour--
@@ -44,13 +34,9 @@ func (c Clock) Add(minutes int) Clock {
 			c.hour += 24
 		}
 	} else {
-		rem := (c.minute + minutes) / 60
-		c.minute = (c.minute + minutes) % 60
+		rem := (c.minute) / 60
+		c.minute = (c.minute) % 60
 		c.hour = (c.hour + rem) % 24
 	}
 	return c
-
 }
-
-// Remember to delete all of the stub comments.
-// They are just noise, and reviewers will complain.
