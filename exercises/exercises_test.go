@@ -720,3 +720,30 @@ func TestExponent(t *testing.T) {
 		t.Errorf("Expected exponent to raise 5 to -3 to be 1/125, not %v", test6)
 	}
 }
+
+func TestSqrt(t *testing.T) {
+	test1 := sqrt(2)
+	test2 := sqrt(4)
+	test3 := sqrt(9)
+	test4 := sqrt(8)
+	test5 := sqrt(10)
+
+	if test1 < 1.41 || test1 >= 1.42 {
+		t.Errorf("Expected sqrt of 11 to be about 1.41, not %v", test1)
+	}
+	if test2 != 2 {
+		t.Errorf("Expected sqrt of 4 to be 2, not %v", test2)
+	}
+
+	if test3 != 3 {
+		t.Errorf("Expected sqrt of 9 to be 3, not %v", test3)
+	}
+
+	if test4 < 2.82 || test4 >= 2.83 {
+		t.Errorf("Expected sqrt of 8 to be about 2.82, not %v", test4)
+	}
+
+	if test5 < 3.16 || test5 >= 3.17 {
+		t.Errorf("Expected sqrt of 10 to be about 3.16, not %v", test5)
+	}
+}
