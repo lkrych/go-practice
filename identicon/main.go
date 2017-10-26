@@ -11,9 +11,11 @@ func main() {
 	hashedInput := readAndHashInput()
 	color := hashedInput[:3]
 	grid := buildGrid(hashedInput)
+	filtered := filterOddSquares(grid)
 	fmt.Println(hashedInput)
 	fmt.Println("The color is:", color)
 	fmt.Println("The grid is ", grid)
+	fmt.Println("The filtered grid is ", filtered)
 }
 
 func readAndHashInput() [16]byte {
@@ -33,10 +35,19 @@ func buildGrid(hash [16]byte) []byte {
 	// mirror the first and zeroth index of the chunks
 	// flatten into slice
 	flattened := []byte{}
-	for idx := range chunked {
-		chunked[idx] = append(chunked[idx], chunked[idx][1])
-		chunked[idx] = append(chunked[idx], chunked[idx][0])
-		flattened = append(flattened, chunked[idx]...)
+	for i := range chunked {
+		chunked[i] = append(chunked[i], chunked[i][1])
+		chunked[i] = append(chunked[i], chunked[i][0])
+		flattened = append(flattened, chunked[i]...)
 	}
 	return flattened
+}
+
+func filterOddSquares(grid []byte) []byte {
+	for i, el := range grid {
+		if el%2 != 0 {
+			grid[i] = 0
+		}
+	}
+	return grid
 }
