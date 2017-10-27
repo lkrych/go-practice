@@ -18,7 +18,7 @@ func main() {
 	grid := buildGrid(hashedInput)
 	filtered := filterOddSquares(grid)
 
-	newPNGfile := "./identicon.png"
+	newPNGfile := "../../../Desktop/identicon.png"
 
 	myimage := image.NewRGBA(image.Rect(0, 0, 250, 250))
 	white := color.RGBA{255, 255, 255, 255}
