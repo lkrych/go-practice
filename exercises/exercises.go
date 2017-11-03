@@ -461,3 +461,14 @@ func sqrt(x float64) float64 {
 	}
 	return z
 }
+
+func partitionEvenOdd(arr []int) []int {
+	partition := 0
+	for i := 0; i < len(arr); i++ {
+		if arr[i]%2 == 0 {
+			arr[i], arr[partition] = arr[partition], arr[i]
+			partition++
+		}
+	}
+	return arr
+}
