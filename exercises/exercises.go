@@ -470,5 +470,7 @@ func partitionEvenOdd(arr []int) []int {
 			partition++
 		}
 	}
-	return arr
+	front := quickSort(arr[:partition])
+	back := quickSort(arr[partition:])
+	return append(front, back...)
 }
