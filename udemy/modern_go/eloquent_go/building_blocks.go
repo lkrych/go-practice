@@ -16,6 +16,7 @@ func main() {
 	case 4:
 		fmt.Println("I am 4")
 	}
+
 }
 
 func compareNumbers(i1, i2 int) (bool, int) {
