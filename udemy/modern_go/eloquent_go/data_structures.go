@@ -23,3 +23,11 @@ func main() {
 	fmt.Printf("%v, capacity: %v, length: %v \n", s2, cap(s2), len(s2))
 
 }
+
+func getTwoElements(s []int, firstIdx, secondIdx int) []int {
+	//This will create a memory leak!
+	//The returned slice will still have access to the elements after the secondIdx in slice s!
+	// return s[firstIdx:secondIdx]
+
+	//use copy to create smaller slices
+}
