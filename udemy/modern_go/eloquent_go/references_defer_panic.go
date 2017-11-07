@@ -31,6 +31,7 @@ func testpanics() {
 	defer func() {
 		if err := recover(); err != nil {
 			fmt.Println("We caught the panic and recovered the code.")
+			fmt.Printf("The panic text is %v \n", err)
 		}
 	}()
 	panic("A panic happened")
