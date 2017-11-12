@@ -62,14 +62,14 @@ func makeExercises(num int) {
 
 	// add exercises and tests to file
 	for idx := range idxs {
-		fileName := files[idx]
+		fileName := files[idx].Name()
 
 		//read exercise file
 		exercise, err := ioutil.ReadFile(fmt.Sprintf("./exercises_itemized/%v", fileName))
 		checkErr(err)
 
 		// read exercise test file
-		split := strings.Split(fileName.Name(), ".")
+		split := strings.Split(fileName, ".")
 		testName := fmt.Sprintf("%v_test.go", split[0])
 		test, err := ioutil.ReadFile(fmt.Sprintf("./exercises_test/%v", testName))
 		checkErr(err)
