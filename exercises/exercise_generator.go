@@ -8,8 +8,6 @@ import (
 	"strings"
 )
 
-type format func() (int, error)
-
 func main() {
 	//ask for number of questions
 	numQuestions := askForQuestions()
