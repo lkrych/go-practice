@@ -75,10 +75,14 @@ func makeExercises(num int) {
 		checkErr(err)
 
 		//write files to output
-		exerciseFile.Write(exercise)
-		exerciseFile.WriteString("\n")
-		testFile.Write(test)
-		testFile.WriteString("\n")
+		_, err = exerciseFile.Write(exercise)
+		checkErr(err)
+		_, err = exerciseFile.WriteString("\n")
+		checkErr(err)
+		_, err = testFile.Write(test)
+		checkErr(err)
+		_, err = testFile.WriteString("\n")
+		checkErr(err)
 	}
 }
 
