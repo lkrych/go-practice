@@ -84,9 +84,9 @@ func makeExercises(num int) {
 
 func createFiles() {
 	os.Mkdir("./go_exercises", os.ModePerm)
-	exerciseFile, err := os.Create("./go_exercises/exercises.go")
+	_, err := os.Create("./go_exercises/exercises.go")
 	checkErr(err)
-	testFile, err := os.Create("./go_exercises/exercises_test.go")
+	_, err = os.Create("./go_exercises/exercises_test.go")
 	checkErr(err)
 }
 
