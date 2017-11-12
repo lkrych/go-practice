@@ -64,19 +64,21 @@ func makeExercises(num int) {
 	for idx := range idxs {
 		fileName := files[idx]
 
-		//open exercise file
-		exercise, err := os.Open(fmt.Sprintf("./exercises_itemized/%v", fileName))
-		defer exercise.Close()
+		//read exercise file
+		exercise, err := ioutil.ReadFile(fmt.Sprintf("./exercises_itemized/%v", fileName))
 		checkErr(err)
 
-		// open exercise test file
+		// read exercise test file
 		split := strings.Split(fileName.Name(), ".")
 		testName := fmt.Sprintf("%v_test.go", split[0])
-		test, err := os.Open(fmt.Sprintf("./exercises_test/%v", testName))
-		defer test.Close()
+		test, err := ioutil.ReadFile(fmt.Sprintf("./exercises_test/%v", testName))
 		checkErr(err)
 
 		//write files to output
+		exerciseFile.Write(exercise)
+		exerciseFile.WriteString("\n")
+		testFile.Write(test)
+		testFile.WriteString("\n")
 	}
 }
 
