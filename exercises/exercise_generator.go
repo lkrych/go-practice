@@ -43,26 +43,49 @@ func askForExercises() int {
 }
 
 func makeExercises(num int) {
+
 	//create directory and files
-	exerciseFile, testFile := createFiles()
+	createFiles()
+	exerciseFile, err := os.Open("./go_exercises/exercises.go")
+	defer exerciseFile.Close()
+	checkErr(err)
+	testFile, err := os.Open("./go_exercises/exercises_test.go")
+	defer testFile.Close()
+	checkErr(err)
+
 	//read exercises
 	files, err := ioutil.ReadDir("./exercises_itemized")
 	checkErr(err)
+
 	//grab random indices corresponding to files in files slice
 	idxs := randomIndices(len(files))
+
 	// add exercises and tests to file
 	for idx := range idxs {
 		fileName := files[idx]
+
+		//open exercise file
+		exercise, err := os.Open(fmt.Sprintf("./exercises_itemized/%v", fileName))
+		defer exercise.Close()
+		checkErr(err)
+
+		// open exercise test file
+		split := strings.Split(fileName.Name(), ".")
+		testName := fmt.Sprintf("%v_test.go", split[0])
+		test, err := os.Open(fmt.Sprintf("./exercises_test/%v", testName))
+		defer test.Close()
+		checkErr(err)
+
+		//write files to output
 	}
 }
 
-func createFiles() (*os.File, *os.File) {
+func createFiles() {
 	os.Mkdir("./go_exercises", os.ModePerm)
 	exerciseFile, err := os.Create("./go_exercises/exercises.go")
 	checkErr(err)
 	testFile, err := os.Create("./go_exercises/exercises_test.go")
 	checkErr(err)
-	return exerciseFile, testFile
 }
 
 func randomIndices(n int) []int {
