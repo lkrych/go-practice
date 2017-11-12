@@ -46,12 +46,6 @@ func makeExercises(num int) {
 
 	//create directory and files
 	createFiles()
-	exerciseFile, err := os.Open("./go_exercises/exercises.go")
-	defer exerciseFile.Close()
-	checkErr(err)
-	testFile, err := os.Open("./go_exercises/exercises_test.go")
-	defer testFile.Close()
-	checkErr(err)
 
 	//read exercises
 	files, err := ioutil.ReadDir("./exercises_itemized")
@@ -75,13 +69,16 @@ func makeExercises(num int) {
 		checkErr(err)
 
 		//write files to output
-		_, err = exerciseFile.Write(exercise)
+		exerciseFile := "./go_exercises/exercises.go"
+		testFile := "./go_exercises/exercises_test.go"
+
+		err = ioutil.WriteFile(exerciseFile, exercise, 0644)
 		checkErr(err)
-		_, err = exerciseFile.WriteString("\n")
+		err = ioutil.WriteFile(exerciseFile, []byte("\n"), 0644)
 		checkErr(err)
-		_, err = testFile.Write(test)
+		err = ioutil.WriteFile(testFile, test, 0644)
 		checkErr(err)
-		_, err = testFile.WriteString("\n")
+		err = ioutil.WriteFile(testFile, []byte("\n"), 0644)
 		checkErr(err)
 	}
 }
