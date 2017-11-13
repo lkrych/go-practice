@@ -42,7 +42,7 @@ func askForExercises() int {
 	return numExercises
 }
 
-func makeExercises(num int) {
+func makeExercises(numExercises int) {
 
 	//create directory and files
 	createFiles()
@@ -52,10 +52,10 @@ func makeExercises(num int) {
 	checkErr(err)
 
 	//grab random indices corresponding to files in files slice
-	idxs := randomIndices(len(files))
+	randIdxs := randomIndices(numExercises, len(files))
 
 	// add exercises and tests to file
-	for idx := range idxs {
+	for _, idx := range randIdxs {
 		fileName := files[idx].Name()
 
 		//read exercise file
@@ -67,6 +67,11 @@ func makeExercises(num int) {
 		testName := fmt.Sprintf("%v_test.go", split[0])
 		test, err := ioutil.ReadFile(fmt.Sprintf("./exercises_test/%v", testName))
 		checkErr(err)
+
+		//check to make sure files are being read correctly
+		fmt.Println("Exercises and Tests for", fileName)
+		// formatPrint(string(exercise))
+		// formatPrint(string(test))
 
 		//write files to output
 		exerciseFile := "./go_exercises/exercises.go"
@@ -91,7 +96,7 @@ func createFiles() {
 	checkErr(err)
 }
 
-func randomIndices(n int) []int {
+func randomIndices(n int, arrLen int) []int {
 	//a map is a more efficient way to enforce unique idxs
 	m := make(map[int]bool)
 	//seed
@@ -101,7 +106,7 @@ func randomIndices(n int) []int {
 	idxCount := 0
 	for idxCount < n {
 		//generate a random int
-		newIdx := r1.Intn(n)
+		newIdx := r1.Intn(arrLen)
 		//check if that int has been found
 		if _, ok := m[newIdx]; ok {
 			//if it has, continue looping
