@@ -54,13 +54,15 @@ func makeExercises(numExercises int) {
 	//grab random indices corresponding to files in files slice
 	randIdxs := randomIndices(numExercises, len(files))
 
-	//write files to output
+	//Open exercise and test files for writing
 	exerciseFile, err := os.OpenFile("./go_exercises/exercises.go", os.O_RDWR, 0666)
 	checkErr(err)
 	defer exerciseFile.Close()
 	testFile, err := os.OpenFile("./go_exercises/exercises_test.go", os.O_RDWR, 0666)
 	checkErr(err)
 	defer testFile.Close()
+
+	initFiles(exerciseFile, testFile)
 
 	// add exercises and tests to file
 	for _, idx := range randIdxs {
@@ -81,11 +83,11 @@ func makeExercises(numExercises int) {
 
 		_, err = exerciseFile.Write(exercise)
 		checkErr(err)
-		_, err = exerciseFile.Write([]byte("\n"))
+		_, err = exerciseFile.Write([]byte("\n \n"))
 		checkErr(err)
 		_, err = testFile.Write(test)
 		checkErr(err)
-		_, err = testFile.Write([]byte("\n"))
+		_, err = testFile.Write([]byte("\n \n"))
 		checkErr(err)
 	}
 }
@@ -131,8 +133,22 @@ func randomIndices(n int, arrLen int) []int {
 	return keys
 }
 
-func addExercisesToFiles() {
+//initialize files with package and import statements
+func initFiles(exerciseFile *os.File, testFile *os.File) {
+	//init files with package main
+	_, err := exerciseFile.Write([]byte("package exercises"))
+	checkErr(err)
+	_, err = exerciseFile.Write([]byte("\n \n"))
+	checkErr(err)
 
+	_, err = testFile.Write([]byte("package exercises"))
+	checkErr(err)
+	_, err = testFile.Write([]byte("\n \n"))
+	checkErr(err)
+	_, err = testFile.Write([]byte("import (\n\"fmt\"\n\"testing\"\n\"github.com/google/go-cmp/cmp\"\n)"))
+	checkErr(err)
+	_, err = testFile.Write([]byte("\n \n"))
+	checkErr(err)
 }
 
 // print funcs for formatting
