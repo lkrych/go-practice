@@ -54,6 +54,14 @@ func makeExercises(numExercises int) {
 	//grab random indices corresponding to files in files slice
 	randIdxs := randomIndices(numExercises, len(files))
 
+	//write files to output
+	exerciseFile, err := os.OpenFile("./go_exercises/exercises.go", os.O_RDWR, 0666)
+	checkErr(err)
+	defer exerciseFile.Close()
+	testFile, err := os.OpenFile("./go_exercises/exercises_test.go", os.O_RDWR, 0666)
+	checkErr(err)
+	defer testFile.Close()
+
 	// add exercises and tests to file
 	for _, idx := range randIdxs {
 		fileName := files[idx].Name()
@@ -70,30 +78,26 @@ func makeExercises(numExercises int) {
 
 		//check to make sure files are being read correctly
 		fmt.Println("Exercises and Tests for", fileName)
-		// formatPrint(string(exercise))
-		// formatPrint(string(test))
 
-		//write files to output
-		exerciseFile := "./go_exercises/exercises.go"
-		testFile := "./go_exercises/exercises_test.go"
-
-		err = ioutil.WriteFile(exerciseFile, exercise, 0644)
+		_, err = exerciseFile.Write(exercise)
 		checkErr(err)
-		err = ioutil.WriteFile(exerciseFile, []byte("\n"), 0644)
+		_, err = exerciseFile.Write([]byte("\n"))
 		checkErr(err)
-		err = ioutil.WriteFile(testFile, test, 0644)
+		_, err = testFile.Write(test)
 		checkErr(err)
-		err = ioutil.WriteFile(testFile, []byte("\n"), 0644)
+		_, err = testFile.Write([]byte("\n"))
 		checkErr(err)
 	}
 }
 
 func createFiles() {
 	os.Mkdir("./go_exercises", os.ModePerm)
-	_, err := os.Create("./go_exercises/exercises.go")
+	execs, err := os.Create("./go_exercises/exercises.go")
 	checkErr(err)
-	_, err = os.Create("./go_exercises/exercises_test.go")
+	execs.Close()
+	tests, err := os.Create("./go_exercises/exercises_test.go")
 	checkErr(err)
+	tests.Close()
 }
 
 func randomIndices(n int, arrLen int) []int {
