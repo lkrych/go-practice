@@ -136,12 +136,12 @@ func randomIndices(n int, arrLen int) []int {
 //initialize files with package and import statements
 func initFiles(exerciseFile *os.File, testFile *os.File) {
 	//init files with package main
-	_, err := exerciseFile.Write([]byte("package exercises"))
+	_, err := exerciseFile.Write([]byte("package goExercises"))
 	checkErr(err)
 	_, err = exerciseFile.Write([]byte("\n \n"))
 	checkErr(err)
 
-	_, err = testFile.Write([]byte("package exercises"))
+	_, err = testFile.Write([]byte("package goExercises"))
 	checkErr(err)
 	_, err = testFile.Write([]byte("\n \n"))
 	checkErr(err)
