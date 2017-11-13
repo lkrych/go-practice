@@ -1,4 +1,4 @@
-unc TestDigitalRoot(t *testing.T) {
+func TestDigitalRoot(t *testing.T) {
 	test1 := digitalRoot(10)
 	test2 := digitalRoot(83)
 	test3 := digitalRoot(123)
