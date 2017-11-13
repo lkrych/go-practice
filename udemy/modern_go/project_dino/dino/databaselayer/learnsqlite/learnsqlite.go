@@ -25,18 +25,27 @@ func main() {
 	}
 	defer db.Close()
 
-	// //general query with arguments
-	// rows, err := db.Query("select * from animals where age > $1", 9)
-	// handlerows(rows, err)
-
-	// //query a single row
-	// row := db.QueryRow("select * from animals where age > $1", 10)
-	// a := animal{}
-	// err = row.Scan(&a.id, &a.animalType, &a.nickname, &a.zone, &a.age) // psql driver return data for row
+	// err = createdatabse(db)
 	// if err != nil {
 	// 	log.Fatal(err)
 	// }
-	// fmt.Println(a)
+	// err = insertsampledata(db)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+
+	//general query with arguments
+	rows, err := db.Query("select * from animals where age > $1", 0)
+	handlerows(rows, err)
+
+	//query a single row
+	row := db.QueryRow("select * from animals where age > $1", 10)
+	a := animal{}
+	err = row.Scan(&a.id, &a.animalType, &a.nickname, &a.zone, &a.age) // psql driver return data for row
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(a)
 
 	//insert a row
 
@@ -69,14 +78,14 @@ func main() {
 	// }
 	// defer stmt.Close()
 	// //let's try with age > 0
-	// rows, err := stmt.Query(0)
+	// rows, err = stmt.Query(0)
 	// handlerows(rows, err)
 
 	// //lets try with age > 10
 	// rows, err = stmt.Query(10)
 	// handlerows(rows, err)
 
-	testTransaction(db)
+	// testTransaction(db)
 }
 
 func handlerows(rows *sql.Rows, err error) {
