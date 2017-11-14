@@ -7,7 +7,7 @@ func TestNearbyAZ(t *testing.T) {
 	test6 := nearbyAZ("za")
 
 	if test1 != true {
-		t.Errorf("Expected nearbyAZ of baz to be false, not %v", test1)
+		t.Errorf("Expected nearbyAZ of baz to be true, not %v", test1)
 	}
 
 	if test2 != true {
