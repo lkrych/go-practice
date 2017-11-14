@@ -9,7 +9,7 @@ import (
 )
 
 type animal struct {
-	ID         int    `gorm:"primary_key;not_null;unique;AUTO_INCREMENT"`
+	gorm.Model
 	AnimalType string `gorm:"type:TEXT"`
 	Nickname   string `gorm:"type:TEXT"`
 	Zone       int    `gorm:"type:INTEGER"`
@@ -51,6 +51,8 @@ func main() {
 
 	//queries
 	animals := []animal{}
+	//Debug shows what SQL commands are being run by gorm
+	// db.Debug().Find(&animals, "age > ?", 2)
 	db.Find(&animals, "age > ?", 2)
 	fmt.Println(animals)
 
