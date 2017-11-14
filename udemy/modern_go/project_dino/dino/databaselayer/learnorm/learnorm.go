@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/jinzhu/gorm"
@@ -26,11 +27,31 @@ func main() {
 
 	//checks if table exists, if not, it creates the table and columns of the struct type
 	db.AutoMigrate(&animal{}) // will add any missing fields, will add 's' to the struct name
-	db.Table("dinos").CreateTable(&animal{})
-	// 	a := animal{
-	// 		Animaltype: "Beluga Whale",
-	// 		Nickname:   "Whitey",
-	// 		Zone:       1,
-	// 		Age:        5,
-	// 	}
+	// db.Table("dinos").CreateTable(&animal{}) //create a custom tablename
+
+	a := animal{
+		AnimalType: "Beluga Whale",
+		Nickname:   "Whitey",
+		Zone:       1,
+		Age:        5,
+	}
+	db.Save(&a) // will create a new row if no ID is given
+
+	a = animal{
+		AnimalType: "Orangutan",
+		Nickname:   "Orange Crush",
+		Zone:       2,
+		Age:        3,
+	}
+	db.Save(&a)
+
+	//updates
+
+	// db.Table("animals").Where("Nickname = ?", "Orange Crush").Update("Nickname", "BANANA SLUG")
+
+	//queries
+	animals := []animal{}
+	db.Find(&animals, "age > ?", 2)
+	fmt.Println(animals)
+
 }
