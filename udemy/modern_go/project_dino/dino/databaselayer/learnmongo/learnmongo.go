@@ -77,4 +77,9 @@ func main() {
 	results := []animal{}
 	animalcollection.Find(query).All(&results)
 	fmt.Println(results)
+
+	//one result
+	result := animal{}
+	animalcollection.Find(query).One(&result)
+	fmt.Println(result)
 }
