@@ -13,7 +13,7 @@ const { //this is how you create an enum
 
 type DinoDBHandler interface {
 	GetAvailableAnimals() ([]Animal, error)
-	GetAnimalsByNickname(string) (Animal, error)
+	GetAnimalByNickname(string) (Animal, error)
 	GetAnimalByType(string) ([]Animal, error)
 	AddAnimal(Animal) error
 	UpdateAnimal(Animal, string) error
