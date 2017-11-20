@@ -9,6 +9,7 @@ type SQLiteHandler struct {
 	*SQLHandler
 }
 
+//return a type that implements the sqlhandler interface.
 func NewSQLiteHandler(connection string) (*SQLiteHandler, error) {
 	db, err := sql.Open("sqlite3", connection)
 	return &SQLiteHandler{
