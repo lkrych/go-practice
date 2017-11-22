@@ -2,6 +2,7 @@ package main
 
 import (
 	"dino/communicationlayer/proto3"
+	"dino/databaselayer"
 	"flag"
 	"fmt"
 	"io/ioutil"
@@ -82,5 +83,28 @@ func RunProto3Server() {
 			}
 			fmt.Println(a)
 		}(c)
+	}
+}
+
+//read all animals from MONGO and send them through the server
+func SendDBToServer() {
+	handler, err := databaselayer.GetDatabaseHandler(databaselayer.MONGODB, "mongodb://127.0.0.1")
+	if err != nil {
+		log.Fatal(err)
+	}
+	animals, err := handler.GetAvailableAnimals()
+	for _, animal := range animals {
+		a := &proto3.Animal{
+			Id:         int32(animal.ID),
+			AnimalType: animal.AnimalType,
+			Nickname:   animal.Nickname,
+			Zone:       int32(animal.Zone),
+			Age:        int32(animal.Age),
+		}
+		data, err := proto.Marshal(a)
+		if err != nil {
+			log.Fatal(err)
+		}
+		SendData(data)
 	}
 }
