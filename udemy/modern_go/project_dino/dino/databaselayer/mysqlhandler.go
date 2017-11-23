@@ -3,17 +3,17 @@ package databaselayer
 import (
 	"database/sql"
 
-	_ "github.com/lib/pq"
+	_ "github.com/go-sql-driver/mysql"
 )
 
-type PGHandler struct {
+type MySQLHandler struct {
 	*SQLHandler
 }
 
 //return a type that implements the sqlhandler interface.
-func NewPGHandler(connection string) (*PGHandler, error) {
+func NewMySQLHandler(connection string) (*MySQLHandler, error) {
 	db, err := sql.Open("postgres", connection) // return db object as sqlhandler
-	return &PGHandler{
+	return &MySQLHandler{
 		SQLHandler: &SQLHandler{
 			DB: db,
 		},

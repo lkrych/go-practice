@@ -11,10 +11,10 @@ const ( //this is how you create an enum
 	MONGODB
 )
 
-type DinoDBHandler interface {
+type AnimalDBHandler interface {
 	GetAvailableAnimals() ([]Animal, error)
 	GetAnimalByNickname(string) (Animal, error)
-	GetAnimalByType(string) ([]Animal, error)
+	GetAnimalsByType(string) ([]Animal, error)
 	AddAnimal(Animal) error
 	UpdateAnimal(Animal, string) error
 }
@@ -30,13 +30,13 @@ type Animal struct {
 var DBTypeNotSupported = errors.New("The Database type provided is not supported...")
 
 //factory function
-func GetDatabaseHandler(dbtype uint8, connection string) (DinoDBHandler, error) {
+func GetDatabaseHandler(dbtype uint8, connection string) (AnimalDBHandler, error) {
 	switch dbtype {
 	case MYSQL:
-		return NewMySQLHANDLER(connection)
+		return NewMySQLHandler(connection)
 	case MONGODB:
-		return NewMongodbHandler(connection)
-	case POSTGRESQL:
+		return NewMongdbHandler(connection)
+	case POSTGRESSQL:
 		return NewPGHandler(connection)
 	case SQLITE:
 		return NewSQLiteHandler(connection)

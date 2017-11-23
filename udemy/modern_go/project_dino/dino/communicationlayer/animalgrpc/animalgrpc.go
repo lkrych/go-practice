@@ -37,6 +37,7 @@ func (server *GrpcServer) GetAllAnimals(req *Request, stream AnimalService_GetAl
 			return err
 		}
 	}
+	return nil
 }
 
 func convertToGRPCAnimal(animal databaselayer.Animal) *Animal {

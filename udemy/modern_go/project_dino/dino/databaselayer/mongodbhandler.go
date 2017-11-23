@@ -1,6 +1,9 @@
 package databaselayer
 
-import mgo "gopkg.in/mgo.v2"
+import (
+	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
+)
 
 type MongodbHandler struct {
 	*mgo.Session
@@ -17,7 +20,7 @@ func (handler *MongodbHandler) GetAvailableAnimals() ([]Animal, error) {
 	s := handler.getFreshSession()
 	defer s.Close()
 	animals := []Animal{}
-	err := s.DB("Dino").C("animals").Find(nil).All.(&animals)
+	err := s.DB("Dino").C("animals").Find(nil).All(&animals)
 	return animals, err
 }
 
@@ -25,11 +28,11 @@ func (handler *MongodbHandler) GetAnimalByNickname(nickname string) (Animal, err
 	s := handler.getFreshSession()
 	defer s.Close()
 	a := Animal{}
-	err := s.DB("Dino").C("animals").Find(bson.M{"nickname":nickname}).One(&a)
+	err := s.DB("Dino").C("animals").Find(bson.M{"nickname": nickname}).One(&a)
 	return a, err
 }
 
-func (handler *MongodbHandler) GetAnimalsByTYpe(animalType string) ([]Animal, error) {
+func (handler *MongodbHandler) GetAnimalsByType(animalType string) ([]Animal, error) {
 	s := handler.getFreshSession()
 	defer s.Close()
 	animals := []Animal{}

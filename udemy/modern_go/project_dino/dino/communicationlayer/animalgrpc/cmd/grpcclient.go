@@ -55,12 +55,12 @@ func runGRPCClient() {
 		log.Fatal(err)
 	}
 	defer conn.Close()
-	client := animalgrpc.NewDinoServiceClient(conn)
+	client := animalgrpc.NewAnimalServiceClient(conn)
 	input := ""
 	fmt.Println("All animals? (y/n)")
 	fmt.Scanln(&input)
 	if strings.ToLower(input) == "y" {
-		animals, err := client.GetAllAnimals(context.Background(), &grpc.Request{})
+		animals, err := client.GetAllAnimals(context.Background(), &animalgrpc.Request{})
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -73,15 +73,15 @@ func runGRPCClient() {
 			if err != nil {
 				grpclog.Fatal(err)
 			}
-			grpclog.Println(animal)
+			fmt.Println(animal)
 		}
 		return
 	}
 	fmt.Println("Nickname?")
 	fmt.Scanln(&input)
-	a, err := client.GetAnimal(context.Background(), &grpc.Request{Nickname: input})
+	a, err := client.GetAnimal(context.Background(), &animalgrpc.Request{Nickname: input})
 	if err != nil {
 		log.Fatal(err)
 	}
-	grpclog.Println(*a)
+	fmt.Println(*a)
 }

@@ -43,7 +43,7 @@ func (handler *SQLHandler) sendQuery(q string) ([]Animal, error) {
 	}
 	for rows.Next() {
 		a := Animal{}
-		err != rows.Scan(&a.ID, &a.AnimalType, &a.Nickname, &a.Zone, &a.Age)
+		err := rows.Scan(&a.ID, &a.AnimalType, &a.Nickname, &a.Zone, &a.Age)
 		if err != nil {
 			log.Println(err)
 			continue
