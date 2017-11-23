@@ -4,12 +4,12 @@ import (
 	"errors"
 )
 
-const { //this is how you create an enum
-	MYSQL uint8 - iota
+const ( //this is how you create an enum
+	MYSQL uint8 = iota
 	SQLITE
 	POSTGRESSQL
 	MONGODB
-}
+)
 
 type DinoDBHandler interface {
 	GetAvailableAnimals() ([]Animal, error)
@@ -19,12 +19,12 @@ type DinoDBHandler interface {
 	UpdateAnimal(Animal, string) error
 }
 
-type Animal struct {	
-	ID int `bson:"-"`
+type Animal struct {
+	ID         int    `bson:"-"`
 	AnimalType string `bson:"animal_type"`
-	Nickname string `bson:"nickname"`
-	Zone int `bson:"zone"`
-	Age int `bson:"age"`
+	Nickname   string `bson:"nickname"`
+	Zone       int    `bson:"zone"`
+	Age        int    `bson:"age"`
 }
 
 var DBTypeNotSupported = errors.New("The Database type provided is not supported...")

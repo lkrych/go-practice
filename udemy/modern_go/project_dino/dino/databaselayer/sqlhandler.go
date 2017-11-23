@@ -10,14 +10,14 @@ type SQLHandler struct {
 	*sql.DB
 }
 
-func (handler *SQLHandler) GetAvailableAnimals() ([]Animal, error]) {
+func (handler *SQLHandler) GetAvailableAnimals() ([]Animal, error) {
 	return handler.sendQuery("select * from Animals")
 }
 
 func (handler *SQLHandler) GetAnimalByNickname(nickname string) (Animal, error) {
 	row := handler.QueryRow(fmt.Sprintf("select * from Animals where nickname = '%s'", nickname))
 	a := Animal{}
-	err :=row.Scan(&a.ID, &a.AnimalType, &a.Nickname, &a.Zone, &a.Age)
+	err := row.Scan(&a.ID, &a.AnimalType, &a.Nickname, &a.Zone, &a.Age)
 	return a, err
 }
 
@@ -34,7 +34,6 @@ func (handler *SQLHandler) UpdateAnimal(a Animal, nname string) error {
 	_, err := handler.Exec(fmt.Sprintf("Update Animals set Animal_type = '%s',nickname= '%s', zone = '%d', age = '%d' where nickname = '%s'", a.AnimalType, a.Nickname, a.Zone, a.Age, nname))
 	return err
 }
-
 
 func (handler *SQLHandler) sendQuery(q string) ([]Animal, error) {
 	Animals := []Animal{}
