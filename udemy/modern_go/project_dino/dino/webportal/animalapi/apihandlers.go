@@ -4,6 +4,7 @@ import (
 	"dino/databaselayer"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"strings"
 
@@ -49,7 +50,7 @@ func (handler *AnimalRESTAPIHandler) searchHandler(w http.ResponseWriter, r *htt
 	}
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
-		fmt.Fprintf(w, "Error occurred while querying animlas %v", err)
+		fmt.Fprintf(w, "Error occurred while querying animals %v", err)
 	}
 	json.NewEncoder(w).Encode(animal)
 }
@@ -73,6 +74,12 @@ func (handler *AnimalRESTAPIHandler) editsHandler(w http.ResponseWriter, r *http
 	case "add":
 		err = handler.dbhandler.AddAnimal(animal)
 	case "edit":
-
+		nickname := r.RequestURI[len("api/animals/edit/"):]
+		log.Println("edit requested for nickname", nickname)
+		err = handler.dbhandler.UpdateAnimal(animal, nickname)
+	}
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintf(w, "Error occurred while processing request %v", err)
 	}
 }
