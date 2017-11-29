@@ -17,7 +17,7 @@ func RunAPIOnRouter(r *mux.Router, db databaselayer.AnimalDBHandler) {
 	handler := newAnimalRESTAPIHandler(db)
 
 	apirouter := r.PathPrefix("/api/dinos").Subrouter()
+
 	apirouter.Methods("GET").Path("/{SearchCriteria}/{search}").HandlerFunc(handler.searchHandler)
 	apirouter.Methods("POST").PathPrefix("/{Operation}").HandlerFunc(handler.editsHandler)
-
 }
