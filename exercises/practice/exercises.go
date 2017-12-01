@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
+	"log"
 	"math"
 	"strconv"
 	"strings"
@@ -586,4 +588,37 @@ func buyStockTwice(arr []int) int {
 	}
 	fmt.Printf("After backwards iteration: %v \n", maxProfits)
 	return totalMaxProfit
+}
+
+func reverseCaptcha(arr []int) int {
+
+	sum := 0
+	for i := 1; i < len(arr); i++ {
+		if arr[i-1] == arr[i] {
+			sum += arr[i]
+			fmt.Printf("Repeat: %v \n", arr[i])
+		}
+	}
+	fmt.Printf("Arr[0]: %v \n", arr[0])
+	fmt.Printf("Arr[-1]: %v \n", arr[len(arr)-1])
+	if arr[0] == arr[len(arr)-1] {
+		sum += arr[0]
+		fmt.Printf("Repeat: %v \n", arr[0])
+	}
+	return sum
+}
+
+func adventCaptcha() int {
+	content, err := ioutil.ReadFile("reverse_captcha_input.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+	strs := strings.Split(string(content), "")
+	ints := make([]int, len(strs))
+	for i := 0; i < len(ints); i++ {
+		ints[i], _ = strconv.Atoi(strs[i])
+	}
+	ints = ints[:len(ints)-1]
+	sum := reverseCaptcha(ints)
+	return sum
 }
