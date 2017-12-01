@@ -619,6 +619,18 @@ func adventCaptcha() int {
 		ints[i], _ = strconv.Atoi(strs[i])
 	}
 	ints = ints[:len(ints)-1]
-	sum := reverseCaptcha(ints)
+	sum := halfwayReverseCaptcha(ints)
+	return sum
+}
+
+func halfwayReverseCaptcha(arr []int) int {
+	sum := 0
+	halfway := len(arr) / 2
+	for i := 1; i < halfway; i++ {
+		if arr[i] == arr[i+halfway] {
+			sum += arr[i] * 2
+		}
+	}
+
 	return sum
 }
