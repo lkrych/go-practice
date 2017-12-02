@@ -634,3 +634,64 @@ func halfwayReverseCaptcha(arr []int) int {
 
 	return sum
 }
+
+func checkSum(multiArr [][]int) int {
+	checksum := 0
+	for idx, arr := range multiArr {
+		max := -100000
+		min := 100000
+		for i := 0; i < len(multiArr[idx]); i++ {
+			if arr[i] > max {
+				max = arr[i]
+			}
+			if arr[i] < min {
+				min = arr[i]
+			}
+		}
+		checksum += (max - min)
+	}
+	return checksum
+}
+
+func checkSumAdvent() [][]int {
+	content, err := ioutil.ReadFile("checksum_input.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+	arrays := strings.Split(string(content), "\n")
+	multiarr := make([][]int, len(arrays)-1)
+
+	for i := 0; i < len(arrays)-1; i++ {
+		split := strings.Split(string(arrays[i]), "	")
+		intSplit := make([]int, len(split))
+		for j := 0; j < len(split); j++ {
+			intSplit[j], _ = strconv.Atoi(split[j])
+		}
+		multiarr[i] = intSplit
+	}
+	return multiarr
+}
+
+func checkSumEven(multiArr [][]int) int {
+	checksum := 0
+	for i := range multiArr {
+		for j := 0; j < len(multiArr[i]); j++ {
+			for k := j + 1; k < len(multiArr[i]); k++ {
+				elJ := multiArr[i][j]
+				elK := multiArr[i][k]
+
+				if elJ%elK == 0 {
+					checksum += elJ / elK
+					continue
+				}
+
+				if elK%elJ == 0 {
+					checksum += elK / elJ
+					continue
+				}
+
+			}
+		}
+	}
+	return checksum
+}
