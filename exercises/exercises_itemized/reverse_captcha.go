@@ -6,7 +6,7 @@ func reverseCaptcha(arr []int) int {
 }
 	
 func adventCaptcha() int {
-	//read in big int from "practice/reverse_captcha_input.txt"
+	//read in big int from "../practice/reverse_captcha_input.txt"
 	//convert it into something useful and then return the sum
 }
 	
