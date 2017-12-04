@@ -23,7 +23,7 @@ func newAnimalRESTAPIHandler(db databaselayer.AnimalDBHandler) *AnimalRESTAPIHan
 
 func (handler *AnimalRESTAPIHandler) searchHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	criteria, ok := vars["Searchcriteria"]
+	criteria, ok := vars["SearchCriteria"]
 	if !ok {
 		w.WriteHeader(http.StatusBadRequest)
 		fmt.Fprintf(w, "No search criteria found. You can search by nickname or by type.")
