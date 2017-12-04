@@ -1047,3 +1047,26 @@ func TestCheckSum(t *testing.T) {
 		t.Errorf("Expected answer to be 9, not %v", test8)
 	}
 }
+
+func TestSpiral(t *testing.T) {
+	test1 := spiralMemory(325489)
+	test2 := spiralMemory(12)
+	test3 := spiralMemory(23)
+	test4 := spiralMemory(1024)
+
+	if test1 != 6 {
+		t.Errorf("Expected answer to be 6, not %v", test1)
+	}
+
+	if test2 != 3 {
+		t.Errorf("Expected answer to be 3, not %v", test2)
+	}
+
+	if test3 != 2 {
+		t.Errorf("Expected answer to be 2, not %v", test3)
+	}
+
+	if test4 != 31 {
+		t.Errorf("Expected answer to be 31, not %v", test4)
+	}
+}

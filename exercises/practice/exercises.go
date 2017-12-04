@@ -695,3 +695,32 @@ func checkSumEven(multiArr [][]int) int {
 	}
 	return checksum
 }
+
+func spiralMemory(n int) int {
+	sum := 1
+	idx := 1
+	for sum < n {
+		sum += 8 * idx
+		idx++
+	}
+	perRow := (idx - 1) * 2
+	fmt.Printf("Per Row: %v \n", perRow)
+
+	for sum > n {
+		sum -= perRow
+	}
+	distanceToN := 0
+
+	for sum < n {
+		sum++
+		distanceToN++
+	}
+	fmt.Printf("Distance to n: %v \n", distanceToN)
+	middle := perRow / 2
+	if distanceToN > middle {
+		return idx + (distanceToN - middle)
+	}
+
+	return idx + (middle - distanceToN) - 1
+
+}
