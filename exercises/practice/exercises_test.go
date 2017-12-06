@@ -1132,7 +1132,53 @@ func TestPassPhraseAnagram(t *testing.T) {
 		t.Errorf("Expected answer to be false, not %v", test5)
 	}
 
-	if test6 != 6 {
+	if test6 != 119 {
 		t.Errorf("Expected answer to be 6, not %v", test6)
+	}
+}
+
+func TestJumpMaze(t *testing.T) {
+	test1 := jumpMaze([]int{0, 3, 0, 1, -3})
+	test2 := jumpMaze([]int{1, 3, 0, 1, -3})
+	test3 := jumpMaze([]int{0, 2, 0, 1, -3})
+	test4 := jumpMazeAdvent()
+
+	if test1 != 5 {
+		t.Errorf("Expected answer to be 5, not %v", test1)
+	}
+
+	if test2 != 4 {
+		t.Errorf("Expected answer to be 4, not %v", test2)
+	}
+
+	if test3 != 10 {
+		t.Errorf("Expected answer to be 10, not %v", test3)
+	}
+
+	if test4 != 388611 {
+		t.Errorf("Expected answer to be 388611, not %v", test4)
+	}
+}
+
+func TestJumpMazeStrange(t *testing.T) {
+	test1 := jumpMazeStrange([]int{0, 3, 0, 1, -3})
+	test2 := jumpMazeStrange([]int{1, 3, 0, 1, -3})
+	test3 := jumpMazeStrange([]int{0, 2, 0, 1, -3})
+	test4 := jumpMazeStrangeAdvent()
+
+	if test1 != 10 {
+		t.Errorf("Expected answer to be 5, not %v", test1)
+	}
+
+	if test2 != 9 {
+		t.Errorf("Expected answer to be 4, not %v", test2)
+	}
+
+	if test3 != 10 {
+		t.Errorf("Expected answer to be 10, not %v", test3)
+	}
+
+	if test4 != 388611 {
+		t.Errorf("Expected answer to be 388611, not %v", test4)
 	}
 }

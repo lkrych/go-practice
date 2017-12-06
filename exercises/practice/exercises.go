@@ -787,3 +787,57 @@ func passPhraseAnagramAdvent() int {
 	}
 	return phraseCount
 }
+
+func jumpMaze(arr []int) int {
+	idx := 0
+	jumps := 0
+	for idx < len(arr) {
+		currIdx := idx
+		idx += arr[currIdx]
+		arr[currIdx]++
+		jumps++
+	}
+	return jumps
+}
+
+func jumpMazeAdvent() int {
+	content, err := ioutil.ReadFile("jump_input.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+	splitString := strings.Split(string(content), "\n")
+	splitInt := make([]int, len(splitString))
+	for i, el := range splitString {
+		splitInt[i], _ = strconv.Atoi(el)
+	}
+	return jumpMaze(splitInt)
+}
+
+func jumpMazeStrange(arr []int) int {
+	idx := 0
+	jumps := 0
+	for idx < len(arr) {
+		currIdx := idx
+		idx += arr[currIdx]
+		if arr[currIdx] > 2 {
+			arr[currIdx]--
+		} else {
+			arr[currIdx]++
+		}
+		jumps++
+	}
+	return jumps
+}
+
+func jumpMazeStrangeAdvent() int {
+	content, err := ioutil.ReadFile("jump_input.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+	splitString := strings.Split(string(content), "\n")
+	splitInt := make([]int, len(splitString))
+	for i, el := range splitString {
+		splitInt[i], _ = strconv.Atoi(el)
+	}
+	return jumpMazeStrange(splitInt)
+}
