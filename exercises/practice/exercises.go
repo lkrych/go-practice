@@ -610,7 +610,7 @@ func reverseCaptcha(arr []int) int {
 }
 
 func adventCaptcha() int {
-	content, err := ioutil.ReadFile("reverse_captcha_input.txt")
+	content, err := ioutil.ReadFile("./advent_input/reverse_captcha_input.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -655,7 +655,7 @@ func checkSum(multiArr [][]int) int {
 }
 
 func checkSumAdvent() [][]int {
-	content, err := ioutil.ReadFile("checksum_input.txt")
+	content, err := ioutil.ReadFile("./advent_input/checksum_input.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -741,7 +741,7 @@ func passPhrase(passphrase string) bool {
 
 func passPhraseAdvent() int {
 	phraseCount := 0
-	content, err := ioutil.ReadFile("passphrase_input.txt")
+	content, err := ioutil.ReadFile("./advent_input/passphrase_input.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -775,7 +775,7 @@ func SortString(w string) string {
 
 func passPhraseAnagramAdvent() int {
 	phraseCount := 0
-	content, err := ioutil.ReadFile("passphrase_input.txt")
+	content, err := ioutil.ReadFile("./advent_input/passphrase_input.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -801,7 +801,7 @@ func jumpMaze(arr []int) int {
 }
 
 func jumpMazeAdvent() int {
-	content, err := ioutil.ReadFile("jump_input.txt")
+	content, err := ioutil.ReadFile("./advent_input/jump_input.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -830,7 +830,7 @@ func jumpMazeStrange(arr []int) int {
 }
 
 func jumpMazeStrangeAdvent() int {
-	content, err := ioutil.ReadFile("jump_input.txt")
+	content, err := ioutil.ReadFile("./advent_input/jump_input.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -840,4 +840,62 @@ func jumpMazeStrangeAdvent() int {
 		splitInt[i], _ = strconv.Atoi(el)
 	}
 	return jumpMazeStrange(splitInt)
+}
+
+func memoryBank(bank []int) int {
+	memory := make(map[string]int)
+	reallocations := 0
+	for {
+		//check if bank is in memory
+		stringBank := strings.Join(ConvertIntSliceToStringSlice(bank), ",")
+		if _, ok := memory[stringBank]; ok {
+			fmt.Printf("The last time this was seen was %v ", reallocations-memory[stringBank])
+			return reallocations
+		}
+		//find max
+		max := 0
+		maxIdx := 0
+		memory[stringBank] = reallocations
+		for idx, el := range bank {
+			if el > max {
+				max = el
+				maxIdx = idx
+			}
+		}
+		//take all memory out of maxIdx
+		bank[maxIdx] = 0
+		//redistribute memory
+		for i := 1; i < (max + 1); i++ {
+			newRegisterIdx := (maxIdx + i) % len(bank)
+			bank[newRegisterIdx]++
+		}
+		//count process
+		reallocations++
+	}
+}
+
+func ConvertIntSliceToStringSlice(arr []int) []string {
+	stringSlice := make([]string, len(arr))
+	for i := 0; i < len(arr); i++ {
+		stringSlice[i] = strconv.Itoa(arr[i])
+	}
+	return stringSlice
+}
+
+func memoryBankAdvent() int {
+	content, err := ioutil.ReadFile("./advent_input/memory_bank_input.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	stringer := strings.Replace(string(content), "\n", "", -1)
+	fmt.Printf("Content: %v, length: %v \n", stringer, len(stringer))
+	split := strings.Split(stringer, "	")
+	fmt.Printf("Split: %v, length: %v \n", split, len(split))
+	intSlice := make([]int, len(split))
+	for i := 0; i < len(split); i++ {
+		intSlice[i], _ = strconv.Atoi(split[i])
+	}
+	fmt.Printf("intSLice: %v, length: %v \n", intSlice, len(intSlice))
+	return memoryBank(intSlice)
 }
