@@ -899,3 +899,41 @@ func memoryBankAdvent() int {
 	fmt.Printf("intSLice: %v, length: %v \n", intSlice, len(intSlice))
 	return memoryBank(intSlice)
 }
+
+func recursiveCircus(filepath string) string {
+	content, err := ioutil.ReadFile(filepath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	diskMap := make(map[string]bool)
+	splitByLine := strings.Split(string(content), "\n")
+	for i, line := range splitByLine {
+		fmt.Printf("Idx %v: %v \n", i, line)
+		splitLine := strings.Split(line, " ")
+		fmt.Printf("Split: %v, len: %v \n", splitLine, len(splitLine))
+		//remove from map
+		if len(splitLine) > 2 {
+			for _, el := range splitLine[3:] {
+				newEntry := strings.Replace(el, ",", "", -1)
+				diskMap = checkIfInMap(newEntry, diskMap)
+			}
+		}
+		entry := splitLine[0]
+		diskMap = checkIfInMap(entry, diskMap)
+	}
+
+	rootOfDisk := ""
+	for k := range diskMap {
+		rootOfDisk = k
+	}
+	return rootOfDisk
+}
+
+func checkIfInMap(el string, myMap map[string]bool) map[string]bool {
+	if _, ok := myMap[el]; ok {
+		delete(myMap, el)
+	} else {
+		myMap[el] = true
+	}
+	return myMap
+}
