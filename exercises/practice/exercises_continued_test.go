@@ -14,3 +14,16 @@ func TestRecursiveCircus(t *testing.T) {
 		t.Errorf("Expected answer to be 'fknj', not %v", test2)
 	}
 }
+
+func TestRecursiveCircusTree(t *testing.T) {
+	// test1 := recursiveCircusTree("./advent_input/recursive_circus_beginner_input.txt")
+	test2 := recursiveCircusTree("./advent_input/recursive_circus_input.txt")
+
+	// if test1 != 3 {
+	// 	t.Errorf("Expected answer to be 3, not %v", test1)
+	// }
+
+	if test2 != 3 {
+		t.Errorf("Expected answer to be 'fknj', not %v", test2)
+	}
+}

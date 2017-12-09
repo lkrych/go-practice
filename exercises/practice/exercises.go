@@ -937,3 +937,82 @@ func checkIfInMap(el string, myMap map[string]bool) map[string]bool {
 	}
 	return myMap
 }
+
+type Node struct {
+	name     string
+	children []string
+	val      int
+}
+
+func buildCircusTree(filepath string) map[string]*Node {
+	nodeTable := make(map[string]*Node)
+	content, err := ioutil.ReadFile(filepath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	splitByLine := strings.Split(string(content), "\n")
+
+	//build map and nodes
+	for _, line := range splitByLine {
+		// fmt.Printf("Idx %v: %v \n", i, line)
+		splitLine := strings.Split(line, " ")
+		// fmt.Printf("Split: %v, len: %v \n", splitLine, len(splitLine))
+		//populate map
+		entry := splitLine[0]
+		newNode := Node{
+			name:     entry,
+			val:      convertToInt(splitLine[1]),
+			children: []string{},
+		}
+		if len(splitLine) > 2 {
+			for _, el := range splitLine[3:] {
+				newEntry := strings.Replace(el, ",", "", -1)
+				newNode.children = append(newNode.children, newEntry)
+			}
+		}
+		// fmt.Printf("New node: %v \n", newNode)
+		nodeTable[entry] = &newNode
+		// fmt.Printf("nodeTable: %v \n", nodeTable)
+	}
+	return nodeTable
+}
+
+func convertToInt(s string) int {
+	s = strings.Replace(s, "(", "", -1)
+	s = strings.Replace(s, ")", "", -1)
+	integerS, _ := strconv.Atoi(s)
+	return integerS
+}
+
+func recursiveCircusDifference(nodeMap map[string]*Node, nodeName string) int {
+	// fmt.Printf("NodeMap: %v \n", nodeMap)
+
+	childrenOfNode := nodeMap[nodeName].children
+	valOfNode := nodeMap[nodeName].val
+	childVals := make(map[string]int)
+	// fmt.Printf("Node: %v \n", nodeName)
+
+	if len(childrenOfNode) > 0 {
+		for i, child := range childrenOfNode {
+			// fmt.Printf("ChildNode: %v, Val: %v \n", child, nodeMap[child].val)
+			newVal := recursiveCircusDifference(nodeMap, child)
+			if i != 0 {
+				if val := childVals[nodeName]; val != newVal {
+					fmt.Printf("Child vals: %v from child %v, new entry: %v \n", childVals, child, newVal)
+					fmt.Printf("%v 's value is %v \n", child, nodeMap[child].val)
+					fmt.Printf("There is a difference between child nodes of %v \n", nodeName)
+				}
+			}
+			childVals[nodeName] = newVal
+		}
+		return valOfNode + (childVals[nodeName] * len(childrenOfNode))
+	}
+	return valOfNode
+
+}
+
+func recursiveCircusTree(filepath string) int {
+	nodeMap := buildCircusTree(filepath)
+	diff := recursiveCircusDifference(nodeMap, "eugwuhl")
+	return diff
+}
