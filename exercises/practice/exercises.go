@@ -1016,3 +1016,97 @@ func recursiveCircusTree(filepath string) int {
 	diff := recursiveCircusDifference(nodeMap, "eugwuhl")
 	return diff
 }
+
+func register(filepath string) (int, int) {
+	registerMap := make(map[string]int)
+	maxVal := 0
+	content, err := ioutil.ReadFile(filepath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	splitByLine := strings.Split(string(content), "\n")
+	for _, line := range splitByLine {
+		splitLine := strings.Split(line, " ")
+
+		cmdRegister := splitLine[0]
+		primaryCommand := splitLine[1]
+		cmdVal := splitLine[2]
+		condRegister := splitLine[4]
+		condCommand := splitLine[5]
+		condVal := splitLine[6]
+
+		//check if condRegister exists
+		if _, ok := registerMap[condRegister]; ok {
+			//check condition
+			if checkCondition(condRegister, condCommand, condVal, registerMap) {
+				maxVal = performCommand(cmdRegister, primaryCommand, cmdVal, registerMap, maxVal)
+			} else {
+				continue
+			}
+		} else {
+			//init condRegister
+			registerMap[condRegister] = 0
+			if checkCondition(condRegister, condCommand, condVal, registerMap) {
+				maxVal = performCommand(cmdRegister, primaryCommand, cmdVal, registerMap, maxVal)
+			} else {
+				continue
+			}
+		}
+	}
+
+	currMax := 0
+	for _, value := range registerMap {
+		if value > currMax {
+			currMax = value
+		}
+	}
+	return currMax, maxVal
+}
+
+func checkCondition(register string, command string, val string, myMap map[string]int) bool {
+	registerVal := 0
+	if _, ok := myMap[register]; ok {
+		registerVal = myMap[register]
+	}
+	newVal, err := strconv.Atoi(val)
+	if err != nil {
+		log.Fatal(err)
+	}
+	switch command {
+	case ">":
+		return registerVal > newVal
+	case "<":
+		return registerVal < newVal
+	case ">=":
+		return registerVal >= newVal
+	case "==":
+		return registerVal == newVal
+	case "<=":
+		return registerVal <= newVal
+	case "!=":
+		return registerVal != newVal
+	}
+	return false
+}
+
+func performCommand(register string, command string, val string, myMap map[string]int, maxVal int) int {
+	registerVal := 0
+	if _, ok := myMap[register]; ok {
+		registerVal = myMap[register]
+	}
+	newVal, err := strconv.Atoi(val)
+	if err != nil {
+		log.Fatal(err)
+	}
+	switch command {
+	case "inc":
+		myMap[register] = registerVal + newVal
+	case "dec":
+		myMap[register] = registerVal - newVal
+	}
+
+	if myMap[register] > maxVal {
+		maxVal = myMap[register]
+	}
+	return maxVal
+}
