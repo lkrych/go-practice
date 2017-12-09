@@ -27,4 +27,26 @@ class ChannelList extends React.Component {
   }
 }
 
-ReactDOM.render(<ChannelList channels={channels} />, document.getElementById('app'));
+class ChannelForm extends React.Component {
+  render(){
+
+    return(
+      <form>
+        <input type='text' />
+      </form>
+    );
+  }
+}
+
+class ChannelSection extends React.Component {
+  render(){
+    return(
+      <div>
+        <ChannelList channels={channels}/>
+        <ChannelForm />
+      </div>
+    );
+  }
+}
+
+ReactDOM.render(<ChannelSection />, document.getElementById('app'));
