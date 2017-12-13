@@ -275,3 +275,120 @@ func streamParserAdvent(filepath string) (int, int) {
 	}
 	return streamParser(string(content))
 }
+
+func knotHashMinimal(input []int) int {
+	knot := []int{0, 1, 2, 3, 4}
+	skipSize := 0
+	currIdx := 0
+	for _, el := range input {
+		knot = reverseAndWrap(knot, el, currIdx)
+		currIdx += el + skipSize
+		if currIdx > len(knot)-1 {
+			currIdx = currIdx % len(knot)
+		}
+		skipSize++
+		fmt.Printf("####################### \n")
+		fmt.Printf("The knot is %v \n", knot)
+		fmt.Printf("####################### \n")
+	}
+	return knot[0] * knot[1]
+}
+
+func knotHash(input []int) int {
+	knot := make([]int, 256)
+	for i := 0; i < len(knot); i++ {
+		knot[i] = i
+	}
+	skipSize := 0
+	currIdx := 0
+	for _, el := range input {
+		fmt.Printf("The currentIndex is %v \n", currIdx)
+		knot = reverseAndWrap(knot, el, currIdx%len(knot))
+		currIdx += el + skipSize
+		skipSize++
+		fmt.Printf("####################### \n")
+		fmt.Printf("The knot is %v \n", knot)
+		fmt.Printf("####################### \n")
+	}
+	return knot[0] * knot[1]
+}
+
+func reverseAndWrap(arr []int, el int, currIdx int) []int {
+	newArr := []int{}
+	remainder := 0
+	if (currIdx + el) > len(arr) {
+		remainder = ((currIdx + el) % len(arr))
+	}
+	// fmt.Printf("The array is %v \n", arr)
+	// fmt.Printf("The current index is %v \n", currIdx)
+	// fmt.Printf("The el is %v \n", el)
+	// fmt.Printf("The remainder is %v \n", remainder)
+	if remainder > 0 {
+		// fmt.Printf("The first half of the new arr is %v \n", arr[currIdx:])
+		// fmt.Printf("The second half of the new arr is %v \n", arr[:remainder])
+	} else {
+		// fmt.Printf("The first half of the new arr is %v \n", arr[currIdx:currIdx+el])
+		// fmt.Printf("The second half of the new arr is %v \n", arr[:remainder])
+	}
+
+	if remainder > 0 {
+		newArr = append(newArr, arr[currIdx:]...)
+		newArr = append(newArr, arr[:remainder]...)
+	} else {
+		newArr = append(newArr, arr[currIdx:currIdx+el]...)
+	}
+	//cleave off any extra
+	if len(newArr) > len(arr) {
+		newArr = newArr[:len(arr)]
+	}
+
+	for i, j := 0, len(newArr)-1; i < j; i, j = i+1, j-1 {
+		newArr[i], newArr[j] = newArr[j], newArr[i]
+	}
+	// fmt.Printf("the reversed array is %v \n", newArr)
+
+	if remainder > 0 {
+		for i := currIdx; i < len(arr); i++ {
+			reversedEl := newArr[0]
+			newArr = newArr[1:]
+			// fmt.Printf("Reversed el: %v, newArr: %v, index i: %v \n", reversedEl, newArr, i)
+			arr[i] = reversedEl
+		}
+
+		for i := 0; i < remainder+1; i++ {
+			if len(newArr) == 0 {
+				continue
+			}
+			reversedEl := newArr[0]
+			newArr = newArr[1:]
+			// fmt.Printf("REMAINDER- Reversed el: %v, newArr: %v, index i: %v \n", reversedEl, newArr, i)
+			arr[i] = reversedEl
+		}
+	} else {
+		for i := currIdx; i < currIdx+el; i++ {
+			reversedEl := newArr[0]
+			newArr = newArr[1:]
+			// fmt.Printf("Reversed el: %v, newArr: %v, index i: %v \n", reversedEl, newArr, i)
+			arr[i] = reversedEl
+		}
+	}
+
+	return arr
+}
+
+func knotHashAdvent(filepath string) int {
+	content, err := ioutil.ReadFile(filepath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	split := strings.Split(string(content), ",")
+	fmt.Printf("Split_arr: %v, len: %v", split, len(split))
+	intArr := make([]int, len(split))
+	for i, el := range split {
+		intArr[i], err = strconv.Atoi(el)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+	return knotHash(intArr)
+}

@@ -132,3 +132,21 @@ func TestStreamParser(t *testing.T) {
 		t.Errorf("Expected answer to be 17, not %v", garbage9)
 	}
 }
+
+func TestKnotHash(t *testing.T) {
+	test1 := knotHashMinimal([]int{3, 4, 1, 5})
+	test2 := knotHashMinimal([]int{3, 4})
+	test3 := knotHashAdvent("./advent_input/knot_input.txt")
+
+	if test1 != 12 {
+		t.Errorf("Expected answer to be 12, not %v", test1)
+	}
+
+	if test2 != 12 {
+		t.Errorf("Expected answer to be 12, not %v", test2)
+	}
+
+	if test3 != 32 {
+		t.Errorf("Expected answer to be 32, not %v", test3)
+	}
+}
