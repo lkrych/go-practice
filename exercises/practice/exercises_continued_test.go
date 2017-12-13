@@ -134,19 +134,24 @@ func TestStreamParser(t *testing.T) {
 }
 
 func TestKnotHash(t *testing.T) {
-	test1 := knotHashMinimal([]int{3, 4, 1, 5})
-	test2 := knotHashMinimal([]int{3, 4})
-	test3 := knotHashAdvent("./advent_input/knot_input.txt")
+	// test1 := knotHashMinimal([]int{3, 4, 1, 5})
+	// test2 := knotHashMinimal([]int{3, 4})
+	// test3 := knotHashAdvent("./advent_input/knot_input.txt")
+	test4 := knotHashAdventAdvanced("./advent_input/knot_input.txt")
 
-	if test1 != 12 {
-		t.Errorf("Expected answer to be 12, not %v", test1)
-	}
+	// if test1 != 12 {
+	// 	t.Errorf("Expected answer to be 12, not %v", test1)
+	// }
 
-	if test2 != 12 {
-		t.Errorf("Expected answer to be 12, not %v", test2)
-	}
+	// if test2 != 12 {
+	// 	t.Errorf("Expected answer to be 12, not %v", test2)
+	// }
 
-	if test3 != 32 {
-		t.Errorf("Expected answer to be 32, not %v", test3)
+	// if test3 != 32 {
+	// 	t.Errorf("Expected answer to be 32, not %v", test3)
+	// }
+
+	if test4 != "googlywoogly" {
+		t.Errorf("Expected answer to be googlywoogly, not %v", test4)
 	}
 }

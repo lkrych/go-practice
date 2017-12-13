@@ -294,23 +294,18 @@ func knotHashMinimal(input []int) int {
 	return knot[0] * knot[1]
 }
 
-func knotHash(input []int) int {
-	knot := make([]int, 256)
-	for i := 0; i < len(knot); i++ {
-		knot[i] = i
-	}
-	skipSize := 0
-	currIdx := 0
+func knotHash(input []int, knot []int, currIdx int, skipSize int) ([]int, int, int) {
 	for _, el := range input {
-		fmt.Printf("The currentIndex is %v \n", currIdx)
 		knot = reverseAndWrap(knot, el, currIdx%len(knot))
 		currIdx += el + skipSize
 		skipSize++
+		fmt.Printf("The currentIndex is %v \n", currIdx)
+		fmt.Printf("The current skip size is %v \n", skipSize)
 		fmt.Printf("####################### \n")
 		fmt.Printf("The knot is %v \n", knot)
 		fmt.Printf("####################### \n")
 	}
-	return knot[0] * knot[1]
+	return knot, currIdx, skipSize
 }
 
 func reverseAndWrap(arr []int, el int, currIdx int) []int {
@@ -390,5 +385,59 @@ func knotHashAdvent(filepath string) int {
 			log.Fatal(err)
 		}
 	}
-	return knotHash(intArr)
+	knotInput := make([]int, 256)
+	currIdx := 0
+	skipSize := 0
+	knot, _, _ := knotHash(intArr, knotInput, currIdx, skipSize)
+	return knot[0] * knot[1]
+}
+
+func knotHashAdventAdvanced(filepath string) string {
+	content, err := ioutil.ReadFile(filepath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	content = append(content, 17, 31, 73, 47, 23)
+	intArr := make([]int, len(content))
+	for i, element := range content {
+		intArr[i] = int(element)
+	}
+	knotInput := make([]int, 256)
+	for i := 0; i < len(knotInput); i++ {
+		knotInput[i] = i
+	}
+	knot := computeSparseHash(intArr, knotInput)
+	dense := computeDenseHash(knot)
+	return convertHex(dense)
+}
+
+func computeSparseHash(inputArr []int, knotInput []int) []int {
+	currPos := 0
+	skipSize := 0
+	for i := 0; i < 64; i++ {
+		knotInput, currPos, skipSize = knotHash(inputArr, knotInput, currPos, skipSize)
+	}
+	return knotInput
+}
+
+func computeDenseHash(knot []int) []int {
+	hexArr := []int{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+	for i, el := range knot {
+		group := i / 16
+		mod := i % 16
+		if mod == 0 {
+			hexArr[group] = el
+		} else {
+			hexArr[group] = hexArr[group] ^ el
+		}
+	}
+	return hexArr
+}
+
+func convertHex(denseHash []int) string {
+	hexStr := ""
+	for _, el := range denseHash {
+		hexStr += fmt.Sprintf("%.02x", el)
+	}
+	return hexStr
 }
