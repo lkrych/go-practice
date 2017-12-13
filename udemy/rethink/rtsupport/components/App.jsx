@@ -12,11 +12,9 @@ class App extends Component {
     let {channels} = this.state;
     channels.push({id:channels.length, name});
     this.setState({channels});
-    //TODO: send to server
   }
   setChannel(activeChannel){
     this.setState({activeChannel});
-    //TODO: get channels messages;
   }
   render(){
     return(
@@ -28,3 +26,5 @@ class App extends Component {
     );
   }
 }
+
+export default App;
