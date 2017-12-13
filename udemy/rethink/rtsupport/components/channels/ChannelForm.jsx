@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 
 class ChannelForm extends Component{
   onSubmit(e){
@@ -10,7 +11,7 @@ class ChannelForm extends Component{
   }
   render(){
     return(
-      <form onsubmit={this.onSubmit.bind(this)}>
+      <form onSubmit={this.onSubmit.bind(this)}>
         <input
         type='text'
         ref='channel'
@@ -21,7 +22,7 @@ class ChannelForm extends Component{
 }
 
 ChannelForm.propTypes = {
-  addChannel: React.PropTypes.func.isRequired
+  addChannel: PropTypes.func.isRequired
 };
 
 export default ChannelForm;
