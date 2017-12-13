@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import ChannelList from './ChannelList.jsx';
 
 class ChannelForm extends Component{
   onSubmit(e){
