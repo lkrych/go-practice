@@ -6,6 +6,7 @@ class App extends Component {
     super(props);
     this.state = {
       channels: [],
+      users: [],
       activeChannel: {}
     };
   }
@@ -17,6 +18,11 @@ class App extends Component {
   setChannel(activeChannel){
     this.setState({activeChannel});
   }
+  addUser(name){
+    let {users} = this.state;
+    users.push({id:users.length,name});
+    this.setState({users});
+  }
   render(){
     return(
       <div className='app'>
@@ -25,6 +31,10 @@ class App extends Component {
             {...this.state} //pass activechannel and channels
             addChannel={this.addChannel.bind(this)}
             setChannel={this.setChannel.bind(this)}
+          />
+          <UserSection
+          {...this.state}
+          addUser={this.addUser.bind(this)}
           />
         </div>
       </div>
