@@ -441,3 +441,144 @@ func convertHex(denseHash []int) string {
 	}
 	return hexStr
 }
+
+func hexMaze(mazeInput []string) int {
+	dirMap := make(map[string]int)
+	for _, direction := range mazeInput {
+		dirMap = addDistance(direction, dirMap)
+	}
+	totalDistance := 0
+	for _, distance := range dirMap {
+		totalDistance += distance
+	}
+	return totalDistance
+}
+
+func addDistance(dir string, dirMap map[string]int) map[string]int {
+	switch dir {
+	case "n":
+		if val, ok := dirMap["s"]; ok {
+			if val > 0 {
+				dirMap["s"]--
+				break
+			}
+		} else if val, ok := dirMap["se"]; ok {
+			if val > 0 {
+				dirMap["se"]--
+				dirMap["e"]++
+				break
+			}
+		} else if val, ok := dirMap["sw"]; ok {
+			if val > 0 {
+				dirMap["sw"]--
+				dirMap["w"]++
+				break
+			}
+		}
+		dirMap["n"]++
+	case "s":
+		if val, ok := dirMap["n"]; ok {
+			if val > 0 {
+				dirMap["n"]--
+				break
+			}
+		} else if val, ok := dirMap["ne"]; ok {
+			if val > 0 {
+				dirMap["ne"]--
+				dirMap["e"]++
+				break
+			}
+		} else if val, ok := dirMap["nw"]; ok {
+			if val > 0 {
+				dirMap["nw"]--
+				dirMap["w"]++
+				break
+			}
+		}
+		dirMap["s"]++
+
+	case "nw":
+		if val, ok := dirMap["ne"]; ok {
+			if val > 0 {
+				dirMap["ne"]--
+				dirMap["n"]++
+				break
+			}
+		}
+
+		if val, ok := dirMap["se"]; ok {
+			if val > 0 {
+				dirMap["se"]--
+				break
+			}
+		}
+
+		dirMap["nw"]++
+
+	case "ne":
+		if val, ok := dirMap["nw"]; ok {
+			if val > 0 {
+				dirMap["nw"]--
+				dirMap["n"]++
+				break
+			}
+		}
+
+		if val, ok := dirMap["sw"]; ok {
+			if val > 0 {
+				dirMap["sw"]--
+				break
+			}
+		}
+
+		dirMap["ne"]++
+
+	case "sw":
+		if val, ok := dirMap["se"]; ok {
+			if val > 0 {
+				dirMap["se"]--
+				dirMap["s"]++
+				break
+			}
+		}
+
+		if val, ok := dirMap["ne"]; ok {
+			if val > 0 {
+				dirMap["ne"]--
+				break
+			}
+		}
+
+		dirMap["sw"]++
+	case "se":
+		if val, ok := dirMap["sw"]; ok {
+			if val > 0 {
+				dirMap["sw"]--
+				dirMap["s"]++
+				break
+			}
+		}
+
+		if val, ok := dirMap["nw"]; ok {
+			if val > 0 {
+				dirMap["nw"]--
+				break
+			}
+		}
+
+		dirMap["se"]++
+	}
+	fmt.Printf("Direction map: %v \n", dirMap)
+	return dirMap
+}
+
+func hexMazeAdvent(filepath string) int {
+	content, err := ioutil.ReadFile(filepath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	strArray := strings.Split(string(content), ",")
+
+	fmt.Printf("The converted array is %v \n", strArray)
+	return hexMaze(strArray)
+}

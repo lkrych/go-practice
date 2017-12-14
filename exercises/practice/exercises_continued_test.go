@@ -155,3 +155,32 @@ func TestKnotHash(t *testing.T) {
 		t.Errorf("Expected answer to be googlywoogly, not %v", test4)
 	}
 }
+
+func TestHexMaze(t *testing.T) {
+	test1 := hexMaze([]string{"ne", "ne", "ne"})
+	test2 := hexMaze([]string{"ne", "ne", "sw", "sw"})
+	test3 := hexMaze([]string{"ne", "ne", "s", "s"})
+	test4 := hexMaze([]string{"se", "sw", "se", "sw", "sw"})
+	test5 := hexMazeAdvent("./advent_input/hex_maze_input.txt")
+
+	if test1 != 3 {
+		t.Errorf("Expected answer to be 3, not %v", test1)
+	}
+
+	if test2 != 0 {
+		t.Errorf("Expected answer to be 0, not %v", test2)
+	}
+
+	if test3 != 2 {
+		t.Errorf("Expected answer to be 2, not %v", test3)
+	}
+
+	if test4 != 3 {
+		t.Errorf("Expected answer to be 3, not %v", test4)
+	}
+
+	if test5 != 3 {
+		t.Errorf("Expected answer to be 3, not %v", test5)
+	}
+
+}
