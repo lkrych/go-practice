@@ -6,13 +6,18 @@ import ChannelList from './ChannelList.jsx';
 class ChannelSection extends Component{
   render(){
     return(
-      <div>
-        <ChannelList 
-          channels={this.props.channels}
-          setChannel={this.props.setChannel}
-        />
-        <ChannelForm
-          addChannel={this.props.addChannel} />
+      <div className='support panel panel-primary'>
+        <div className='panel-heading'>
+          <strong> Channels </strong>
+        </div>
+        <div className='panel-body channels'>
+          <ChannelList 
+            channels={this.props.channels}
+            setChannel={this.props.setChannel}
+          />
+          <ChannelForm
+            addChannel={this.props.addChannel} />
+        </div>
       </div>
     );
   }
