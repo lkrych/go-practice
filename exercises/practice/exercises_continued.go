@@ -673,3 +673,21 @@ func cleanUp(dirMap map[string]int) (int, map[string]int) {
 	return totalDistance, dirMap
 
 }
+
+func digitalPlumber(filepath string) int {
+	content, err := ioutil.ReadFile(filepath)
+	if err != nil {
+		log.Fatal(err)
+	}
+	splitByLine := strings.Split(string(content), "\n")
+	for _, line := range splitByLine {
+		splitLine := strings.Split(line, " ")
+		fmt.Printf("Split line: %v, len: %v \n", splitLine, len(splitLine))
+		pipeIn := splitLine[0]
+		pipeOut := splitLine[2:]
+		fmt.Printf("Pipe in: %v \n", pipeIn)
+		fmt.Printf("Pipe out: %v \n", pipeOut)
+
+	}
+	return 0
+}
