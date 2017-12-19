@@ -444,14 +444,17 @@ func convertHex(denseHash []int) string {
 
 func hexMaze(mazeInput []string) int {
 	dirMap := make(map[string]int)
+	farthestDistance := 0
+	currentDistance := 0
 	for _, direction := range mazeInput {
 		dirMap = addDistance(direction, dirMap)
+		currentDistance, dirMap = cleanUp(dirMap)
+		if currentDistance > farthestDistance {
+			farthestDistance = currentDistance
+		}
 	}
-	totalDistance := 0
-	for _, distance := range dirMap {
-		totalDistance += distance
-	}
-	return totalDistance
+	fmt.Printf("The farthest distance gone by the wandering child process is %v \n", farthestDistance)
+	return currentDistance
 }
 
 func addDistance(dir string, dirMap map[string]int) map[string]int {
@@ -581,4 +584,92 @@ func hexMazeAdvent(filepath string) int {
 
 	fmt.Printf("The converted array is %v \n", strArray)
 	return hexMaze(strArray)
+}
+
+func cleanUp(dirMap map[string]int) (int, map[string]int) {
+	//Combine S and NE/NW
+	if valSouth, ok := dirMap["s"]; ok {
+		if valSouth > 0 {
+			if valNorth, ok := dirMap["ne"]; ok {
+				if valNorth > 0 {
+					if valSouth-valNorth > 0 {
+						dirMap["s"] = valSouth - valNorth
+						dirMap["ne"] = 0
+						dirMap["se"] = dirMap["se"] + valNorth
+					} else {
+						dirMap["se"] = dirMap["se"] + valSouth
+						dirMap["s"] = 0
+						dirMap["ne"] = valNorth - valSouth
+					}
+				}
+			}
+
+			if valNorth, ok := dirMap["nw"]; ok {
+				if valNorth > 0 {
+					if valSouth-valNorth > 0 {
+						dirMap["s"] = valSouth - valNorth
+						dirMap["nw"] = 0
+						dirMap["sw"] = dirMap["sw"] + valNorth
+					} else {
+						dirMap["sw"] = dirMap["sw"] + valSouth
+						dirMap["s"] = 0
+						dirMap["nw"] = valNorth - valSouth
+					}
+				}
+			}
+		}
+	}
+
+	if valNorth, ok := dirMap["n"]; ok {
+		if valNorth > 0 {
+			if valSouth, ok := dirMap["se"]; ok {
+				if valSouth > 0 {
+					if valNorth-valSouth > 0 {
+						dirMap["n"] = valNorth - valSouth
+						dirMap["se"] = 0
+						dirMap["ne"] = dirMap["ne"] + valSouth
+					} else {
+						dirMap["ne"] = dirMap["ne"] + valNorth
+						dirMap["n"] = 0
+						dirMap["se"] = valSouth - valNorth
+					}
+				}
+			}
+			//combine N and SE/SW
+			if valSouth, ok := dirMap["sw"]; ok {
+				if valSouth > 0 {
+					if valNorth-valSouth > 0 {
+						dirMap["n"] = valNorth - valSouth
+						dirMap["sw"] = 0
+						dirMap["nw"] = dirMap["nw"] + valSouth
+					} else {
+						dirMap["nw"] = dirMap["nw"] + valNorth
+						dirMap["n"] = 0
+						dirMap["sw"] = valSouth - valNorth
+					}
+				}
+			}
+		}
+	}
+
+	if valNorth, ok := dirMap["n"]; ok {
+		if valNorth > 0 {
+			if valSouth, ok := dirMap["s"]; ok {
+				if valNorth-valSouth > 0 {
+					dirMap["n"] = valNorth - valSouth
+					dirMap["s"] = 0
+				} else {
+					dirMap["s"] = valSouth - valNorth
+					dirMap["n"] = 0
+				}
+			}
+		}
+	}
+	fmt.Printf("Cleaned up Map: %v \n", dirMap)
+	totalDistance := 0
+	for _, distance := range dirMap {
+		totalDistance += distance
+	}
+	return totalDistance, dirMap
+
 }
