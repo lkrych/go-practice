@@ -679,6 +679,15 @@ func digitalPlumber(filepath string) int {
 	if err != nil {
 		log.Fatal(err)
 	}
+	nodeTable := buildNodeTree(content)
+	preventLoops := make(map[string]int)
+	count := searchTree(nodeTable, "0", preventLoops)
+
+	return count
+}
+
+func buildNodeTree(content []byte) map[string]*Node {
+	nodeTable := make(map[string]*Node)
 	splitByLine := strings.Split(string(content), "\n")
 	for _, line := range splitByLine {
 		splitLine := strings.Split(line, " ")
@@ -687,7 +696,43 @@ func digitalPlumber(filepath string) int {
 		pipeOut := splitLine[2:]
 		fmt.Printf("Pipe in: %v \n", pipeIn)
 		fmt.Printf("Pipe out: %v \n", pipeOut)
+		//populate map
+		entry := splitLine[0]
+		newNode := Node{
+			name:     entry,
+			val:      convertToInt(splitLine[1]),
+			children: []string{},
+		}
+		for _, el := range pipeOut {
+			newNode.children = append(newNode.children, el)
+		}
 
+		// fmt.Printf("New node: %v \n", newNode)
+		nodeTable[entry] = &newNode
 	}
-	return 0
+	fmt.Printf("nodeTable: %v \n", nodeTable)
+
+	return nodeTable
+}
+
+func searchTree(nodeMap map[string]*Node, node string, preventLoopsMap map[string]int) int {
+	fmt.Printf("Looking for %v in %v, the preventLoopsMap looks like %v \n", node, nodeMap, preventLoopsMap)
+
+	count := 0
+
+	if _, ok := preventLoopsMap[node]; ok {
+
+		fmt.Printf("%v was found in the preventLoops map \n", node)
+		return count
+	}
+	//add currentNode to preventLoopsMap to prevent infinite loops
+	preventLoopsMap[node] = 1
+
+	for _, child := range nodeMap[node].children {
+		fmt.Printf("The child is %v \n", child)
+		count += searchTree(nodeMap, child, preventLoopsMap)
+		count++
+		fmt.Printf("Made it through the loop with child %v \n", child)
+	}
+	return count
 }

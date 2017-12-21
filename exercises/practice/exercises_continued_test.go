@@ -187,13 +187,13 @@ func TestHexMaze(t *testing.T) {
 
 func TestDigitalPlumber(t *testing.T) {
 	test1 := digitalPlumber("./advent_input/digital_plumber_beginner.txt")
-	test2 := digitalPlumber("./advent_input/digital_plumber_input.txt")
+	// test2 := digitalPlumber("./advent_input/digital_plumber_input.txt")
 
 	if test1 != 3 {
 		t.Errorf("Expected answer to be 3, not %v", test1)
 	}
 
-	if test2 != 0 {
-		t.Errorf("Expected answer to be 0, not %v", test2)
-	}
+	// if test2 != 0 {
+	// 	t.Errorf("Expected answer to be 0, not %v", test2)
+	// }
 }
