@@ -1,7 +1,18 @@
 package main
 
+import (
+	"log"
+	"net/http"
+
+	"github.com/gorilla/websocket"
+)
+
 //note: channels are an in-memory thread-safe message queue where
 // senders pass data and receivers read data in a non-blocking thread-safe way.
+
+//the practical significance of this is that if we tried to directly access the clients map
+// it is possible that two goroutines running concurently might try to modify the map at the same time,
+//resulting in corrupt memory or unpredictable state
 
 type room struct {
 	//channel that holds incoming messages that should be forwarded to other clients
@@ -12,4 +23,59 @@ type room struct {
 	leave chan *client
 	//client holds all current clients in this room
 	clients map[*client]bool
+}
+
+// the select statement can be used whenever we need
+// to synchronize or modify shared memory
+
+// if this function is run in a goroutine, it will run in the background
+// which won't block the rest of our application. This code will watch the three channels inside
+// the room and will run the case statement if a msg is received
+
+func (r *room) run() {
+	for {
+		select {
+		case client := <-r.join:
+			//joining
+			r.clients[client] = true
+		case client := <-r.leave:
+			//leaving
+			delete(r.clients, client)
+			close(client.send)
+		case msg := <-r.forward:
+			//forward message to all clients
+			for client := range r.clients {
+				//msg will be sent into client's send channel
+				//client's write method will pick it up
+				client.send <- msg
+			}
+		}
+	}
+}
+
+const (
+	socketBufferSize  = 1024
+	messageBufferSize = 1024
+)
+
+//make room type into an http.Handler type
+var upgrader = &websocket.Upgrader{
+	ReadBufferSize:  socketBufferSize,
+	WriteBufferSize: socketBufferSize}
+
+func (r *room) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+	socket, err := upgrader.Upgrade(w, req, nil)
+	if err != nil {
+		log.Fatal("ServeHTTP:", err)
+		return
+	}
+	client := &client{
+		socket: socket,
+		send:   make(chan []byte, messageBufferSize),
+		room:   r,
+	}
+	r.join <- client
+	defer func() { r.leave <- client }()
+	go client.write()
+	client.read() // will block main thread until it's time to close it
 }
