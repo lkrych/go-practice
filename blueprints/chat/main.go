@@ -16,6 +16,7 @@ import (
 	"github.com/stretchr/gomniauth/providers/github"
 	"github.com/stretchr/gomniauth/providers/google"
 	"github.com/stretchr/signature"
+	yaml "gopkg.in/yaml.v2"
 )
 
 //templ represents a single template
@@ -71,11 +72,11 @@ func main() {
 //goroutine to run the web server.
 
 func (c *config) getConfig() *config {
-	yaml, err := ioutil.ReadFile("secrets.yml")
+	yamlFile, err := ioutil.ReadFile("secrets.yml")
 	if err != nil {
 		log.Printf("Error reading YAML: %v", err)
 	}
-	err = yaml.Unmarshal(yaml, c)
+	err = yaml.Unmarshal(yamlFile, c)
 	if err != nil {
 		log.Fatalf("Unmarshal: %v", err)
 	}
