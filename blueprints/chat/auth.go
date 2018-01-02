@@ -57,12 +57,12 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, fmt.Sprintf("Error when trying to get provider %s: %s", provider, err), http.StatusBadRequest)
 			return
 		}
-		loginUrl, err := provider.GetBeginAuthURL(nil, nil)
+		loginURL, err := provider.GetBeginAuthURL(nil, nil)
 		if err != nil {
-			http.Error(w, fmt.Sprintf("Error when trying to GetBeginAuthUrl for %s: %s", provider, err) http.StatusInternalServerError)
+			http.Error(w, fmt.Sprintf("Error when trying to GetBeginAuthUrl for %s: %s", provider, err), http.StatusInternalServerError)
 			return
 		}
-		w.Header.Set("Location", loginUrl)
+		w.Header().Set("Location", loginURL)
 		w.WriteHeader(http.StatusTemporaryRedirect)
 
 	default:
