@@ -27,10 +27,10 @@ type templateHandler struct {
 }
 
 type config struct {
-	googleClient string `yaml:"GOOGLE_CLIENT_ID"`
-	googleSecret string `yaml:"GOOGLE_SECRET"`
-	githubClient string `yaml:"GITHUB_CLIENT_ID"`
-	githubSecret string `yaml:"GOOGLE_SECRET"`
+	GoogleClient string `yaml:"GOOGLE_CLIENT_ID"`
+	GoogleSecret string `yaml:"GOOGLE_SECRET"`
+	GithubClient string `yaml:"GITHUB_CLIENT_ID"`
+	GithubSecret string `yaml:"GITHUB_SECRET"`
 }
 
 //serveHTTP handles the HTTP request
@@ -44,15 +44,18 @@ func (t *templateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func main() {
 	var addr = flag.String("addr", ":8080", "The addr of the application.")
 	flag.Parse() // parse the flags
+
 	//parse secrets
 	var c config
 	c.getConfig()
+
 	//setup gomniauth
 	gomniauth.SetSecurityKey(signature.RandomKey(64))
 	gomniauth.WithProviders(
-		google.New(c.googleClient, c.googleSecret, "http://localhost:8080/auth/callback/google"),
-		github.New(c.githubClient, c.githubSecret, "http://localhost:8080/auth/callback/github"),
+		google.New(c.GoogleClient, c.GoogleSecret, "http://localhost:8080/auth/callback/google"),
+		github.New(c.GithubClient, c.GithubSecret, "http://localhost:8080/auth/callback/github"),
 	)
+
 	r := newRoom()
 	r.tracer = trace.New(os.Stdout)
 	http.Handle("/chat", MustAuth(&templateHandler{filename: "chat.html"}))
@@ -73,10 +76,12 @@ func main() {
 
 func (c *config) getConfig() *config {
 	yamlFile, err := ioutil.ReadFile("secrets.yml")
+
 	if err != nil {
 		log.Printf("Error reading YAML: %v", err)
 	}
 	err = yaml.Unmarshal(yamlFile, c)
+
 	if err != nil {
 		log.Fatalf("Unmarshal: %v", err)
 	}
