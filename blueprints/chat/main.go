@@ -26,10 +26,10 @@ type templateHandler struct {
 }
 
 type config struct {
-	google_client string `yaml:"GOOGLE_CLIENT_ID"`
-	google_secret string `yaml:"GOOGLE_SECRET"`
-	github_client string `yaml:"GITHUB_CLIENT_ID"`
-	github_secret string `yaml:"GOOGLE_SECRET"`
+	googleClient string `yaml:"GOOGLE_CLIENT_ID"`
+	googleSecret string `yaml:"GOOGLE_SECRET"`
+	githubClient string `yaml:"GITHUB_CLIENT_ID"`
+	githubSecret string `yaml:"GOOGLE_SECRET"`
 }
 
 //serveHTTP handles the HTTP request
@@ -49,8 +49,8 @@ func main() {
 	//setup gomniauth
 	gomniauth.SetSecurityKey(signature.RandomKey(64))
 	gomniauth.WithProviders(
-		google.New(c.google_client, c.google_secret, "http://localhost:8080/auth/callback/google"),
-		github.New(c.github_client, c.github_secret, "http://localhost:8080/auth/callback/github"),
+		google.New(c.googleClient, c.googleSecret, "http://localhost:8080/auth/callback/google"),
+		github.New(c.githubClient, c.githubSecret, "http://localhost:8080/auth/callback/github"),
 	)
 	r := newRoom()
 	r.tracer = trace.New(os.Stdout)
