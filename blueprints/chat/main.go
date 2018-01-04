@@ -64,7 +64,7 @@ func main() {
 		github.New(c.GithubClient, c.GithubSecret, "http://localhost:8080/auth/callback/github"),
 	)
 
-	r := newRoom(UseGravatar)
+	r := newRoom(UseFileSystemAvatar)
 	r.tracer = trace.New(os.Stdout)
 	http.Handle("/chat", MustAuth(&templateHandler{filename: "chat.html"}))
 	http.Handle("/login", &templateHandler{filename: "login.html"})
@@ -81,7 +81,7 @@ func main() {
 	http.Handle("/upload", &templateHandler{filename: "upload.html"})
 	http.HandleFunc("/uploader", uploaderHandler)
 	//handler that will serve static files, provide index listings and generate a 404
-	http.Handle("/avatars", http.StripPrefix("/avatars", http.FileServer(http.Dir("./avatars"))))
+	http.Handle("/avatars/", http.StripPrefix("/avatars/", http.FileServer(http.Dir("./avatars"))))
 
 	http.Handle("/room", r)
 	//get the room going
