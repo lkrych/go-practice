@@ -79,6 +79,10 @@ func main() {
 		w.WriteHeader(http.StatusTemporaryRedirect)
 	})
 	http.Handle("/upload", &templateHandler{filename: "upload.html"})
+	http.HandleFunc("/uploader", uploaderHandler)
+	//handler that will serve static files, provide index listings and generate a 404
+	http.Handle("/avatars", http.StripPrefix("/avatars", http.FileServer(http.Dir("./avatars"))))
+
 	http.Handle("/room", r)
 	//get the room going
 	go r.run()
