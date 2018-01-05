@@ -21,6 +21,9 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
+//set the active Avatar implementation
+var avatars Avatar = UseFileSystemAvatar
+
 //templ represents a single template
 type templateHandler struct {
 	once     sync.Once
@@ -64,7 +67,7 @@ func main() {
 		github.New(c.GithubClient, c.GithubSecret, "http://localhost:8080/auth/callback/github"),
 	)
 
-	r := newRoom(UseFileSystemAvatar)
+	r := newRoom()
 	r.tracer = trace.New(os.Stdout)
 	http.Handle("/chat", MustAuth(&templateHandler{filename: "chat.html"}))
 	http.Handle("/login", &templateHandler{filename: "login.html"})
