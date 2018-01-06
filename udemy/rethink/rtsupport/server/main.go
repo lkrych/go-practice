@@ -4,9 +4,22 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/gorilla/websocket"
+	"github.com/mitchellh/mapstructure"
 )
+
+//Message is how json will be received in the server, we use an empty interface to accept any type of data
+type Message struct {
+	Name string      `json:"name"`
+	Data interface{} `json:"data"`
+}
+
+type Channel struct {
+	ID   string `json:"id"`
+	Name string `json:"data"`
+}
 
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
@@ -30,14 +43,52 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	for {
-		msgType, msg, err := socket.ReadMessage()
-		if err != nil {
-			log.Fatal(err)
-			return
+		var inMessage Message
+		var outMessage Message
+		if err := socket.ReadJSON(&inMessage); err != nil {
+			fmt.Println(err)
+			break
 		}
-		fmt.Println(string(msg))
-		if err = socket.WriteMessage(msgType, msg); err != nil { //echo back to client
-			log.Fatal(err)
+		fmt.Printf("%#v\n", inMessage)
+		switch inMessage.Name {
+		case "channel add":
+			err := addChannel(inMessage.Data)
+			if err != nil {
+				outMessage = Message{"error", err}
+				if err := socket.WriteJSON(outMessage); err != nil {
+					fmt.Println(err)
+					break
+				}
+			}
+		case "channel subscribe":
+			//make sure subscribe doesn't block
+			go subscribeChannel(socket)
 		}
+		// fmt.Println(string(msg))
+		// if err = socket.WriteMessage(msgType, msg); err != nil { //echo back to client
+		// 	log.Fatal(err)
+		// }
+	}
+}
+
+func addChannel(data interface{}) error {
+	var channel Channel
+
+	err := mapstructure.Decode(data, &channel)
+	if err != nil {
+		return err
+	}
+	channel.ID = "1"
+	fmt.Printf("%#v\n", channel)
+	return nil
+}
+
+func subscribeChannel(socket *websocket.Conn) {
+	//TODO: rethinkDB query / changefeed
+	for {
+		time.Sleep(time.Second * 1)
+		message := Message{"channel add", Channel{
+			"1", "Software Support"}}
+		socket.WriteJSON(message)
 	}
 }
