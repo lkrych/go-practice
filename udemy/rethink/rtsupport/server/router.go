@@ -29,14 +29,23 @@ func (r *Router) Handle(msgName string, handler Handler) {
 	r.rules[msgName] = handler
 }
 
+func (r *Router) FindHandler(msgName string) (Handler, bool) {
+	handler, found := r.rules[msgName]
+	if found {
+		fmt.Printf("%s was found", msgName)
+	}
+	return handler, found
+}
+
 func (e *Router) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	socket, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerErrror)
+		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprint(w, err.Error())
 		return
 	}
-	client := NewClient(socket)
+	client := NewClient(socket, e.FindHandler)
+	fmt.Printf("Client has been created \n")
 	go client.Write()
 	client.Read()
 }
