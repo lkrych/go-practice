@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import ChannelSection from './channels/ChannelSection.jsx';
 import UserSection from './users/UserSection.jsx';
 import MessageSection from './messages/MessageSection.jsx';
-import Socket from './Socket.js';
+import Socket from '../socket.js';
 
 class App extends Component {
   constructor(props){
@@ -16,7 +16,8 @@ class App extends Component {
     };
   }
   componentDidMount(){
-    let socket = this.socket = new Socket();
+    let ws = new WebSocket('ws://localhost:4000');
+    let socket = this.socket = new Socket(ws);
     socket.on('connect', this.onConnect.bind(this));
     socket.on('disconnect', this.onDisconnect.bind(this));
     socket.on('channel add', this.onAddChannel.bind(this));
@@ -104,7 +105,7 @@ class App extends Component {
           />
           <UserSection
           {...this.state}
-          addUser={this.addUser.bind(this)}
+          addUser={this.onAddUser.bind(this)}
           />
         </div>
         <MessageSection 
