@@ -30,6 +30,8 @@ func main() {
 	router := NewRouter(session)
 
 	router.Handle("channel add", addChannel)
+	router.Handle("channel subscribe", subscribeChannel)
+	router.Handle("channel unsubscribe", unsubscribeChannel)
 
 	http.Handle("/", router)
 	fmt.Printf("Server running on port 4000 \n")
