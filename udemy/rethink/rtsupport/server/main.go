@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	r "gopkg.in/gorethink/gorethink.v4"
 )
@@ -16,6 +17,14 @@ type Channel struct {
 type User struct {
 	ID   string `gorethink:"id,omitempty"`
 	Name string `gorethink:"name"`
+}
+
+type ChannelMessage struct {
+	ID        string    `gorethink:"id,omitempty"`
+	ChannelID string    `gorethink:"channelID"`
+	Body      string    `gorethink:"body"`
+	Author    string    `gorethink:"author"`
+	CreatedAt time.Time `gorethink:"createdAt"`
 }
 
 func main() {
@@ -32,6 +41,14 @@ func main() {
 	router.Handle("channel add", addChannel)
 	router.Handle("channel subscribe", subscribeChannel)
 	router.Handle("channel unsubscribe", unsubscribeChannel)
+
+	router.Handle("user edit", editUser)
+	router.Handle("user subscribe", subscribeUser)
+	router.Handle("user unsubscribe", unsubscribeUser)
+
+	router.Handle("message add", addChannelMesage)
+	router.Handle("message subscribe", subscribeChannelMessage)
+	router.Handle("message unsubscribe", unsubscribeChannelMessage)
 
 	http.Handle("/", router)
 	fmt.Printf("Server running on port 4000 \n")
