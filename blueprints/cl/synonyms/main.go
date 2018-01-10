@@ -10,8 +10,8 @@ import (
 
 func main() {
 	//parse secrets
-	var thesaurus := &thesaurus.Config{}
-	thesaurus.GetConfig()
+	var thesaurus = &thesaurus.BigHuge{}
+	thesaurus = thesaurus.GetConfig()
 	s := bufio.NewScanner(os.Stdin)
 	for s.Scan() {
 		word := s.Text()
