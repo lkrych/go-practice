@@ -189,6 +189,65 @@ func (u *WeightedQuickUnionUF) New(objects []int, objectSize []int) UF {
 	}
 }
 
+//WeightedQuickUnionWithCompressionUF improves performance by adding path compression
+// to weighted quick union
+// adding a loop in the find block to make sure that every node we inspect
+// has its path re-assigned.
+type WeightedQuickUnionWithCompressionUF struct {
+	objects    []int
+	objectSize []int
+	count      int
+}
+
+func (u *WeightedQuickUnionWithCompressionUF) Union(p int, q int) {
+	rootP := u.Find(p)
+	rootQ := u.Find(q)
+
+	if rootP == rootQ {
+		return
+	}
+
+	if u.objectSize[rootP] < u.objectSize[rootQ] {
+		u.objects[rootP] = rootQ
+		u.objectSize[rootQ] += u.objectSize[rootP]
+	} else {
+		u.objects[rootQ] = rootP
+		u.objectSize[rootP] += u.objectSize[rootQ]
+	}
+	u.count--
+}
+
+func (u *WeightedQuickUnionWithCompressionUF) Find(p int) int {
+	root := p
+	for root != u.objects[root] {
+		root = u.objects[root]
+	}
+	//assign sub-trees to root
+	//constant O(logn) sub-procedure amortizes Find calls
+	for p != root {
+		newp := u.objects[p]
+		u.objects[p] = root
+		p = newp
+	}
+	return root
+}
+
+func (u *WeightedQuickUnionWithCompressionUF) Connected(p int, q int) bool {
+	return u.Find(p) == u.Find(q)
+}
+
+func (u *WeightedQuickUnionWithCompressionUF) Count() int {
+	return u.count
+}
+
+func (u *WeightedQuickUnionWithCompressionUF) New(objects []int, objectSize []int) UF {
+	return &WeightedQuickUnionWithCompressionUF{
+		objects:    objects,
+		objectSize: objectSize,
+		count:      len(objects),
+	}
+}
+
 func main() {
-	NewUF("./algorithm_input/tinyUF.txt", &WeightedQuickUnionUF{})
+	NewUF("./algorithm_input/tinyUF.txt", &WeightedQuickUnionWithCompressionUF{})
 }
