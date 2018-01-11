@@ -55,7 +55,7 @@ func NewUF(filename string, u UF) {
 	fmt.Printf("There are %v connected objects! \n", unionFindObject.Count())
 }
 
-//NaiveUF has O(n) union method,
+//NaiveUF has O(n) Union method and an O(1) Find method
 type NaiveUF struct {
 	objects    []int
 	objectSize []int
@@ -96,7 +96,9 @@ func (u *NaiveUF) New(objects []int, objectSize []int) UF {
 	}
 }
 
-//QuickUnionUF has a O(1) union method, but the connected method now takes longer, possibly O(n), or the depth of the tree
+//QuickUnionUF has a O(1) union method, but the connected method now takes longer,
+// possibly O(n), because objects are now stored as trees and the Big-O complexity of
+// Find is now dependent upon the depth of the tree
 type QuickUnionUF struct {
 	objects    []int
 	objectSize []int
@@ -139,7 +141,7 @@ func (u *QuickUnionUF) New(objects []int, objectSize []int) UF {
 
 //WeightedQuickUnionUF makes up for the inefficiencies in the Find method of
 // QuickUnionUF by making sure the smaller tree is always assigned the larger tree.
-// This makes sure the trees are wider rather than taller.
+// This makes sure the trees are wider rather than taller. This makes Union O(logn).
 type WeightedQuickUnionUF struct {
 	objects    []int
 	objectSize []int
