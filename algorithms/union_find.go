@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
 	"strconv"
@@ -16,7 +15,7 @@ type UF interface {
 	Count() int
 }
 
-func NewUF(filename string, u UF) {
+func NewUF(filename string, u UF) *UF {
 	content, err := ioutil.ReadFile(filename)
 	if err != nil {
 		log.Fatal(err)
@@ -45,14 +44,13 @@ func NewUF(filename string, u UF) {
 			log.Fatal(err)
 		}
 		if unionFindObject.Connected(p, q) {
-			fmt.Printf("%v is connected to %v \n", p, q)
+			// fmt.Printf("%v is connected to %v \n", p, q)
 			continue
 		}
 		unionFindObject.Union(p, q)
-		fmt.Printf("%v, %v \n", p, q)
+		// fmt.Printf("%v, %v \n", p, q)
 	}
-
-	fmt.Printf("There are %v connected objects! \n", unionFindObject.Count())
+	return &unionFindObject
 }
 
 //NaiveUF has O(n) Union method and an O(1) Find method
