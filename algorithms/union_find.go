@@ -13,20 +13,7 @@ type UF interface {
 	Connected(p int, q int) bool
 	Find(p int) int
 	New(objects []int, objectSize []int) UF
-	getObjects() []int
-}
-
-func Count(objects []int) int {
-	rootMap := make(map[int]bool)
-	count := 0
-	for _, root := range objects {
-		if _, ok := rootMap[root]; ok {
-			continue
-		}
-		count++
-		rootMap[root] = true
-	}
-	return count
+	Count() int
 }
 
 func NewUF(filename string, u UF) {
@@ -65,13 +52,14 @@ func NewUF(filename string, u UF) {
 		fmt.Printf("%v, %v \n", p, q)
 	}
 
-	fmt.Printf("There are %v connected objects! \n", Count(unionFindObject.getObjects()))
+	fmt.Printf("There are %v connected objects! \n", unionFindObject.Count())
 }
 
 //NaiveUF has O(n) union method,
 type NaiveUF struct {
 	objects    []int
 	objectSize []int
+	count      int
 }
 
 func (u *NaiveUF) Union(p int, q int) {
@@ -85,6 +73,7 @@ func (u *NaiveUF) Union(p int, q int) {
 			u.objects[i] = qID
 		}
 	}
+	u.count--
 }
 
 func (u *NaiveUF) Find(p int) int {
@@ -95,14 +84,15 @@ func (u *NaiveUF) Connected(p int, q int) bool {
 	return u.objects[p] == u.objects[q]
 }
 
-func (u *NaiveUF) getObjects() []int {
-	return u.objects
+func (u *NaiveUF) Count() int {
+	return u.count
 }
 
 func (u *NaiveUF) New(objects []int, objectSize []int) UF {
 	return &NaiveUF{
 		objects:    objects,
 		objectSize: objectSize,
+		count:      len(objects),
 	}
 }
 
@@ -110,6 +100,7 @@ func (u *NaiveUF) New(objects []int, objectSize []int) UF {
 type QuickUnionUF struct {
 	objects    []int
 	objectSize []int
+	count      int
 }
 
 func (u *QuickUnionUF) Union(p int, q int) {
@@ -120,6 +111,7 @@ func (u *QuickUnionUF) Union(p int, q int) {
 		return
 	}
 	u.objects[rootP] = rootQ
+	u.count--
 }
 
 func (u *QuickUnionUF) Find(p int) int {
@@ -133,17 +125,68 @@ func (u *QuickUnionUF) Connected(p int, q int) bool {
 	return u.Find(p) == u.Find(q)
 }
 
-func (u *QuickUnionUF) getObjects() []int {
-	return u.objects
+func (u *QuickUnionUF) Count() int {
+	return u.count
 }
 
 func (u *QuickUnionUF) New(objects []int, objectSize []int) UF {
 	return &QuickUnionUF{
 		objects:    objects,
 		objectSize: objectSize,
+		count:      len(objects),
+	}
+}
+
+//WeightedQuickUnionUF makes up for the inefficiencies in the Find method of
+// QuickUnionUF by making sure the smaller tree is always assigned the larger tree.
+// This makes sure the trees are wider rather than taller.
+type WeightedQuickUnionUF struct {
+	objects    []int
+	objectSize []int
+	count      int
+}
+
+func (u *WeightedQuickUnionUF) Union(p int, q int) {
+	rootP := u.Find(p)
+	rootQ := u.Find(q)
+
+	if rootP == rootQ {
+		return
+	}
+
+	if u.objectSize[rootP] < u.objectSize[rootQ] {
+		u.objects[rootP] = rootQ
+		u.objectSize[rootQ] += u.objectSize[rootP]
+	} else {
+		u.objects[rootQ] = rootP
+		u.objectSize[rootP] += u.objectSize[rootQ]
+	}
+	u.count--
+}
+
+func (u *WeightedQuickUnionUF) Find(p int) int {
+	for p != u.objects[p] {
+		p = u.objects[p]
+	}
+	return p
+}
+
+func (u *WeightedQuickUnionUF) Connected(p int, q int) bool {
+	return u.Find(p) == u.Find(q)
+}
+
+func (u *WeightedQuickUnionUF) Count() int {
+	return u.count
+}
+
+func (u *WeightedQuickUnionUF) New(objects []int, objectSize []int) UF {
+	return &WeightedQuickUnionUF{
+		objects:    objects,
+		objectSize: objectSize,
+		count:      len(objects),
 	}
 }
 
 func main() {
-	NewUF("./algorithm_input/tinyUF.txt", &NaiveUF{})
+	NewUF("./algorithm_input/tinyUF.txt", &WeightedQuickUnionUF{})
 }
