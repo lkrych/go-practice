@@ -5,6 +5,10 @@ import (
 	"io/ioutil"
 	"log"
 	"net"
+	"net/http"
+	"net/url"
+	"strconv"
+	"sync"
 	"time"
 
 	"github.com/garyburd/go-oauth/oauth"
@@ -23,6 +27,10 @@ var reader io.ReadCloser
 var (
 	authClient *oauth.Client
 	creds      *oauth.Credentials
+)
+var (
+	authSetupOnce sync.Once
+	httpClient    *http.Client
 )
 
 func (t *ts) readKeys() *ts {
@@ -78,4 +86,23 @@ func setupTwitterAuth() {
 			Secret: ts.ConsumerSecret,
 		},
 	}
+}
+
+func makeRequest(req *http.Request, params url.Values) (*http.Response, error) {
+	//ensures our initialization is only run once despite the number of times we will use makeRequest
+	authSetupOnce.Do(func() {
+		setupTwitterAuth()
+		httpClient = &http.Client{
+			Transport: &http.Transport{
+				Dial: dial,
+			},
+		}
+	})
+	formEnc := params.Encode()
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Set("Content-Length", strconv.Itoa(len(formEnc)))
+	req.Header.Set("Authorization", authClient.AuthorizationHeader(creds,
+		"POST",
+		req.URL, params))
+	return httpClient.Do(req)
 }
