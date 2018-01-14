@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"io"
 	"io/ioutil"
 	"log"
@@ -8,6 +9,7 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 
@@ -20,6 +22,10 @@ type ts struct {
 	ConsumerSecret string `yaml:"TWITTER_SECRET,required"`
 	AccessToken    string `yaml:"TWITTER_ACCESSTOKEN,required"`
 	AccessSecret   string `yaml:"TWITTER_ACCESSSECRET,required"`
+}
+
+type tweet struct {
+	Text string
 }
 
 var conn net.Conn
@@ -105,4 +111,70 @@ func makeRequest(req *http.Request, params url.Values) (*http.Response, error) {
 		"POST",
 		req.URL, params))
 	return httpClient.Do(req)
+}
+
+//takes a send only channel called votes to inform rest of our program that is has noticed a vote on twitter
+func readFromTwitter(votes chan<- string) {
+	options, err := loadOptions()
+	if err != nil {
+		log.Println("failed to load options:", err)
+		return
+	}
+	u, err := url.Parse("https://stream.twitter.com/1.1/statuses/filter.json")
+	if err != nil {
+		log.Println("creating filter request failed:", err)
+		return
+	}
+	query := make(url.Values)
+	query.Set("track", strings.Join(options, ","))
+	req, err := http.NewRequest("POST", u.String(), strings.NewReader(query.Encode()))
+	if err != nil {
+		log.Println("creating filter request failed:", err)
+		return
+	}
+	resp, err := makeRequest(req, query)
+	if err != nil {
+		log.Println("making request failed:", err)
+		return
+	}
+	reader := resp.Body
+	decoder := json.NewDecoder(reader)
+	for {
+		var t tweet
+		if err := decoder.Decode(&t); err != nil {
+			break
+		}
+		for _, option := range options {
+			if strings.Contains(
+				strings.ToLower(t.Text),
+				strings.ToLower(option),
+			) {
+				log.Println("vote:", option)
+				votes <- option
+			}
+		}
+	}
+}
+
+func startTwitterStream(stopchan <-chan struct{}, votes chan<- string) <-chan struct{} {
+	stoppedchan := make(chan struct{}, 1)
+	go func() {
+		defer func() {
+			stoppedchan <- struct{}{}
+		}()
+		for {
+			select {
+			case <-stopchan:
+				log.Println("stopping Twitter...")
+				return
+			default:
+				log.Println("Querying Twitter...")
+				readFromTwitter(votes)
+				log.Println(" (waiting)")
+				time.Sleep(10 * time.Second)
+				//wait before reconnecting
+			}
+		}
+	}()
+	return stoppedchan
 }
