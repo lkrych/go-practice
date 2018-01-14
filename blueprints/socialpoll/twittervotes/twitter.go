@@ -19,10 +19,10 @@ import (
 )
 
 type ts struct {
-	ConsumerKey    string `yaml:"TWITTER_KEY,required"`
-	ConsumerSecret string `yaml:"TWITTER_SECRET,required"`
-	AccessToken    string `yaml:"TWITTER_ACCESSTOKEN,required"`
-	AccessSecret   string `yaml:"TWITTER_ACCESSSECRET,required"`
+	ConsumerKey    string `yaml:"TWITTER_KEY"`
+	ConsumerSecret string `yaml:"TWITTER_SECRET"`
+	AccessToken    string `yaml:"TWITTER_ACCESSTOKEN"`
+	AccessSecret   string `yaml:"TWITTER_ACCESSSECRET"`
 }
 
 type tweet struct {
