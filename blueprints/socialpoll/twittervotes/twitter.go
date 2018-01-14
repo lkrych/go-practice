@@ -13,6 +13,7 @@ import (
 	"sync"
 	"time"
 
+	nsq "github.com/bitly/go-nsq"
 	"github.com/garyburd/go-oauth/oauth"
 	yaml "gopkg.in/yaml.v2"
 )
@@ -177,4 +178,25 @@ func startTwitterStream(stopchan <-chan struct{}, votes chan<- string) <-chan st
 		}
 	}()
 	return stoppedchan
+}
+
+func publishVotes(votes <-chan string) <-chan struct{} {
+	stopchan := make(chan struct{}, 1)
+	pub, err := nsq.NewProducer("localhost:4150", nsq.NewConfig())
+	if err != nil {
+		log.Fatalln("Error connecting with queue")
+		stopchan <- struct{}{}
+		return stopchan
+	}
+	go func() {
+		for vote := range votes {
+			pub.Publish("votes", []byte(vote))
+		}
+		log.Println("Publisher: Stopping")
+		pub.Stop()
+		log.Println("Publisher: Stopped")
+		stopchan <- struct{}{}
+	}()
+	return stopchan
+
 }
