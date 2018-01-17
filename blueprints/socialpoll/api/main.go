@@ -3,10 +3,16 @@ package main
 import (
 	"context"
 	"net/http"
+
+	mgo "gopkg.in/mgo.v2"
 )
 
 type contextKey struct {
 	name string
+}
+
+type Server struct {
+	db *mgo.Session
 }
 
 var contextKeyAPIKey = &contextKey{"api-key"}
