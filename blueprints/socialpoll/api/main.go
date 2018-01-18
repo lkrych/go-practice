@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"flag"
+	"log"
 	"net/http"
 
 	mgo "gopkg.in/mgo.v2"
@@ -18,6 +20,24 @@ type Server struct {
 var contextKeyAPIKey = &contextKey{"api-key"}
 
 func main() {
+	var (
+		addr  = flag.String("addr", ":8080", "endpoint address")
+		mongo = flag.String("mongo", "localhost", "mongodb address")
+	)
+	log.Println("Dialing mongo", *mongo)
+	db, err := mgo.Dial(*mongo)
+	if err != nil {
+		log.Fatalln("Failed to connect to mongo:", err)
+	}
+	defer db.Close()
+	s := &Server{
+		db: db,
+	}
+	mux := http.NewServeMux()
+	mux.HandleFunc("/polls/", withCORS(withAPIKEY(s.handlePolls)))
+	log.Println("Starting web server on", *addr)
+	http.ListenAndServe(":8080", mux)
+	log.Println("Stopping web server...")
 }
 
 func APIKey(ctx context.Context) (string, bool) {
