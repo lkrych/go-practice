@@ -26,6 +26,9 @@ func (s *Server) handlePolls(w http.ResponseWriter, r *http.Request) {
 	case "DELETE":
 		s.handlePollsDelete(w, r)
 		return
+	case "OPTIONS":
+		w.Header().Add("Access-Control-Allow-Methods", "DELETE")
+		return
 	}
 	//not found
 	respondHTTPErr(w, r, http.StatusNotFound)
