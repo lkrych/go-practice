@@ -5,11 +5,16 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"math/rand"
 	"net/http"
 	"net/url"
+	"sync"
+	"time"
 
 	yaml "gopkg.in/yaml.v2"
 )
+
+var APIKey APIKeys
 
 type Place struct {
 	*googleGeometry `json:"geometry"`
@@ -57,7 +62,6 @@ func (p *Place) Public() interface{} {
 }
 
 func (q *Query) find(types string) (*googleResponse, error) {
-	APIKey := &APIKeys{}
 	APIKey = APIKey.readKeys()
 	u := "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
 	vals := make(url.Values)
@@ -86,7 +90,38 @@ func (q *Query) find(types string) (*googleResponse, error) {
 }
 
 //Run runs the query concurrently, and returns the results.
-func (q *Query)
+func (q *Query) Run() []interface{} {
+	rand.Seed(time.Now().UnixNano())
+	var w sync.WaitGroup
+	var l sync.Mutex //allows for many go routines to access the map concurrently and safely
+	places := make([]interface{}, len(q.Journey))
+	for i, r := range q.Journey {
+		w.Add(1)
+		go func(types string, i int) {
+			defer w.Done()
+			response, err := q.find(types)
+			if err != nil {
+				log.Println("Failed to find places:", err)
+				return
+			}
+			if len(response.Results) == 0 {
+				log.Println("No places found for", types)
+				return
+			}
+			for _, result := range response.Results {
+				for _, photo := range result.Photos {
+					photo.URL = "https://maps.googleapis.com/maps/api/place/photo?" + "maxwidth=1000&photoreference=" + photo.PhotoRef + "&key=" + APIKey.ConsumerKey
+				}
+			}
+			randI := rand.Intn(len(response.Results))
+			l.Lock()
+			places[i] = response.Results[randI]
+			l.Unlock()
+		}(r, i)
+	}
+	w.Wait() //wait for everything to finish
+	return places
+}
 
 type APIKeys struct {
 	ConsumerKey string `yaml:"GOOGLE_PLACES_SECRET"`
