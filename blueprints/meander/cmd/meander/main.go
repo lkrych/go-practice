@@ -12,10 +12,9 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
-var APIKey *APIKeys
-
 func main() {
-	APIKey = APIKey.readKeys()
+	var APIKeys = &APIKeys{}
+	APIKeys = APIKeys.readKeys()
 
 	http.HandleFunc("/journeys", cors(func(w http.ResponseWriter, r *http.Request) {
 		respond(w, r, meander.Journeys)
@@ -41,7 +40,7 @@ func main() {
 			return
 		}
 		q.CostRangeStr = urlQuery.Get("cost")
-		places := q.Run(APIKey.ConsumerKey)
+		places := q.Run(APIKeys.ConsumerKey)
 		respond(w, r, places)
 	}))
 	log.Println("Starting web server on 8080")
