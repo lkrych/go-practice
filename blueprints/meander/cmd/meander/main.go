@@ -2,14 +2,21 @@ package main
 
 import (
 	"encoding/json"
+	"io/ioutil"
 	"log"
 	"meander"
 	"net/http"
 	"strconv"
 	"strings"
+
+	yaml "gopkg.in/yaml.v2"
 )
 
+var APIKey *APIKeys
+
 func main() {
+	APIKey = APIKey.readKeys()
+
 	http.HandleFunc("/journeys", cors(func(w http.ResponseWriter, r *http.Request) {
 		respond(w, r, meander.Journeys)
 	}))
@@ -34,7 +41,7 @@ func main() {
 			return
 		}
 		q.CostRangeStr = urlQuery.Get("cost")
-		places := q.Run()
+		places := q.Run(APIKey.ConsumerKey)
 		respond(w, r, places)
 	}))
 	log.Println("Starting web server on 8080")
@@ -54,4 +61,22 @@ func cors(f http.HandlerFunc) http.HandlerFunc {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		f(w, r)
 	}
+}
+
+type APIKeys struct {
+	ConsumerKey string `yaml:"GOOGLE_PLACES_SECRET"`
+}
+
+func (k *APIKeys) readKeys() *APIKeys {
+	yamlFile, err := ioutil.ReadFile("/Users/Leland/go/go_code/blueprints/meander/api_keys/secrets.yml")
+
+	if err != nil {
+		log.Printf("Error reading YAML: %v", err)
+	}
+	err = yaml.Unmarshal(yamlFile, k)
+
+	if err != nil {
+		log.Fatalf("Unmarshal: %v", err)
+	}
+	return k
 }
