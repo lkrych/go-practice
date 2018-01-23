@@ -3,18 +3,13 @@ package meander
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"math/rand"
 	"net/http"
 	"net/url"
 	"sync"
 	"time"
-
-	yaml "gopkg.in/yaml.v2"
 )
-
-var APIKey *APIKeys
 
 type Place struct {
 	*googleGeometry `json:"geometry"`
@@ -61,14 +56,13 @@ func (p *Place) Public() interface{} {
 	}
 }
 
-func (q *Query) find(types string) (*googleResponse, error) {
-	APIKey = APIKey.readKeys()
+func (q *Query) find(types string, APIKey string) (*googleResponse, error) {
 	u := "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
 	vals := make(url.Values)
 	vals.Set("location", fmt.Sprintf("%g,%g", q.Lat, q.Lng))
 	vals.Set("radius", fmt.Sprintf("%d", q.Radius))
 	vals.Set("types", types)
-	vals.Set("key", APIKey.ConsumerKey)
+	vals.Set("key", APIKey)
 	if len(q.CostRangeStr) > 0 {
 		r, err := ParseCostRange(q.CostRangeStr)
 		if err != nil {
@@ -90,7 +84,7 @@ func (q *Query) find(types string) (*googleResponse, error) {
 }
 
 //Run runs the query concurrently, and returns the results.
-func (q *Query) Run() []interface{} {
+func (q *Query) Run(APIKey string) []interface{} {
 	rand.Seed(time.Now().UnixNano())
 	var w sync.WaitGroup
 	var l sync.Mutex //allows for many go routines to access the map concurrently and safely
@@ -99,7 +93,7 @@ func (q *Query) Run() []interface{} {
 		w.Add(1)
 		go func(types string, i int) {
 			defer w.Done()
-			response, err := q.find(types)
+			response, err := q.find(types, APIKey)
 			if err != nil {
 				log.Println("Failed to find places:", err)
 				return
@@ -110,7 +104,7 @@ func (q *Query) Run() []interface{} {
 			}
 			for _, result := range response.Results {
 				for _, photo := range result.Photos {
-					photo.URL = "https://maps.googleapis.com/maps/api/place/photo?" + "maxwidth=1000&photoreference=" + photo.PhotoRef + "&key=" + APIKey.ConsumerKey
+					photo.URL = "https://maps.googleapis.com/maps/api/place/photo?" + "maxwidth=1000&photoreference=" + photo.PhotoRef + "&key=" + APIKey
 				}
 			}
 			randI := rand.Intn(len(response.Results))
@@ -121,22 +115,4 @@ func (q *Query) Run() []interface{} {
 	}
 	w.Wait() //wait for everything to finish
 	return places
-}
-
-type APIKeys struct {
-	ConsumerKey string `yaml:"GOOGLE_PLACES_SECRET"`
-}
-
-func (k *APIKeys) readKeys() *APIKeys {
-	yamlFile, err := ioutil.ReadFile("/Users/Leland/go/go_code/blueprints/meander/api_keys/secrets.yml")
-
-	if err != nil {
-		log.Printf("Error reading YAML: %v", err)
-	}
-	err = yaml.Unmarshal(yamlFile, k)
-
-	if err != nil {
-		log.Fatalf("Unmarshal: %v", err)
-	}
-	return k
 }
