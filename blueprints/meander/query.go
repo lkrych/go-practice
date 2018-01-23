@@ -44,7 +44,7 @@ type googlePhoto struct {
 
 type Query struct {
 	Lat          float64
-	Lng          float32
+	Lng          float64
 	Journey      []string
 	Radius       int
 	CostRangeStr string
