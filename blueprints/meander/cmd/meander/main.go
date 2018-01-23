@@ -14,25 +14,26 @@ func main() {
 		respond(w, r, meander.Journeys)
 	}))
 	http.HandleFunc("/recommendations", cors(func(w http.ResponseWriter, r *http.Request) {
+		urlQuery := r.URL.Query()
 		q := &meander.Query{
-			Journey: strings.Split(r.URL.Query().Get("journey"), "|")}
+			Journey: strings.Split(urlQuery.Get("journey"), "|")}
 		var err error
-		q.Lat, err = strconv.ParseFloat(r.URL.Query().Get("lat"), 64)
+		q.Lat, err = strconv.ParseFloat(urlQuery.Get("lat"), 64)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-		q.Lng, err = strconv.ParseFloat(r.URL.Query().Get("lng"), 64)
+		q.Lng, err = strconv.ParseFloat(urlQuery.Get("lng"), 64)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-		q.Radius, err = strconv.Atoi(r.URL.Query().Get("radius"))
+		q.Radius, err = strconv.Atoi(urlQuery.Get("radius"))
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-		q.CostRangeStr = r.URL.Query().Get("cost")
+		q.CostRangeStr = urlQuery.Get("cost")
 		places := q.Run()
 		respond(w, r, places)
 	}))
