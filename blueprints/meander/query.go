@@ -14,7 +14,7 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
-var APIKey APIKeys
+var APIKey *APIKeys
 
 type Place struct {
 	*googleGeometry `json:"geometry"`
