@@ -43,16 +43,16 @@ func (z *zipper) Archive(src, dest string) error {
 		if err != nil {
 			return err
 		}
-		in, err := os.Open(path)
+		in, err := os.Open(path) //opens source file for reading
 		if err != nil {
 			return err
 		}
 		defer in.Close()
-		f, err := w.Create(path)
+		f, err := w.Create(path) //creates a new compressed file
 		if err != nil {
 			return err
 		}
-		_, err = io.Copy(f, in)
+		_, err = io.Copy(f, in) //reads all bytes from the source file and writes them through ZipWriter object
 		if err != nil {
 			return err
 		}
