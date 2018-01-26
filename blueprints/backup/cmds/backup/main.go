@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"log"
 	"strings"
+
+	"github.com/matryer/filedb"
 )
 
 type path struct {
