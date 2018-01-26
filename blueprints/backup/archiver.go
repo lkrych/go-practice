@@ -10,6 +10,7 @@ import (
 //Archiver implementations will be responsible for archiving the source folder and storing it
 //at the destination path
 type Archiver interface {
+	DestFmt() string
 	Archive(src string, dest string) error
 }
 
@@ -58,4 +59,8 @@ func (z *zipper) Archive(src, dest string) error {
 		}
 		return nil
 	})
+}
+
+func (z *zipper) DestFmt() string {
+	return "%d.zip"
 }
