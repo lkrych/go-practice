@@ -10,11 +10,11 @@ import (
 )
 
 type Question struct {
-	Key          *datastore.Key `json: "id" datastore: "-"`
-	CTime        time.Time      `json: "created"`
-	Question     string         `json: "question"`
-	User         UserCard       `json: "user"`
-	AnswersCount int            `json: "answers_count"`
+	Key          *datastore.Key `json:"id" datastore:"-"`
+	CTime        time.Time      `json:"created"`
+	Question     string         `json:"question"`
+	User         UserCard       `json:"user"`
+	AnswersCount int            `json:"answers_count"`
 }
 
 //OK checks to make sure that question length is valid
