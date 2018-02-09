@@ -5,7 +5,8 @@ import (
 	"errors"
 	"time"
 
-	datastore "google.golang.org/genproto/googleapis/datastore/v1"
+	"google.golang.org/appengine/datastore"
+	"google.golang.org/appengine/log"
 )
 
 type Question struct {
