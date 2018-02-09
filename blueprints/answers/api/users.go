@@ -53,3 +53,17 @@ func gravatarURL(email string) string {
 	io.WriteString(m, strings.ToLower(email))
 	return fmt.Sprintf("//www.gravatar.com/avatar/%x", m.Sum(nil))
 }
+
+type UserCard struct {
+	Key         *datastore.Key `json:"id"`
+	DisplayName string         `json:"display_name"`
+	AvatarURL   string         `json:"avatar_url"`
+}
+
+func (u User) Card() UserCard {
+	return UserCard{
+		Key:         u.Key,
+		DisplayName: u.DisplayName,
+		AvatarURL:   u.AvatarURL,
+	}
+}
