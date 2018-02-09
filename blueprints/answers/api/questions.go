@@ -38,3 +38,15 @@ func (q *Question) Create(ctx context.Context) error {
 	}
 	return nil
 }
+
+func (q *Question) Update(ctx context.Context) error {
+	if q.Key == nil {
+		q.Key = datastore.NewIncompleteKey(ctx, "Question", nil)
+	}
+	var err error
+	q.Key, err = datastore.Put(ctx, q.Key, q)
+	if err != nil {
+		return err
+	}
+	return nil
+}
