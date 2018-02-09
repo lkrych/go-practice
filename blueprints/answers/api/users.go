@@ -2,7 +2,11 @@ package api
 
 import (
 	"context"
+	"crypto/md5"
 	"errors"
+	"fmt"
+	"io"
+	"strings"
 
 	"google.golang.org/appengine/datastore"
 	"google.golang.org/appengine/log"
@@ -42,4 +46,10 @@ func UserFromAEUser(ctx context.Context) (*User, error) {
 		return nil, err
 	}
 	return &appUser, nil
+}
+
+func gravatarURL(email string) string {
+	m := md5.New()
+	io.WriteString(m, strings.ToLower(email))
+	return fmt.Sprintf("//www.gravatar.com/avatar/%x", m.Sum(nil))
 }
