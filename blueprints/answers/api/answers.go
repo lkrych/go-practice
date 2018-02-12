@@ -75,6 +75,7 @@ func (a *Answer) Put(ctx context.Context) error {
 	return nil
 }
 
+//GetAnswers fetches answers from the datastore ordered by score and date
 func GetAnswers(ctx context.Context, questionKey *datastore.Key) ([]*Answer, error) {
 	var answers []*Answer
 	answerKeys, err := datastore.NewQuery("Answer").
