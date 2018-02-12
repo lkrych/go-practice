@@ -68,6 +68,7 @@ func GetQuestion(ctx context.Context, key *datastore.Key) (*Question, error) {
 	return &q, nil
 }
 
+//TopQuestions returns the top questions in the db
 func TopQuestions(ctx context.Context) ([]*Question, error) {
 	var questions []*Question
 	questionKeys, err := datastore.NewQuery("Question").
