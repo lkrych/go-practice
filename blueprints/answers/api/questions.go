@@ -11,8 +11,8 @@ import (
 
 type Question struct {
 	Key          *datastore.Key `json:"id" datastore:"-"`
-	CTime        time.Time      `json:"created"`
-	Question     string         `json:"question"`
+	CTime        time.Time      `json:"created" datastore:",noindex"`
+	Question     string         `json:"question" datastore:",noindex"`
 	User         UserCard       `json:"user"`
 	AnswersCount int            `json:"answers_count"`
 }
