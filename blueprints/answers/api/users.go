@@ -55,9 +55,9 @@ func gravatarURL(email string) string {
 }
 
 type UserCard struct {
-	Key         *datastore.Key `json:"id"`
-	DisplayName string         `json:"display_name"`
-	AvatarURL   string         `json:"avatar_url"`
+	Key         *datastore.Key `json:"id" datastore:",noindex"`
+	DisplayName string         `json:"display_name" datastore:",noindex"`
+	AvatarURL   string         `json:"avatar_url" datastore:",noindex"`
 }
 
 func (u User) Card() UserCard {
