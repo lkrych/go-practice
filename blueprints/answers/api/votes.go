@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"google.golang.org/appengine/datastore"
@@ -14,6 +15,15 @@ type Vote struct {
 	Answer   AnswerCard     `json:"answer" datastore:",noindex"`
 	User     UserCard       `json:"user" datastore:",noindex"`
 	Score    int            `json:"score" datastore:",noindex"`
+}
+
+func (v *Vote) Put(ctx context.Context) error {
+	var err error
+	v.Key, err = datastore.Put(ctx, v.Key, v)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func CastVote(ctx context.Context, answerKey *datastore.Key, score int) (*Vote, error) {
@@ -38,4 +48,47 @@ func CastVote(ctx context.Context, answerKey *datastore.Key, score int) (*Vote, 
 		return nil, err
 	}
 	return &vote, nil
+}
+
+func castVoteInTransaction(ctx context.Context, answerKey *datastore.Key, question *Question, user *User, score int) (Vote, error) {
+	var vote Vote
+	answer, err := GetAnswer(ctx, answerKey)
+	if err != nil {
+		return vote, err
+	}
+	voteKeyStr := fmt.Sprintf("%s:%s", answerKey.Encode(), user.Key.Encode())
+	voteKey := datastore.NewKey(ctx, "Vote", voteKeyStr, 0, nil)
+	var delta int //delta describes the change to answer score
+	err = datastore.Get(ctx, voteKey, &vote)
+	if err != nil && err != datastore.ErrNoSuchEntity {
+		return vote, err
+	}
+
+	if err == datastore.ErrNoSuchEntity {
+		//if the Vote doesn't exist, create it!
+		vote = Vote{
+			Key:      voteKey,
+			User:     user.Card(),
+			Answer:   answer.Card(),
+			Question: question.Card(),
+			Score:    score,
+		}
+	} else {
+		//they have already voted - so we will be changing this vote
+		delta = vote.Score * -1
+	}
+	delta += score
+	answer.Score += delta
+	err = answer.Put(ctx)
+	if err != nil {
+		return vote, err
+	}
+	vote.Key = voteKey
+	vote.Score = score
+	vote.MTime = time.Now()
+	err = vote.Put(ctx)
+	if err != nil {
+		return vote, err
+	}
+	return vote, nil
 }
