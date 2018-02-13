@@ -91,3 +91,19 @@ func GetAnswers(ctx context.Context, questionKey *datastore.Key) ([]*Answer, err
 	}
 	return answers, nil
 }
+
+//AnswerCard is the friendly version of the Answer struct
+type AnswerCard struct {
+	Key    *datastore.Key `json:"id" datastore:",noindex"`
+	Answer string         `json:"answer" datastore:",noindex"`
+	User   UserCard       `json:"user" datastore:",noindex"`
+}
+
+//Card is the AnswerCard constructor
+func (a Answer) Card() AnswerCard {
+	return AnswerCard{
+		Key:    a.Key,
+		Answer: a.Answer,
+		User:   a.User,
+	}
+}
