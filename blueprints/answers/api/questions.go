@@ -85,3 +85,19 @@ func TopQuestions(ctx context.Context) ([]*Question, error) {
 	}
 	return questions, nil
 }
+
+//QuestionCard is the API friendly version of Question struct
+type QuestionCard struct {
+	Key      *datastore.Key `json:"id" datastore:",noindex"`
+	Question string         `json:"question" datastore:",noindex"`
+	User     UserCard       `json:"user" datastore:",noindex"`
+}
+
+//Card creates a QuestionCard struct from a question
+func (q Question) Card() QuestionCard {
+	return QuestionCard{
+		Key:      q.Key,
+		Question: q.Question,
+		User:     q.User,
+	}
+}
