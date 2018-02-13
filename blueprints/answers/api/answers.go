@@ -10,9 +10,9 @@ import (
 
 type Answer struct {
 	Key    *datastore.Key `json:"id" datastore:"-"`
-	Answer string         `json:"answer"`
+	Answer string         `json:"answer" datastore:",noindex"`
 	CTime  time.Time      `json:"created"`
-	User   UserCard       `json:"user"`
+	User   UserCard       `json:"user" datastore:",noindex"`
 	Score  int            `json:"score"`
 }
 
