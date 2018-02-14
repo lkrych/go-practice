@@ -1,0 +1,42 @@
+import (
+	"bytes"
+	"context"
+	"encoding/json"
+	"net/http"
+
+	"google.golang.org/appengine/log"
+)
+
+//decode takes an http.Request and a destination value called v,
+//which is where the json will go, we check to see whether the OK
+//method is implemented, and if it is, we call it.
+func decode(r *http.Request, v interface{}) error {
+	err := json.NewDecoder(r.Body).Decode(v)
+	if err != nil {
+		return err
+	}
+	if valid, ok := v.(interface {
+		OK() error
+	}); ok {
+		err = valid.OK()
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func respond(ctx context.Context, w http.ResponseWriter, r *http.Request, v interface{}, code int) {
+	var buf bytes.Buffer
+	err := json.NewEncoder(&buf).Encode(v)
+	if err != nil {
+		respondErr(ctx, w, r, err, http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.WriteHeader(code)
+	_, err = buf.WriteTo(w)
+	if err != nil {
+		log.Errorf(ctx, "respond: %s", err)
+	}
+}
