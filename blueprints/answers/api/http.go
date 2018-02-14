@@ -40,3 +40,15 @@ func respond(ctx context.Context, w http.ResponseWriter, r *http.Request, v inte
 		log.Errorf(ctx, "respond: %s", err)
 	}
 }
+
+func respondErr(ctx context.Context, w http.ResponseWriter, r *http.Request, err error, code int) {
+	errObj := struct {
+		Error string `json:"error"`
+	}{Error: err.Error()}
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.WriteHeader(code)
+	err = json.NewEncoder(w).Encode(errObj)
+	if err != nil {
+		log.Errorf(ctx, "respondErr: %s", err)
+	}
+}
