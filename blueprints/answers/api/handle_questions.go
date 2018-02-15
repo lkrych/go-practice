@@ -59,3 +59,13 @@ func handleQuestionGet(w http.ResponseWriter, r *http.Request, questionID string
 	}
 	respond(ctx, w, r, question, http.StatusOK)
 }
+
+func handleTopQuestions(w http.ResponseWriter, r *http.Request) {
+	ctx := appengine.NewContext(r)
+	questions, err := TopQuestions(ctx)
+	if err != nil {
+		respondErr(ctx, w, r, err, http.StatusInternalServerError)
+		return
+	}
+	respond(ctx, w, r, questions, http.StatusOK)
+}
