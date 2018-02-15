@@ -1,6 +1,7 @@
 package api
 
 import (
+	"errors"
 	"fmt"
 	"time"
 
@@ -92,4 +93,11 @@ func castVoteInTransaction(ctx context.Context, answerKey *datastore.Key, questi
 		return vote, err
 	}
 	return vote, nil
+}
+
+func validScore(score int) error {
+	if score != -1 && score != 1 {
+		return errors.New("invalid score")
+	}
+	return nil
 }
