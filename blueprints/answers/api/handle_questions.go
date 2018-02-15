@@ -7,6 +7,7 @@ import (
 	"google.golang.org/appengine/datastore"
 )
 
+//handleQuestions uses path parameters, not url parameters
 func handleQuestions(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "POST":
