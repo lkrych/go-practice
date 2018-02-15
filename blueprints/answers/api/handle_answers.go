@@ -37,3 +37,49 @@ func handleAnswersGet(w http.ResponseWriter, r *http.Request) {
 	}
 	respond(ctx, w, r, answers, http.StatusOK)
 }
+
+func handleAnswerCreate(w http.ResponseWriter, r *http.Request) {
+	ctx := appengine.NewContext(r)
+
+	//declaring an anonymous struct that embeds answer, when we decode this
+	//it will capture Answer fields as well as QuestionID
+	var newAnswer struct {
+		Answer
+		QuestionID string `json:"question_id"`
+	}
+
+	err := decode(r, &newAnswer)
+	if err != nil {
+		respondErr(ctx, w, r, err, http.StatusBadRequest)
+		return
+	}
+
+	questionKey, err := datastore.DecodeKey(newAnswer.QuestionID)
+	if err != nil {
+		respondErr(ctx, w, r, err, http.StatusBadRequest)
+		return
+	}
+
+	err = newAnswer.OK()
+	if err != nil {
+		respondErr(ctx, w, r, err, http.StatusBadRequest)
+		return
+	}
+
+	answer := newAnswer.Answer
+	user, err := UserFromAEUser(ctx)
+	if err != nil {
+		respondErr(ctx, w, r, err, http.StatusBadRequest)
+		return
+	}
+
+	answer.User = user.Card()
+	err = answer.Create(ctx, questionKey)
+	if err != nil {
+		respondErr(ctx, w, r, err, http.StatusInternalServerError)
+		return
+	}
+
+	respond(ctx, w, r, answer, http.StatusCreated)
+	}
+}
