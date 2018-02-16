@@ -23,17 +23,21 @@ type ReferenceJSON struct {
 }
 
 func main() {
-	readJSONFiles("/Users/Leland/Desktop/smileID/tanzjson")
+	fmt.Println("Entering main")
+	readJSONFiles("/Users/Leland/Desktop/smileID/tanzjson/json")
 }
 
 //must take in absolute path
 func readJSONFiles(directory string) {
+	fmt.Println("Entering readJSONFiles with", directory)
 	//read directory of json
 	files, err := ioutil.ReadDir(fmt.Sprintf("%v", directory))
 	if err != nil {
 		fmt.Println("Cannot read directory")
 		log.Fatal(err)
 	}
+
+	fmt.Println("Found", directory, "files")
 
 	objs := []*ReferenceJSON{}
 	//iterate through files
@@ -44,6 +48,7 @@ func readJSONFiles(directory string) {
 			fmt.Printf("There was an error reading %v \n", f.Name())
 			log.Fatal(err)
 		}
+		fmt.Println("Read file", f.Name())
 		JSON := jsonToStruct(file)
 		objs = append(objs, JSON)
 	}
@@ -64,6 +69,7 @@ func readJSONFiles(directory string) {
 func jsonToStruct(file []byte) *ReferenceJSON {
 	r := &ReferenceJSON{}
 	if err := json.Unmarshal(file, &r); err != nil {
+		fmt.Println("Error unmarshalling json")
 		log.Fatal(err)
 		return r
 	}
