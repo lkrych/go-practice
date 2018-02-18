@@ -1,6 +1,9 @@
 package vault
 
-import "golang.org/x/net/context"
+import (
+	"golang.org/x/crypto/bcrypt"
+	"golang.org/x/net/context"
+)
 
 // Service provides password hashing capabilities
 type Service interface {
@@ -14,4 +17,12 @@ type vaultService struct{}
 //and lets us do more work to prepare vaultService without changing the API
 func NewService() Service {
 	return vaultService{}
+}
+
+func (vaultService) Hash(ctx context.Context, password string) (string, error) {
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return "", err
+	}
+	return string(hash), nil
 }
