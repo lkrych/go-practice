@@ -37,6 +37,11 @@ type validateResponse struct {
 	Err   string `json:"err,omitempty"`
 }
 
+type Endpoints struct {
+	HashEndpoint     endpoint.Endpoint
+	ValidateEndpoint endpoint.Endpoint
+}
+
 //NewService makes a new Service. This prevents us from exposing our internals
 //and lets us do more work to prepare vaultService without changing the API
 func NewService() Service {
@@ -79,4 +84,30 @@ func decodeValidateRequest(ctx context.Context, r *http.Request) (interface{}, e
 
 func encodeResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {
 	return json.NewEncoder(w).Encode(response)
+}
+
+//MakeHashEndpoint takes Service as an arg, which means that we can generate an endpoint
+//from ony implementation of our Service interface
+//Endpoints are gokit's interface that acts like http.HandleFunc
+func MakeHashEndpoint(srv Service) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
+		req := request.(hashRequest)
+		v, err := srv.Hash(ctx, req.Password)
+		if err != nil {
+			return hashResponse{v, err.Error()}, nil
+		}
+		return hashResponse{v, ""}, nil
+	}
+}
+
+//MakeValidateEndpoint takes Service as an arg, and returns a validateResponse struct
+func MakeValidateEndpoint(srv Service) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
+		req := request.(validateRequest)
+		v, err := srv.Validate(ctx, req.Password, req.Hash)
+		if err != nil {
+			return validateResponse{false, err.Error()}, nil
+		}
+		return validateResponse{v, ""}, nil
+	}
 }
