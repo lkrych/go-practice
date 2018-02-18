@@ -1,6 +1,9 @@
 package vault
 
 import (
+	"encoding/json"
+	"net/http"
+
 	"golang.org/x/crypto/bcrypt"
 	"golang.org/x/net/context"
 )
@@ -12,6 +15,27 @@ type Service interface {
 }
 
 type vaultService struct{}
+
+//to model remote method calls, you create a struct for the incoming
+//arguments and a struct for the return arguments
+type hashRequest struct {
+	Password string `json:"password"`
+}
+
+type hashResponse struct {
+	Hash string `json:"hash"`
+	Err  string `json:"err,omitempty"`
+}
+
+type validateRequest struct {
+	Password string `json:"password"`
+	Hash     string `json:"hash"`
+}
+
+type validateResponse struct {
+	Valid bool   `json:"valid"`
+	Err   string `json:"err,omitempty"`
+}
 
 //NewService makes a new Service. This prevents us from exposing our internals
 //and lets us do more work to prepare vaultService without changing the API
@@ -35,23 +59,20 @@ func (vaultService) Validate(ctx context.Context, password string, hash string) 
 	return true, nil
 }
 
-//to model remote method calls, you create a struct for the incoming
-//arguments and a struct for the return arguments
-type hashRequest struct {
-	Password string `json:"password"`
+func decodeHashRequest(ctx context.Context, r *http.Request) (interface{}, error) {
+	var req hashRequest
+	err := json.NewDecoder(r.Body).Decode(&req)
+	if err != nil {
+		return nil, err
+	}
+	return req, nil
 }
 
-type hashResponse struct {
-	Hash string `json:"hash"`
-	Err  string `json:"err,omitempty"`
-}
-
-type validateRequest struct {
-	Password string `json:"password"`
-	Hash     string `json:"hash"`
-}
-
-type validateResponse struct {
-	Valid bool   `json:"valid"`
-	Err   string `json:"err,omitempty"`
+func decodeValidateRequest(ctx context.Context, r *http.Request) (interface{}, error) {
+	var req validateRequest
+	err := json.NewDecoder(r.Body).Decode(&req)
+	if err != nil {
+		return nil, err
+	}
+	return req, nil
 }
