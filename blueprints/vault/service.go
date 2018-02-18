@@ -34,3 +34,12 @@ func (vaultService) Validate(ctx context.Context, password string, hash string) 
 	}
 	return true, nil
 }
+
+type hashRequest struct {
+	Password string `json:"password"`
+}
+
+type hashResponse struct {
+	Hash string `json:"hash"`
+	Err  string `json:"err,omitempty"`
+}
