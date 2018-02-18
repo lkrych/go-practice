@@ -35,6 +35,8 @@ func (vaultService) Validate(ctx context.Context, password string, hash string) 
 	return true, nil
 }
 
+//to model remote method calls, you create a struct for the incoming
+//arguments and a struct for the return arguments
 type hashRequest struct {
 	Password string `json:"password"`
 }
@@ -42,4 +44,14 @@ type hashRequest struct {
 type hashResponse struct {
 	Hash string `json:"hash"`
 	Err  string `json:"err,omitempty"`
+}
+
+type validateRequest struct {
+	Password string `json:"password"`
+	Hash     string `json:"hash"`
+}
+
+type validateResponse struct {
+	Valid bool   `json:"valid"`
+	Err   string `json:"err,omitempty"`
 }
