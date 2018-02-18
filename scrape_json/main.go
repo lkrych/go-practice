@@ -22,6 +22,10 @@ type ReferenceJSON struct {
 	} `json:"misc_information"`
 }
 
+type UsableJSON struct {
+	Position []float64
+}
+
 func main() {
 	fmt.Println("Entering main")
 	readJSONFiles("/Users/Leland/Desktop/smileID/tanzjson/json")
@@ -39,7 +43,7 @@ func readJSONFiles(directory string) {
 
 	fmt.Println("Found", directory, "files")
 
-	objs := []*ReferenceJSON{}
+	objs := []*UsableJSON{}
 	//iterate through files
 	for _, f := range files {
 		//save scraped json to object and add it to collection
@@ -49,8 +53,8 @@ func readJSONFiles(directory string) {
 			log.Fatal(err)
 		}
 		fmt.Println("Read file", f.Name())
-		JSON := jsonToStruct(file)
-		objs = append(objs, JSON)
+		_, uJSON := jsonToStruct(file)
+		objs = append(objs, uJSON)
 	}
 
 	//write scraped json to file
@@ -66,13 +70,18 @@ func readJSONFiles(directory string) {
 	}
 }
 
-func jsonToStruct(file []byte) *ReferenceJSON {
+func jsonToStruct(file []byte) (*ReferenceJSON, *UsableJSON) {
 	r := &ReferenceJSON{}
+	u := &UsableJSON{}
 	if err := json.Unmarshal(file, &r); err != nil {
 		fmt.Println("Error unmarshalling json")
 		log.Fatal(err)
-		return r
+		return r, u
 	}
-	fmt.Printf("%v \n", r)
-	return r
+	latLng := []float64{}
+	latLng = append(latLng, r.MiscInformation.Geolocation.Latitude)
+	latLng = append(latLng, r.MiscInformation.Geolocation.Longitude)
+	u.Position = latLng
+	// fmt.Printf("%v \n", r)
+	return r, u
 }
