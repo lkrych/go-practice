@@ -2,8 +2,10 @@ package vault
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 
+	"github.com/go-kit/kit/endpoint"
 	"golang.org/x/crypto/bcrypt"
 	"golang.org/x/net/context"
 )
@@ -110,4 +112,32 @@ func MakeValidateEndpoint(srv Service) endpoint.Endpoint {
 		}
 		return validateResponse{v, ""}, nil
 	}
+}
+
+//Hash allows us to treat the endpoints we have created as normal Go methods
+func (e Endpoints) Hash(ctx context.Context, password string) (string, error) {
+	req := hashRequest{Password: password}
+	resp, err := e.HashEndpoint(ctx, req)
+	if err != nil {
+		return "", err
+	}
+	hashResp := resp.(hashResponse)
+	if hashResp.Err != "" {
+		return "", errors.New(hashResp.Err)
+	}
+	return hashResp.Hash, nil
+}
+
+//Validate allows us to treat the endpoints as normal Go methods
+func (e Endpoints) Validate(ctx context.Context, password string, hash string) (bool, error) {
+	req := validateRequest{Password: password, Hash: hash}
+	resp, err := e.ValidateEndpoint(ctx, req)
+	if err != nil {
+		return false, err
+	}
+	validateResp := resp.(validateResponse)
+	if validateResp.Err != "" {
+		return false, errors.New(validateResp.Err)
+	}
+	return validateResp.Valid, nil
 }
