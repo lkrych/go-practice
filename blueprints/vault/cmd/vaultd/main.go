@@ -1,4 +1,4 @@
-package vaultd
+package main
 
 import (
 	"context"
@@ -10,6 +10,8 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"vault"
+	"vault/pb"
 
 	"google.golang.org/grpc"
 )
