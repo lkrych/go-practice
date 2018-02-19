@@ -10,6 +10,23 @@ type grpcServer struct {
 	validate grpctransport.Handler
 }
 
+func NewGRPCServer(ctx context.Context, endpoints Endpoints) pb.VaultServer {
+	return &grpcServer{
+		hash: grpctransport.NewServer(
+			ctx,
+			endpoints.HashEndpoint,
+			DecodeGRPCHashRequest,
+			EncodeGRPCHashResponse,
+		),
+		validate: grpctransport.NewServer(
+			ctx,
+			endpoints.ValidateEndpoint,
+			DecodeGRPCValidateRequest,
+			EncodeGRPCValidateResponse,
+		),
+	}
+}
+
 //Hash will serve requests by first decoding the requests, calling the appropriate
 //endpoint function, getting the response, and encoding and sendint it to the client. This is the MAGIC
 //of of the serveGRPC method of Go-kit
