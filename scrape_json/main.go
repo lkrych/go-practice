@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"math/rand"
 )
 
 type ReferenceJSON struct {
@@ -12,7 +13,8 @@ type ReferenceJSON struct {
 		PhoneMake  string `json:"phoneMake"`
 		PhoneModel string `json:"phoneModel"`
 		UserData   struct {
-			Name string `json:"name"`
+			Name   string `json:"name"`
+			Gender string `json:"gender"`
 		} `json:"userData"`
 		Geolocation struct {
 			Latitude   float64 `json:"latitude"`
@@ -23,7 +25,13 @@ type ReferenceJSON struct {
 }
 
 type UsableJSON struct {
-	Position []float64
+	Position   []float64 `json:"position"`
+	PhoneMake  string    `json:"phoneMake"`
+	PhoneModel string    `json:"phoneModel"`
+	Name       string    `json:"name"`
+	Gender     string    `json:"gender"`
+	Date       string    `json:"date"`
+	Status     string    `json:"status"`
 }
 
 func main() {
@@ -43,7 +51,8 @@ func readJSONFiles(directory string) {
 
 	fmt.Println("Found", directory, "files")
 
-	objs := []*UsableJSON{}
+	auths := []*UsableJSON{}
+	enrolls := []*UsableJSON{}
 	//iterate through files
 	for _, f := range files {
 		//save scraped json to object and add it to collection
@@ -54,16 +63,52 @@ func readJSONFiles(directory string) {
 		}
 		fmt.Println("Read file", f.Name())
 		_, uJSON := jsonToStruct(file)
-		objs = append(objs, uJSON)
+
+		if uJSON.Position[0] == 0 {
+			fmt.Println("Skipping", uJSON)
+			continue
+		}
+
+		//apportion random gender
+		if uJSON.Gender == "" {
+			rand := generateRandom()
+			if rand == 1 {
+				uJSON.Gender = "male"
+			} else {
+				uJSON.Gender = "female"
+			}
+		}
+
+		//apportion random status
+		rand := generateRandom()
+		if rand == 1 {
+			uJSON.Status = "auth"
+			auths = append(auths, uJSON)
+		} else {
+			uJSON.Status = "enroll"
+			enrolls = append(enrolls, uJSON)
+		}
+
 	}
 
 	//write scraped json to file
-	marshalled, err := json.Marshal(objs)
+	marshalledAuths, err := json.Marshal(auths)
 	if err != nil {
-		fmt.Println("There was an error marshalling the JSON")
+		fmt.Println("There was an error marshalling the auths")
 		log.Fatal(err)
 	}
-	err = ioutil.WriteFile("output.json", marshalled, 0644)
+	marshalledEnrolls, err := json.Marshal(enrolls)
+	if err != nil {
+		fmt.Println("There was an error marshalling the enrolls")
+		log.Fatal(err)
+	}
+	err = ioutil.WriteFile("auths.json", marshalledAuths, 0644)
+	if err != nil {
+		fmt.Println("There was an error writing the marshalled JSON")
+		log.Fatal(err)
+	}
+
+	err = ioutil.WriteFile("enrolls.json", marshalledEnrolls, 0644)
 	if err != nil {
 		fmt.Println("There was an error writing the marshalled JSON")
 		log.Fatal(err)
@@ -82,6 +127,14 @@ func jsonToStruct(file []byte) (*ReferenceJSON, *UsableJSON) {
 	latLng = append(latLng, r.MiscInformation.Geolocation.Latitude)
 	latLng = append(latLng, r.MiscInformation.Geolocation.Longitude)
 	u.Position = latLng
+	u.Date = r.MiscInformation.Geolocation.LastUpdate
+	u.Name = r.MiscInformation.UserData.Name
+	u.PhoneMake = r.MiscInformation.PhoneMake
+	u.PhoneModel = r.MiscInformation.PhoneModel
 	// fmt.Printf("%v \n", r)
 	return r, u
+}
+
+func generateRandom() int {
+	return rand.Intn(2)
 }
