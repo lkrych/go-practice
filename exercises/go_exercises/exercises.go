@@ -1,6 +1,9 @@
 package goExercises
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 //return sorted arr using quicksort
 func quickSort(arr []int) []int {
@@ -8,67 +11,91 @@ func quickSort(arr []int) []int {
 		return arr
 	}
 	pivot := arr[0]
-	lessThanPivot := []int{}
-	greaterThanPivot := []int{}
+	leftArr := []int{}
+	rightArr := []int{}
+
 	for i := 1; i < len(arr); i++ {
 		if arr[i] <= pivot {
-			lessThanPivot = append(lessThanPivot, arr[i])
+			leftArr = append(leftArr, arr[i])
 		} else {
-			greaterThanPivot = append(greaterThanPivot, arr[i])
+			rightArr = append(rightArr, arr[i])
 		}
 	}
-	sortedLess := quickSort(lessThanPivot)
-	sortedGreater := quickSort(greaterThanPivot)
+	leftSorted := quickSort(leftArr)
+	rightSorted := quickSort(rightArr)
 
-	sortedLess = append(sortedLess, pivot)
-	return append(sortedLess, sortedGreater...)
+	leftSorted = append(leftSorted, pivot)
+	return append(leftSorted, rightSorted...)
+}
+
+//return true if the letter a is within two spaces of the letter z
+func nearbyAZ(word string) bool {
+	found := 0
+	foundA := false
+	chars := strings.Split(word, "")
+	for i := 0; i < len(chars); i++ {
+		if chars[i] == "a" {
+			found = 3
+			continue
+		}
+		if found > 0 {
+			if chars[i] == "z" {
+				foundA = true
+			}
+			found--
+		}
+	}
+	return foundA
+}
+
+//return the GCF of the two inputs
+func greatestCommonFactor(n1 int, n2 int) int {
+	var greater, smaller int
+	if n1 >= n2 {
+		greater = n1
+		smaller = n2
+	} else {
+		greater = n2
+		smaller = n1
+	}
+
+	for i := smaller; i > 0; i-- {
+		if greater%i == 0 && smaller%i == 0 {
+			return i
+		}
+	}
+	return 1
 }
 
 //In O(n) time, and using O(1) space, remove duplicates from an array
 func removeDups(arr []int) []int {
-	checkIdx := 0
-	checkedAll := false
-	for !checkedAll {
-
-		if checkIdx == len(arr)-1 {
-			checkedAll = true
-			continue
-		}
-		if arr[checkIdx] == arr[checkIdx+1] {
-			arr = append(arr[:checkIdx], arr[checkIdx+1:]...)
-		} else {
-			checkIdx++
+	nextUnduplicatedIdx := 1
+	for i := 1; i < len(arr); i++ {
+		fmt.Println("The indices are ", i, nextUnduplicatedIdx)
+		fmt.Println("The array is ", arr)
+		if arr[nextUnduplicatedIdx-1] != arr[i] {
+			arr[nextUnduplicatedIdx] = arr[i]
+			nextUnduplicatedIdx++
 		}
 	}
-	return arr
+	return arr[:nextUnduplicatedIdx]
 }
 
-//take timeinminutes and convert it into a clock representation
-//ex: 15 => 0:15
-//ex: 150 => 2:30
-//ex: 360 => 6:00
-func timeConversion(timeInMinutes int) string {
-	minutes := timeInMinutes % 60
-	hours := timeInMinutes / 60
+func removeDupsAlt(arr []int) []int {
+	h := make(map[int]bool)
 
-	return fmt.Sprintf("%d:%02d", hours, minutes)
-}
-
-//take in an array of digits encoding a decimal, d and update the array to rep d + 1
-//ex: 1.29 => 1.30 ~ [1,2,9] => [1,3,0]
-//ex 1.48372 => 1.48373
-//TAKE AWAY:  This algorithm should work in a language that has finite-precision arithmetic
-//Arrays can be used to break up numbers of arbitrary size, this allows us to handle very big numbers!
-func incrementArb(arr []int) []int {
-	last := arr[len(arr)-1]
-	last++
-	if last == 10 {
-		newArr := incrementArb(arr[:len(arr)-1])
-		newArr = append(newArr, 0)
-		return newArr
-	} else {
-		arr[len(arr)-1] = last
-		return arr
+	for i := 0; i < len(arr); i++ {
+		h[arr[i]] = true
 	}
+
+	keys := make([]int, len(h))
+
+	i := 0
+	for k := range h {
+		keys[i] = k
+		i++
+	}
+
+	return quickSort(keys)
 
 }
