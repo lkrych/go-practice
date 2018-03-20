@@ -1,7 +1,6 @@
 package goExercises
 
 import (
-	"fmt"
 	"strings"
 )
 
@@ -70,9 +69,9 @@ func greatestCommonFactor(n1 int, n2 int) int {
 //In O(n) time, and using O(1) space, remove duplicates from an array
 func removeDups(arr []int) []int {
 	nextUnduplicatedIdx := 1
+	//O(n) time complexity
 	for i := 1; i < len(arr); i++ {
-		fmt.Println("The indices are ", i, nextUnduplicatedIdx)
-		fmt.Println("The array is ", arr)
+		//if the adjacent elements are not equal, assign the element at i to our nextUnduplicatedIdx
 		if arr[nextUnduplicatedIdx-1] != arr[i] {
 			arr[nextUnduplicatedIdx] = arr[i]
 			nextUnduplicatedIdx++
@@ -84,18 +83,20 @@ func removeDups(arr []int) []int {
 func removeDupsAlt(arr []int) []int {
 	h := make(map[int]bool)
 
+	//O(n) time complexity
 	for i := 0; i < len(arr); i++ {
 		h[arr[i]] = true
 	}
-
+	//O(n) space complexity
 	keys := make([]int, len(h))
 
 	i := 0
+	//O(n) time complexity
 	for k := range h {
 		keys[i] = k
 		i++
 	}
-
+	//O(nlogn) time complexity
 	return quickSort(keys)
 
 }
