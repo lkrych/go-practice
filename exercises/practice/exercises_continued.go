@@ -736,3 +736,7 @@ func searchTree(nodeMap map[string]*Node, node string, preventLoopsMap map[strin
 	}
 	return count
 }
+
+func phoneMnemonic(int) []int {
+
+}

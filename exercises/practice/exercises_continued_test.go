@@ -197,3 +197,22 @@ func TestDigitalPlumber(t *testing.T) {
 	// 	t.Errorf("Expected answer to be 0, not %v", test2)
 	// }
 }
+
+func TestPhoneMnemonics(t *testing.T) {
+	test1 := phoneMnemonic(2276696)
+	test2 := phoneMnemonic(2639874)
+	test3 := phoneMnemonic(2635901)
+
+	if len(test1) != 3 {
+		t.Errorf("Expected all permutations of number to be x, not %v", test1)
+	}
+
+	if len(test2) != 0 {
+		t.Errorf("Expected all permutations of number to be x, not %v", test2)
+	}
+
+	if len(test3) != 2 {
+		t.Errorf("Expected all permutations of number to be x, not %v", test3)
+	}
+
+}
