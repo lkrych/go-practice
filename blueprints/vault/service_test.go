@@ -1,6 +1,8 @@
 package vault
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestHasherService(t *testing.T) {
 	srv := NewService()
