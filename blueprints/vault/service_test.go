@@ -2,11 +2,13 @@ package vault
 
 import (
 	"testing"
+
+	"golang.org/x/net/context"
 )
 
 func TestHasherService(t *testing.T) {
 	srv := NewService()
-	ctx := ctx.Background()
+	ctx := context.Background()
 	h, err := srv.Hash(ctx, "password")
 	if err != nil {
 		t.Errorf("Hash: %s", err)
