@@ -3,8 +3,11 @@ package main
 import (
 	"context"
 	"flag"
+	"fmt"
 	"log"
+	"os"
 	"time"
+	"vault"
 
 	grpcclient "vault/client/grpc"
 
@@ -40,6 +43,26 @@ func main() {
 	default:
 		log.Fatalln("unknown command", cmd)
 	}
+}
+
+func hash(ctx context.Context, service vault.Service, password string) {
+	h, err := service.Hash(ctx, password)
+	if err != nil {
+		log.Fatalln(err.Error())
+	}
+	fmt.Println(h)
+}
+
+func validate(ctx context.Context, service vault.Service, password string, hash string) {
+	valid, err := service.Validate(ctx, password, hash)
+	if err != nil {
+		log.Fatalln(err.Error())
+	}
+	if !valid {
+		fmt.Println("invalid")
+		os.Exit(1)
+	}
+	fmt.Println("valid")
 }
 
 func pop(s []string) (string, []string) {
