@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"log"
@@ -10,9 +11,14 @@ import (
 
 	grpcclient "vault/client/grpc"
 
-	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 )
+
+/*
+	Usage
+		vaultcli hash password
+		vaultcli validate password hash
+*/
 
 func main() {
 	var (
