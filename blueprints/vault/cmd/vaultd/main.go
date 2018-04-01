@@ -10,9 +10,13 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 	"vault"
 	"vault/pb"
 
+	ratelimitkit "github.com/go-kit/kit/ratelimit"
+
+	"github.com/juju/ratelimit"
 	"google.golang.org/grpc"
 )
 
@@ -33,9 +37,17 @@ func main() {
 		errChan <- fmt.Errorf("%s", <-c)
 	}()
 
+	rlbucket := ratelimit.NewBucket(1*time.Second, 5)
+
 	//setup endpoints
 	hashEndpoint := vault.MakeHashEndpoint(srv)
+	{
+		hashEndpoint = ratelimitkit.NewTokenBucketThrottler(rlbucket, time.Sleep)(hashEndpoint)
+	}
 	validateEndpoint := vault.MakeValidateEndpoint(srv)
+	{
+		validateEndpoint = ratelimitkit.NewTokenBucketThrottler(rlbucket, time.Sleep)(validateEndpoint)
+	}
 	endpoints := vault.Endpoints{
 		HashEndpoint:     hashEndpoint,
 		ValidateEndpoint: validateEndpoint,
