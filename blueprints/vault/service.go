@@ -4,6 +4,7 @@ import (
 	newContext "context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/go-kit/kit/endpoint"
@@ -110,6 +111,9 @@ type Endpoints struct {
 func (e Endpoints) Hash(ctx context.Context, password string) (string, error) {
 	req := hashRequest{Password: password}
 	resp, err := e.HashEndpoint(ctx, req)
+	fmt.Printf("response: %s \n", resp)
+	fmt.Printf("error: %s \n", err)
+
 	if err != nil {
 		return "", err
 	}
