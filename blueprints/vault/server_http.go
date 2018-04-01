@@ -7,7 +7,7 @@ import (
 	"golang.org/x/net/context"
 )
 
-//NewHTTPServer reates an http handler interface for interacting with our GoKit endpoints
+// NewHTTPServer makes a new Vault HTTP service.
 func NewHTTPServer(ctx context.Context, endpoints Endpoints) http.Handler {
 	m := http.NewServeMux()
 	m.Handle("/hash", httptransport.NewServer(

@@ -13,7 +13,7 @@ import (
 func New(conn *grpc.ClientConn) vault.Service {
 	var hashEndpoint = grpctransport.NewClient(
 		conn, "Vault", "Hash",
-		vault.EncodeGRPCHashResponse,
+		vault.EncodeGRPCHashRequest,
 		vault.DecodeGRPCHashResponse,
 		pb.HashResponse{},
 	).Endpoint()
