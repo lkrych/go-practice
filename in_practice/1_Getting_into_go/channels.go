@@ -14,7 +14,7 @@ func printCount(c chan int) {
 }
 
 func main() {
-	c := make(chan int)
+	c := make(chan int) //channels are used to communicate between goroutines
 	a := []int{8, 6, 7, 5, 3, 0, 9, -1}
 
 	go printCount(c)
