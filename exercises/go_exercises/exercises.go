@@ -1,34 +1,92 @@
 package goExercises
- 
-// Each instruction consists of several parts: the register to modify, whether to increase or decrease that register's value, 
-// the amount by which to increase or decrease it, and a condition. If the condition fails, skip the instruction without modifying the register.
-// The registers all start at 0. The instructions look like this:
 
-// b inc 5 if a > 1
-// a inc 1 if b < 5
-// c dec -10 if a >= 1
-// c inc -20 if c == 10
-// These instructions would be processed as follows:
+import (
+	"io/ioutil"
+	"log"
+	"strconv"
+	"strings"
+)
 
-// Because a starts at 0, it is not greater than 1, and so b is not modified.
-// a is increased by 1 (to 1) because b is less than 5 (it is 0).
-// c is decreased by -10 (to 10) because a is now greater than or equal to 1 (it is 1).
-// c is increased by -20 (to -10) because c is equal to 10.
-// After this process, the largest value in any register is 1.
-
-//return the highest value ever seen by the registers, and the current highest value
-
-func register(filepath string) (int, int) {
-
+// calculate the checksum of the multi-dimensional array
+// For each row, determine the difference between the largest value and the smallest value;
+// the checksum is the sum of all of these differences.
+func checkSum(multiArr [][]int) int {
+	checkSum := 0
+	smallest := 20000
+	largest := 0
+	for _, arr := range multiArr {
+		smallest = 20000
+		largest = 0
+		for _, el := range arr {
+			if el > largest {
+				largest = el
+			}
+			if el < smallest {
+				smallest = el
+			}
+		}
+		checkSum += (largest - smallest)
+		//add difference between max and min to partial
+	}
+	return checkSum
 }
 
-//you might want to use these helper functions
-func checkCondition(register string, command string, val string, myMap map[string]int) bool {
-	
+func checkSumAdvent() int {
+	//read in the file ../practice/checksum_input and find the checksum for it
+	content, err := ioutil.ReadFile("../practice/advent_input/checksum_input.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+	arrays := strings.Split(string(content), "\n")
+	multiArr := make([][]int, len(arrays))
+
+	for idx, arr := range arrays {
+		splitArr := strings.Split(arr, "\t")
+		intArr := make([]int, len(splitArr))
+		for i, el := range splitArr {
+			if el == "" {
+				continue
+			}
+			intEl, err := strconv.Atoi(el)
+			if err != nil {
+				log.Fatal(err)
+			}
+			intArr[i] = intEl
+		}
+		multiArr[idx] = intArr
+	}
+	return checkSum(multiArr)
 }
 
-func performCommand(register string, command string, val string, myMap map[string]int, maxVal int) int {
-	
+//return if the word is a palindrome
+func isPalindrome(word string) bool {
+	for i, j := 0, len(word)-1; i < j; i, j = i+1, j-1 {
+		if word[i] != word[j] {
+			return false
+		}
+	}
+	return true
 }
 
- 
+//return index of toFind if it exists in arr, otherwise return -1
+func binarySearch(arr []int, toFind int) int {
+	//base case
+	if len(arr) == 0 {
+		return -1
+	}
+
+	midIdx := len(arr) / 2
+
+	if arr[midIdx] == toFind {
+		return midIdx
+	} else if arr[midIdx] > toFind {
+		return binarySearch(arr[:midIdx], toFind)
+	} else {
+		foundIdx := binarySearch(arr[midIdx+1:], toFind)
+		if foundIdx == -1 {
+			return -1
+		} else {
+			return foundIdx + (midIdx + 1)
+		}
+	}
+}
