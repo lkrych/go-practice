@@ -1,6 +1,11 @@
 package main
 
-import "github.com/urfave/cli"
+import (
+	"fmt"
+	"os"
+
+	"github.com/urfave/cli"
+)
 
 func main() {
 	//create a new application
@@ -13,7 +18,7 @@ func main() {
 			Name: "name, n",
 
 			Value: "World",
-			Usage: "Who to say hello to."
+			Usage: "Who to say hello to.",
 		},
 	}
 	//define the action to run
