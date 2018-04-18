@@ -1,0 +1,3 @@
+# a comment line, JSON doesn't have comment lines
+enabled: true
+path: /usr/local
