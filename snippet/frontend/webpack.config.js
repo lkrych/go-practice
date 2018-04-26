@@ -11,12 +11,10 @@ var config = {
   module: {
     rules: [
       {
-        test: /\.jsx?/,
-        loader: 'babel-loader',
-        query: {
-          presets: ['env','react']
-        }
-      },
+        test: /\.jsx?$/,
+        exclude: /node_modules/,
+        use: ["babel-loader", "eslint-loader"]
+      }
     ]
   },
   mode: "production"
