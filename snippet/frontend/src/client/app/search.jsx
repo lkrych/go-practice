@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 
-import AudioPlayer from './audio_player';
+import AudioPlayer from './audio_player.jsx';
 
 class Search extends Component {
   constructor(props) {
     super(props);
     this.state = {
-     
       searchTerm: "",
       searching: false,
       searchResults: {},
@@ -88,7 +87,7 @@ class Search extends Component {
             {podcast.items.map((el, idx) => {
               return (
                 <li key={idx}>
-                  <a onClick={this.playAudio(el.enclosures[0].url)}>
+                  <a onClick={() => this.playAudio(el.enclosures[0].url)} style={{"cursor": "pointer"}}>
                     <h4>{el.title}</h4>
                   </a>
                   <p>{el.description}</p>
