@@ -8,6 +8,7 @@ import (
 )
 
 func main() {
+
 	r := mux.NewRouter()
 
 	// Handle API routes
@@ -15,8 +16,9 @@ func main() {
 
 	api.Handle("/search/{keyword}", searchTermHandler).Methods("GET")
 
-	// Catch-all: Serve our JavaScript application's entry-point (index.html).
-	r.PathPrefix("/").HandlerFunc(IndexHandler("../frontend/index.html"))
-	fmt.Printf("Serving api on port 3000 \n")
-	http.ListenAndServe(":3000", r)
+	// Serve static assets directly.
+	r.PathPrefix("/").Handler(http.FileServer(http.Dir("./public/")))
+
+	fmt.Printf("Serving api on port 8080 \n")
+	http.ListenAndServe(":8080", r)
 }
