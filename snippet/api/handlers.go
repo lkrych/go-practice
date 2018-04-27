@@ -8,13 +8,14 @@ import (
 	"strings"
 
 	"github.com/gorilla/mux"
+	"github.com/microcosm-cc/bluemonday"
 	"github.com/mmcdole/gofeed"
 )
 
 var feedMap = map[string]string{
 	"the weeds":           "http://feeds.feedburner.com/voxtheweeds",
 	"worldly":             "http://feeds.feedburner.com/voxworldly",
-	"the ezra klein show": "http://feeds.feedburner.com/voxworldly",
+	"the ezra klein show": "http://feeds.feedburner.com/TheEzraKleinShow",
 }
 
 var searchTermHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -23,17 +24,27 @@ var searchTermHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Req
 
 	fmt.Println("The params are ", params)
 
+	//setup feed parser
 	fp := gofeed.NewParser()
 	feedURL, _ := feedMap[strings.ToLower(params["keyword"])]
 	feed, err := fp.ParseURL(feedURL)
 	if err != nil {
-		log.Fatalln("Cannot find feed for ", params["keyword"])
+		log.Println("Cannot find feed for ", params["keyword"])
 		log.Fatalln("The error is ", err)
 	}
-	fmt.Println(feed.Title)
-	fmt.Println(feed.Author)
-	fmt.Println(feed.Description)
-	fmt.Println(feed.Link)
+
+	//setup html sanitization
+	p := bluemonday.StrictPolicy()
+
+	//sanitize descriptions
+	feed.Description = p.Sanitize(feed.Description)
+	feed.Description = strings.Replace(feed.Description, "&#39;", "'", -1)
+
+	for _, item := range feed.Items {
+		item.Description = p.Sanitize(item.Description)
+		strings.Replace(item.Description, "&#39;", "'", -1)
+
+	}
 
 	//marshal feed into json
 	feedJSON, err := json.Marshal(feed)
