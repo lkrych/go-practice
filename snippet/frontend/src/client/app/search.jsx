@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import AudioPlayer from './audio_player';
+
 class Search extends Component {
   constructor(props) {
     super(props);
@@ -7,11 +9,15 @@ class Search extends Component {
      
       searchTerm: "",
       searching: false,
-      searchResults: {}
+      searchResults: {},
+      playingAudio: false,
+      currentlyPlaying: null,
     };
    
     this.searchTerm = this.searchTerm.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.playAudio = this.playAudio.bind(this);
+    this.removeAudioPlayer = this.removeAudioPlayer.bind(this);
   }
 
   handleChange(e) {
@@ -41,14 +47,33 @@ class Search extends Component {
     });
     
   }
+
+  playAudio(audioURL){
+    let newState = !this.state.playingAudio;
+    this.setState({
+      playingAudio: newState,
+      currentlyPlaying: audioURL,
+    });
+  }
+
+  removeAudioPlayer(){
+    let newState = !this.state.playingAudio;
+    this.setState({
+      playingAudio: newState,
+      currentlyPlaying: null,
+    });
+  }
         
-    
 
   render() {
     let loader = <div></div>;
     if (this.state.searching) {
       loader = <div className="loader"></div>;
     } 
+    let audioPlayer = <div></div>;
+    if (this.state.playingAudio) {
+      audioPlayer = <AudioPlayer audioURL={this.state.currentlyPlaying} removeAudioPlayer={this.removeAudioPlayer} />;
+    }
 
     let results =  <div></div>;
     if (Object.keys(this.state.searchResults).length > 1) {
@@ -56,14 +81,15 @@ class Search extends Component {
       results = 
         <div>
           <img style={{"height": "200px", "width": "200px"}} src={podcast.image.url} alt={`image for ` + podcast.title}/>
+          {audioPlayer}
           <h2>{podcast.title}</h2>
           <p>{podcast.description}</p>
           <ul>
             {podcast.items.map((el, idx) => {
               return (
                 <li key={idx}>
-                  <a href={el.enclosures[0].url}>
-                  <h4>{el.title}</h4>
+                  <a onClick={this.playAudio(el.enclosures[0].url)}>
+                    <h4>{el.title}</h4>
                   </a>
                   <p>{el.description}</p>
                   <p>{new Date(el.published).toLocaleString()}</p>
