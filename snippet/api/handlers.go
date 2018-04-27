@@ -42,7 +42,7 @@ var searchTermHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Req
 
 	for _, item := range feed.Items {
 		item.Description = p.Sanitize(item.Description)
-		strings.Replace(item.Description, "&#39;", "'", -1)
+		item.Description = strings.Replace(item.Description, "&#39;", "'", -1)
 
 	}
 
