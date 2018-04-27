@@ -7,11 +7,7 @@ class Search extends Component {
      
       searchTerm: "",
       searching: false,
-      searchResults: {
-        addresses: [],
-        jsonSearched: "",
-        itemSearched: ""
-      }
+      searchResults: {}
     };
    
     this.searchTerm = this.searchTerm.bind(this);
@@ -30,7 +26,7 @@ class Search extends Component {
       searching: true
     }, function() {
       const headers = buildRequestHeaders();
-      fetch(`http://localhost:3000/api/search/${this.state.environment}/${this.state.selectedPartner}/${this.state.searchTerm}`,{
+      fetch(`http://localhost:8080/api/search/${this.state.searchTerm}`,{
         credentials: 'include',
         headers: headers
       }).then(
@@ -54,51 +50,53 @@ class Search extends Component {
       loader = <div className="loader"></div>;
     } 
 
-    let searchResults = <div></div>;
-    if(this.state.searchResults["addresses"].length !== 0) {
-      searchResults = 
-      
-        <ul>
-          {this.state.searchResults["addresses"].map( address => (
-            <li key={address}>{address}</li>
-          ))}
-        </ul>;
-    }
-
-    let searchHeader= <div></div>;
-    if(this.state.searchResults["jsonSearched"] !== "" && this.state.searchResults["itemSearched"] !== "") {
-      searchHeader = 
-      <div>
-        <h3>Found {this.state.searchResults["jsonSearched"]} match(es) out of {this.state.searchResults["itemSearched"]} objects using {this.state.searchResults["searchTerm"]} as the search term(s) on the path {this.state.searchResults["searchPath"]}</h3>
-        <br/>
-        <h4>It took {this.state.searchResults["time"]} seconds</h4>
-        {searchResults}
-      </div>;
+    let results =  <div></div>;
+    if (Object.keys(this.state.searchResults).length > 1) {
+      let podcast = this.state.searchResults;
+      results = 
+        <div>
+          <img style={{"height": "200px", "width": "200px"}} src={podcast.image.url} alt={`image for ` + podcast.title}/>
+          <h2>{podcast.title}</h2>
+          <p>{podcast.description}</p>
+          <ul>
+            {podcast.items.map((el, idx) => {
+              return (
+                <li key={idx}>
+                  <a href={el.enclosures[0].url}>
+                  <h4>{el.title}</h4>
+                  </a>
+                  <p>{el.description}</p>
+                  <p>{new Date(el.published).toLocaleString()}</p>
+                </li>
+              );
+            })}
+          </ul>
+        </div>;
     }
     
   
-      return (
-          <div className="results-container">
+    return (
+        <div className="results-container">
 
-          <h1>Search rss feeds for podcast info</h1>
-          <div className="search-container"> 
-            <div>
-              <form onSubmit={this.searchTerm} >
-                <div className="form">
-                  <label htmlFor="text_search">Search term</label> 
-                 
-                  <input id="text_search" type="text" value={this.state.value} onChange={this.handleChange}/>
-                  <br/>
-                  <input type="submit" value="Submit"/>
-                </div>
-              </form>
-            </div>
+        <h1>Search rss feeds for podcast info</h1>
+        <div className="search-container"> 
+          <div>
+            <form onSubmit={this.searchTerm} >
+              <div className="form">
+                <label htmlFor="text_search">Search term</label> 
+                
+                <input id="text_search" type="text" value={this.state.value} onChange={this.handleChange}/>
+                <br/>
+                <input type="submit" value="Submit"/>
+              </div>
+            </form>
           </div>
-          <h1>Results</h1>
-          {loader}
-          {searchHeader}
         </div>
-      );
+        <h1>Results</h1>
+        {loader}
+        {results}
+      </div>
+    );
   }
 }
 
