@@ -16,14 +16,6 @@ class Search extends Component {
    
     this.searchTerm = this.searchTerm.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    this.logout = this.logout.bind(this);
-  }
-
-  logout(){
-    localStorage.removeItem('id_token');
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('profile');
-    location.reload();
   }
 
   handleChange(e) {
@@ -89,7 +81,6 @@ class Search extends Component {
           <div className="results-container">
 
           <h1>Search rss feeds for podcast info</h1>
-          <button className="pull-right"><a onClick={this.logout}>Log out</a></button>
           <div className="search-container"> 
             <div>
               <form onSubmit={this.searchTerm} >
