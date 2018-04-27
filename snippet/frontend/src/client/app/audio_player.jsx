@@ -9,16 +9,15 @@ class AudioPlayer extends Component {
   logStar(){
     let audioPlayer = document.getElementById('media-player');
     console.log("The current time in the play of this file is: ", audioPlayer.currentTime);
-    console.log("The durationof this file is: ", audioPlayer.duration);
-
+    console.log("The duration of this file is: ", audioPlayer.duration);
   }
 
   render(){
     return(
-      <div className="media-player">
-        <audio id="media-player" src={this.props.audioURL}  />
-        <a onClick={this.logStar}><i class="fas fa-star"></i></a>
-        <button onClick={this.props.removeAudioPlayer}><i class="fas fa-times-circle"></i></button>
+      <div className="media-player" style={{"display": "flex", "flexDirection": "row", "alignItems": "center"}}>
+        <audio id="media-player" controls src={this.props.audioURL}  />
+        <a className="media-control" style={{"cursor": "pointer"}} onClick={this.logStar}><i className="fas fa-star"></i></a>
+        <a className="media-control" style={{"cursor": "pointer"}} onClick={this.props.removeAudioPlayer}><i className="fas fa-times-circle"></i></a>
       </div>
     );
   }
