@@ -28,6 +28,7 @@ func main() {
 	signal.Notify(ch, os.Interrupt, os.Kill)
 	go listenForShutdown(ch)
 
+	fmt.Println("Serving on port 8080")
 	manners.ListenAndServe(":8080", handler)
 }
 
