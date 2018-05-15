@@ -737,6 +737,73 @@ func searchTree(nodeMap map[string]*Node, node string, preventLoopsMap map[strin
 	return count
 }
 
-func phoneMnemonic(int) []int {
+//Definition for singly-linked list.
 
+type ListNode struct {
+	Val  int
+	Next *ListNode
+}
+
+func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
+	n1 := createNumber(l1)
+	n2 := createNumber(l2)
+
+	sum := n1 + n2
+
+	fmt.Printf("%d + %d = %d \n", n1, n2, sum)
+
+	return createLinkedList(sum)
+}
+
+func createNumber(l *ListNode) int {
+	val := l.Val
+	decimalCount := 1
+	for l.Next != nil { //iterate until nil
+		l = l.Next
+		computation := (l.Val * power(10, decimalCount))
+		val += computation
+		decimalCount++
+	}
+	return val
+}
+
+func createLinkedList(n int) *ListNode {
+	head := ListNode{
+		Val:  n % 10,
+		Next: nil,
+	}
+
+	var currentNode *ListNode
+	currentNode = &head
+
+	for n > 0 {
+		n = n / 10
+		nextNode := ListNode{
+			Val:  n % 10,
+			Next: nil,
+		}
+		if n == 0 {
+			break
+		}
+		currentNode.Next = &nextNode
+		currentNode = &nextNode
+	}
+	return &head
+}
+
+func printLinkedList(l *ListNode) {
+	i := 1
+	for l != nil { //iterate until nil
+		fmt.Printf("%v: %v \n", i, l.Val)
+		i++
+		l = l.Next
+	}
+}
+
+func power(base int, power int) int {
+	val := 1
+	for i := 0; i < power; i++ {
+		val *= base
+	}
+	return val
 }
