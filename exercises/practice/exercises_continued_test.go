@@ -198,21 +198,60 @@ func TestDigitalPlumber(t *testing.T) {
 	// }
 }
 
-func TestPhoneMnemonics(t *testing.T) {
-	test1 := phoneMnemonic(2276696)
-	test2 := phoneMnemonic(2639874)
-	test3 := phoneMnemonic(2635901)
+func TestAddLinkedLists(t *testing.T) {
+	list := createLinkedList(102)
+	num := createNumber(list)
 
-	if len(test1) != 3 {
-		t.Errorf("Expected all permutations of number to be x, not %v", test1)
+	if num != 102 {
+		t.Errorf("Expected helper functions to work properly. The list is %v, the number is %v", list, num)
 	}
 
-	if len(test2) != 0 {
-		t.Errorf("Expected all permutations of number to be x, not %v", test2)
+	//real tests
+	l1 := createLinkedList(102)
+	l2 := createLinkedList(245)
+	test1 := createNumber(addTwoNumbers(l1, l2))
+
+	l1 = createLinkedList(87)
+	l2 = createLinkedList(349)
+	test2 := createNumber(addTwoNumbers(l1, l2))
+
+	l1 = createLinkedList(1003)
+	l2 = createLinkedList(549)
+	test3 := createNumber(addTwoNumbers(l1, l2))
+
+	if test1 != 347 {
+		t.Errorf("Expected answer to be 347, not %v", test1)
 	}
 
-	if len(test3) != 2 {
-		t.Errorf("Expected all permutations of number to be x, not %v", test3)
+	if test2 != 436 {
+		t.Errorf("Expected answer to be 347, not %v", test2)
 	}
 
+	if test3 != 1552 {
+		t.Errorf("Expected answer to be 347, not %v", test3)
+	}
+}
+
+func TestPower(t *testing.T) {
+	test1 := power(10, 2)
+	test2 := power(3, 3)
+	test3 := power(4, 4)
+	test4 := power(10, 3)
+	test5 := power(2, 5)
+
+	if test1 != 100 {
+		t.Errorf("Expected answer to be 100, not %v", test1)
+	}
+	if test2 != 27 {
+		t.Errorf("Expected answer to be 27, not %v", test2)
+	}
+	if test3 != 256 {
+		t.Errorf("Expected answer to be 256, not %v", test3)
+	}
+	if test4 != 1000 {
+		t.Errorf("Expected answer to be 1000, not %v", test4)
+	}
+	if test5 != 32 {
+		t.Errorf("Expected answer to be 32, not %v", test5)
+	}
 }
