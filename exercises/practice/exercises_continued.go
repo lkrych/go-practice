@@ -752,7 +752,7 @@ func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
 
 	fmt.Printf("%d + %d = %d \n", n1, n2, sum)
 
-	return createLinkedList(sum)
+	return createLinkedList(int64(sum))
 }
 
 func createNumber(l *ListNode) int {
@@ -767,9 +767,9 @@ func createNumber(l *ListNode) int {
 	return val
 }
 
-func createLinkedList(n int) *ListNode {
+func createLinkedList(n int64) *ListNode {
 	head := ListNode{
-		Val:  n % 10,
+		Val:  int(n % 10),
 		Next: nil,
 	}
 
@@ -779,7 +779,7 @@ func createLinkedList(n int) *ListNode {
 	for n > 0 {
 		n = n / 10
 		nextNode := ListNode{
-			Val:  n % 10,
+			Val:  int(n % 10),
 			Next: nil,
 		}
 		if n == 0 {
@@ -806,4 +806,73 @@ func power(base int, power int) int {
 		val *= base
 	}
 	return val
+}
+
+func optimizedAddTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
+	carry := 0
+	sum := 0
+
+	head := ListNode{
+		Val:  0,
+		Next: nil,
+	}
+
+	var currentNode *ListNode
+	currentNode = &head
+
+forLoop:
+	for l1 != nil || l2 != nil {
+		intermediate := 0
+		switch {
+		case l1 != nil && l2 != nil:
+			intermediate = (l1.Val + l2.Val + carry)
+			sum = intermediate % 10
+			carry = intermediate / 10
+			l1 = l1.Next
+			l2 = l2.Next
+
+		case l1 != nil:
+			intermediate = (l1.Val + carry)
+			sum = intermediate % 10
+			carry = intermediate / 10
+			l1 = l1.Next
+		case l2 != nil:
+			intermediate = (l2.Val + carry)
+			sum = intermediate % 10
+			carry = intermediate / 10
+			l2 = l2.Next
+		default:
+			intermediate = carry
+			sum = intermediate % 10
+			carry = intermediate / 10
+		}
+
+		fmt.Println("Sum is", sum)
+		fmt.Println("Carry is", carry)
+		fmt.Println("l1 is", l1)
+		fmt.Println("l2 is", l2)
+		currentNode.Val = sum
+		nextNode := ListNode{
+			Val:  0,
+			Next: nil,
+		}
+		//breaking logic
+		switch {
+		case l1 == nil && l2 == nil && carry == 0:
+			fmt.Println("case 1")
+			break forLoop
+		case l1 == nil && l2 == nil && carry != 0:
+			fmt.Println("case 2")
+			currentNode.Next = &nextNode
+			currentNode = &nextNode
+			currentNode.Val = carry
+			break forLoop
+		}
+
+		currentNode.Next = &nextNode
+		currentNode = &nextNode
+	}
+
+	return &head
+
 }
