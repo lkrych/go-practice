@@ -1,92 +1,72 @@
 package goExercises
 
 import (
-	"io/ioutil"
-	"log"
+	"regexp"
 	"strconv"
 	"strings"
 )
 
-// calculate the checksum of the multi-dimensional array
-// For each row, determine the difference between the largest value and the smallest value;
-// the checksum is the sum of all of these differences.
-func checkSum(multiArr [][]int) int {
-	checkSum := 0
-	smallest := 20000
-	largest := 0
-	for _, arr := range multiArr {
-		smallest = 20000
-		largest = 0
-		for _, el := range arr {
-			if el > largest {
-				largest = el
-			}
-			if el < smallest {
-				smallest = el
-			}
-		}
-		checkSum += (largest - smallest)
-		//add difference between max and min to partial
-	}
-	return checkSum
-}
-
-func checkSumAdvent() int {
-	//read in the file ../practice/checksum_input and find the checksum for it
-	content, err := ioutil.ReadFile("../practice/advent_input/checksum_input.txt")
-	if err != nil {
-		log.Fatal(err)
-	}
-	arrays := strings.Split(string(content), "\n")
-	multiArr := make([][]int, len(arrays))
-
-	for idx, arr := range arrays {
-		splitArr := strings.Split(arr, "\t")
-		intArr := make([]int, len(splitArr))
-		for i, el := range splitArr {
-			if el == "" {
-				continue
-			}
-			intEl, err := strconv.Atoi(el)
-			if err != nil {
-				log.Fatal(err)
-			}
-			intArr[i] = intEl
-		}
-		multiArr[idx] = intArr
-	}
-	return checkSum(multiArr)
-}
-
-//return if the word is a palindrome
-func isPalindrome(word string) bool {
-	for i, j := 0, len(word)-1; i < j; i, j = i+1, j-1 {
-		if word[i] != word[j] {
-			return false
-		}
-	}
-	return true
-}
-
-//return index of toFind if it exists in arr, otherwise return -1
-func binarySearch(arr []int, toFind int) int {
-	//base case
-	if len(arr) == 0 {
-		return -1
-	}
-
-	midIdx := len(arr) / 2
-
-	if arr[midIdx] == toFind {
-		return midIdx
-	} else if arr[midIdx] > toFind {
-		return binarySearch(arr[:midIdx], toFind)
-	} else {
-		foundIdx := binarySearch(arr[midIdx+1:], toFind)
-		if foundIdx == -1 {
-			return -1
+//add dashes around an odd number, except on first or last el. Only allow one dash
+//ex: 303 => 3-0-3
+//ex: 333 => 3-3-3
+//ex: 3223 => 3-22-3
+func dasherizeNumber(n int) string {
+	buildString := []string{}
+	for n > 0 {
+		val := n % 10
+		if (val)%2 == 0 {
+			buildString = append(buildString, strconv.Itoa(val))
 		} else {
-			return foundIdx + (midIdx + 1)
+			buildString = append(buildString, "-")
+			buildString = append(buildString, strconv.Itoa(val))
+			buildString = append(buildString, "-")
 		}
+		n = n / 10
+	}
+
+	//remove from front and back
+	if buildString[0] == "-" {
+		buildString = buildString[1:]
+	}
+
+	if buildString[len(buildString)-1] == "-" {
+		buildString = buildString[:len(buildString)-1]
+	}
+
+	//remove double dashes
+	r, _ := regexp.Compile("--")
+
+	joined := Reverse(strings.Join(buildString, ""))
+
+	return r.ReplaceAllString(joined, "-")
+
+}
+
+func Reverse(s string) string {
+	runes := []rune(s)
+	for i, j := 0, len(runes)-1; i < j; i, j = i+1, j-1 {
+		runes[i], runes[j] = runes[j], runes[i]
+	}
+	return string(runes)
+}
+
+//return num of vowels in sentence
+func countVowels(sentence string) int {
+	count := 0
+	r, _ := regexp.Compile("[aeiou]")
+	for _, el := range strings.Split(sentence, "") {
+		if ok := r.MatchString(el); ok {
+			count++
+		}
+	}
+	return count
+}
+
+//return n!
+func factorial(n int) int {
+	if n < 1 {
+		return 1
+	} else {
+		return n * factorial(n-1)
 	}
 }
