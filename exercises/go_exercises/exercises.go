@@ -1,67 +1,93 @@
 package goExercises
 
 import (
-	"regexp"
-	"strconv"
+	"sort"
 	"strings"
 )
 
-//return true if the letter a is within two spaces of the letter z
-func nearbyAZ(word string) bool {
-	r, _ := regexp.Compile("z")
-	for i, ch := range strings.Split(word, "") {
-		if ch == "a" {
-			search := false
-			if i+4 > len(word)-1 {
-				search = r.MatchString(word[i+1:])
-			} else {
-				search = r.MatchString(word[i+1 : i+4])
-			}
-			if search {
-				return true
-			}
-		}
-	}
-	return false
-}
-
-//convert base ten int n, into hexadecimal or binary representation
-func baseConverter(n int, base int) string {
-	num := []string{}
-	hexMap := map[int]string{
-		0:  "0",
-		1:  "1",
-		2:  "2",
-		3:  "3",
-		4:  "4",
-		5:  "5",
-		6:  "6",
-		7:  "7",
-		8:  "8",
-		9:  "9",
-		10: "a",
-		11: "b",
-		12: "c",
-		13: "d",
-		14: "e",
-		15: "f",
-	}
-	for n > 0 {
-
-		if base == 2 {
-			num = append(num, strconv.Itoa(n%2))
+//take in an array of digits encoding a decimal, d and update the array to rep d + 1
+//ex: 1.29 => 1.30 ~ [1,2,9] => [1,3,0]
+//ex 1.48372 => 1.48373
+//TAKE AWAY:  This algorithm should work in a language that has finite-precision arithmetic
+//Arrays can be used to break up numbers of arbitrary size, this allows us to handle very big numbers!
+func incrementArb(arr []int) []int {
+	carry := 0
+forLoop:
+	for j := len(arr) - 1; j > 0; j-- {
+		sum := arr[j] + 1 + carry
+		carry = sum % 10
+		if sum/10 > 0 {
+			arr[j] = sum % 10
+			continue
 		} else {
-			num = append(num, hexMap[n%16])
+			arr[j] = sum
+			break forLoop
 		}
-		n = n / base
 	}
-	return reverse(strings.Join(num, ""))
+	return arr
 }
 
-func reverse(word string) string {
-	s := []rune(word)
-	for i, j := 0, len(s)-1; i < j; i, j = i+1, j-1 {
-		s[i], s[j] = s[j], s[i]
+//given an arr representing stock prices, return the maximum profit you could retrieve from buying and selling the stock twice
+//ex: [310, 315, 275, 295, 260, 270, 290, 230, 255, 250] => 50
+func buyStockTwice(arr []int) int {
+	maxProfits := make([]int, len(arr))
+	low := 1000000
+	diff := 0
+	for i := 0; i < len(arr); i++ {
+		if arr[i] < low {
+			low = arr[i]
+		}
+		if (arr[i] - low) > diff {
+			diff = arr[i] - low
+		}
+		maxProfits[i] = diff
 	}
-	return string(s)
+	totalMaxProfit := 0
+	high := -1
+	maxProfit := 0
+	for j := len(arr) - 1; j > 0; j-- {
+		if arr[j] > high {
+			high = arr[j]
+		}
+
+		if (high - arr[j]) > maxProfit {
+			maxProfit = high - arr[j]
+		}
+		maxProfits[j] = maxProfit + maxProfits[j-1]
+		if maxProfits[j] > totalMaxProfit {
+			totalMaxProfit = maxProfits[j]
+		}
+
+	}
+
+	return totalMaxProfit
+}
+
+//given an arr representing stock prices, return the maximum profit you could retrieve from buying and selling the stock
+//ex: [310, 315, 275, 295, 260, 270, 290, 230, 255, 250] => 30
+func buyStock(arr []int) int {
+	low := 1000000
+	diff := 0
+	for i := 0; i < len(arr); i++ {
+		if arr[i] < low {
+			low = arr[i]
+		}
+		if (arr[i] - low) > diff {
+			diff = arr[i] - low
+		}
+	}
+	return diff
+}
+
+//Given two strings, write a method to decide if one is a permutation of the other
+func checkPermutation(s1 string, s2 string) bool {
+	s1Array := strings.Split(s1, "")
+	s2Array := strings.Split(s2, "")
+	sort.Strings(s1Array)
+	sort.Strings(s2Array)
+	if strings.Join(s1Array, "") == strings.Join(s2Array, "") {
+		return true
+	} else {
+		return false
+	}
 }
