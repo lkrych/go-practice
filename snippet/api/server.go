@@ -8,8 +8,11 @@ import (
 )
 
 func main() {
-
+	initKeys()
 	r := mux.NewRouter()
+
+	//Public endpoint
+	http.HandleFunc("/login", LoginHandler)
 
 	// Handle API routes
 	api := r.PathPrefix("/api/").Subrouter()
