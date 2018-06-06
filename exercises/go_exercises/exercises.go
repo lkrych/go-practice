@@ -6,67 +6,62 @@ import (
 	"strings"
 )
 
-//add dashes around an odd number, except on first or last el. Only allow one dash
-//ex: 303 => 3-0-3
-//ex: 333 => 3-3-3
-//ex: 3223 => 3-22-3
-func dasherizeNumber(n int) string {
-	buildString := []string{}
+//return true if the letter a is within two spaces of the letter z
+func nearbyAZ(word string) bool {
+	r, _ := regexp.Compile("z")
+	for i, ch := range strings.Split(word, "") {
+		if ch == "a" {
+			search := false
+			if i+4 > len(word)-1 {
+				search = r.MatchString(word[i+1:])
+			} else {
+				search = r.MatchString(word[i+1 : i+4])
+			}
+			if search {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+//convert base ten int n, into hexadecimal or binary representation
+func baseConverter(n int, base int) string {
+	num := []string{}
+	hexMap := map[int]string{
+		0:  "0",
+		1:  "1",
+		2:  "2",
+		3:  "3",
+		4:  "4",
+		5:  "5",
+		6:  "6",
+		7:  "7",
+		8:  "8",
+		9:  "9",
+		10: "a",
+		11: "b",
+		12: "c",
+		13: "d",
+		14: "e",
+		15: "f",
+	}
 	for n > 0 {
-		val := n % 10
-		if (val)%2 == 0 {
-			buildString = append(buildString, strconv.Itoa(val))
+
+		if base == 2 {
+			num = append(num, strconv.Itoa(n%2))
 		} else {
-			buildString = append(buildString, "-")
-			buildString = append(buildString, strconv.Itoa(val))
-			buildString = append(buildString, "-")
+			num = append(num, hexMap[n%16])
 		}
-		n = n / 10
+		n = n / base
 	}
-
-	//remove from front and back
-	if buildString[0] == "-" {
-		buildString = buildString[1:]
-	}
-
-	if buildString[len(buildString)-1] == "-" {
-		buildString = buildString[:len(buildString)-1]
-	}
-
-	//remove double dashes
-	r, _ := regexp.Compile("--")
-
-	joined := Reverse(strings.Join(buildString, ""))
-
-	return r.ReplaceAllString(joined, "-")
-
+	return reverse(strings.Join(num, ""))
 }
 
-func Reverse(s string) string {
-	runes := []rune(s)
-	for i, j := 0, len(runes)-1; i < j; i, j = i+1, j-1 {
-		runes[i], runes[j] = runes[j], runes[i]
+func reverse(word string) string {
+	s := []rune(word)
+	for i, j := 0, len(s)-1; i < j; i, j = i+1, j-1 {
+		s[i], s[j] = s[j], s[i]
 	}
-	return string(runes)
-}
-
-//return num of vowels in sentence
-func countVowels(sentence string) int {
-	count := 0
-	r, _ := regexp.Compile("[aeiou]")
-	for _, el := range strings.Split(sentence, "") {
-		if ok := r.MatchString(el); ok {
-			count++
-		}
-	}
-	return count
-}
-
-//return n!
-func factorial(n int) int {
-	if n < 1 {
-		return 1
-	} else {
-		return n * factorial(n-1)
-	}
+	return string(s)
 }
