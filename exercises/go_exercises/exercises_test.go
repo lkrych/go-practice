@@ -6,124 +6,121 @@ import (
 	"github.com/google/go-cmp/cmp"
 )
 
-func TestIncrementArbitrary(t *testing.T) {
-	test1 := incrementArb([]int{1, 2, 9})
-	test2 := incrementArb([]int{1, 2, 9, 8, 2, 3, 4, 1, 3, 5, 0})
-	test3 := incrementArb([]int{1, 2, 5, 3, 2, 4, 6, 7, 8, 2})
-	test4 := incrementArb([]int{5, 3, 6, 3, 7, 9, 5, 0})
-	test5 := incrementArb([]int{1, 2, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9})
-	ans1 := []int{1, 3, 0}
-	ans2 := []int{1, 2, 9, 8, 2, 3, 4, 1, 3, 5, 1}
-	ans3 := []int{1, 2, 5, 3, 2, 4, 6, 7, 8, 3}
-	ans4 := []int{5, 3, 6, 3, 7, 9, 5, 1}
-	ans5 := []int{1, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
-
+func TestRemoveDups(t *testing.T) {
+	test1 := removeDups([]int{1, 1, 1, 2, 3, 4, 4, 4, 5})
+	test2 := removeDups([]int{1, 1, 1, 2, 33, 102, 102})
+	test3 := removeDups([]int{1, 1, 1, 2, 3, 3, 4, 5, 6, 7, 8, 8, 9, 9})
+	test4 := removeDups([]int{1, 1, 1, 2, 3, 3, 3, 3, 3})
+	test5 := removeDups([]int{1, 1, 1, 2, 3, 3, 4, 5, 5})
+	ans1 := []int{1, 2, 3, 4, 5}
+	ans2 := []int{1, 2, 33, 102}
+	ans3 := []int{1, 2, 3, 4, 5, 6, 7, 8, 9}
+	ans4 := []int{1, 2, 3}
+	ans5 := []int{1, 2, 3, 4, 5}
 	if !cmp.Equal(test1, ans1) {
-		t.Errorf("Expected incrementArb to increment the array %v, instead you got %v", ans1, test1)
+		t.Errorf("Expected array %v to be %v", test1, ans1)
 	}
 	if !cmp.Equal(test2, ans2) {
-		t.Errorf("Expected incrementArb to increment the array %v, instead you got %v", ans2, test2)
+		t.Errorf("Expected array %v to be %v", test2, ans2)
 	}
 
 	if !cmp.Equal(test3, ans3) {
-		t.Errorf("Expected incrementArb to increment the array %v, instead you got %v", ans3, test3)
+		t.Errorf("Expected array %v to be %v", test4, ans3)
 	}
 
 	if !cmp.Equal(test4, ans4) {
-		t.Errorf("Expected incrementArb to increment the array %v, instead you got %v", ans4, test4)
+		t.Errorf("Expected array %v to be %v", test5, ans4)
 	}
 
 	if !cmp.Equal(test5, ans5) {
-		t.Errorf("Expected incrementArb to increment the array %v, instead you got %v", ans5, test5)
+		t.Errorf("Expected array %v to be %v", test5, ans5)
 	}
 }
 
-func TestBuyStockTwice(t *testing.T) {
-	test1 := []int{12, 11, 13, 9, 12, 8, 14, 13, 15}
-	test2 := []int{3, 2, 0, 0, 2, 0, 1, 5}
-	test3 := []int{5, 3, 1, 5, 2, 0, 1}
-	test4 := []int{5, 3, 2, 4, 1}
-	test5 := []int{3, 3, 1, 0, 2, 0, 1, 3, 1, 0, 6}
-	test6 := []int{7, 6, 5, 4, 3, 2}
-	if buyStockTwice(test1) != 10 {
-		t.Errorf("Expected array %v to be 2", test1)
+func TestBaseConverter(t *testing.T) {
+	test1 := baseConverter(5, 2)
+	test2 := baseConverter(1239449, 16)
+	test3 := baseConverter(112, 2)
+	test4 := baseConverter(112, 16)
+
+	if test1 != "101" {
+		t.Errorf("Expected baseConverter of 5 to base 2 to equal 101, not %v", test1)
 	}
-	if buyStockTwice(test2) != 7 {
-		t.Errorf("Expected array %v to be 5", test2)
+	if test2 != "12e999" {
+		t.Errorf("Expected baseConverter of 1239449 to base 16 to be 12e999, not %v", test2)
 	}
 
-	if buyStockTwice(test3) != 5 {
-		t.Errorf("Expected array %v to be 4", test3)
+	if test3 != "1110000" {
+		t.Errorf("Expected baseConverter of 112 to base 2 to be 1110000, not %v", test3)
 	}
 
-	if buyStockTwice(test4) != 2 {
-		t.Errorf("Expected array %v to be 2", test4)
-	}
-
-	if buyStockTwice(test5) != 9 {
-		t.Errorf("Expected array %v to be 6", test5)
-	}
-
-	if buyStockTwice(test6) != 0 {
-		t.Errorf("Expected array %v to be 0", test6)
+	if test4 != "70" {
+		t.Errorf("Expected baseConverter of 112 to base 16 to be 70, not %v", test4)
 	}
 }
 
-func TestBuyStock(t *testing.T) {
-	test1 := []int{3, 3, 1, 0, 2, 0, 1}
-	test2 := []int{3, 2, 0, 0, 2, 0, 1, 5}
-	test3 := []int{5, 3, 1, 5, 2, 0, 1}
-	test4 := []int{5, 3, 2, 4, 1}
-	test5 := []int{3, 3, 1, 0, 2, 0, 1, 3, 1, 0, 6}
-	test6 := []int{7, 6, 5, 4, 3, 2}
-	if buyStock(test1) != 2 {
-		t.Errorf("Expected array %v to be 2", test1)
+func TestMultiplyArbitrary(t *testing.T) {
+	test1 := multiplyArb([]int{1, 9, 3, 7, 0, 7, 7, 2, 1}, []int{-7, 6, 1, 8, 3, 8, 2, 5, 7, 2, 8, 7})
+	test2 := multiplyArb([]int{1, 2, 9, 8, 2, 3, 4, 1, 3, 5, 0}, []int{4, 5})
+	test3 := multiplyArb([]int{1, 2, 5, 3, 2, 4, 6, 7, 8, 2}, []int{-4, 0, 0, 2, 3})
+	test4 := multiplyArb([]int{5, 3, 6, 3, 7, 9, 5, 0}, []int{3, 5, 2})
+	test5 := multiplyArb([]int{1, 2}, []int{5})
+	test6 := multiplyArb([]int{1, 2, 3}, []int{9, 8, 7})
+	ans1 := []int{-1, 4, 7, 5, 7, 3, 9, 5, 2, 5, 8, 9, 6, 7, 6, 4, 1, 2, 9, 2, 7}
+	ans2 := []int{5, 8, 4, 2, 0, 5, 3, 6, 0, 7, 5, 0}
+	ans3 := []int{-5, 0, 1, 5, 8, 6, 9, 5, 9, 5, 5, 9, 8, 6}
+	ans4 := []int{1, 8, 8, 8, 0, 5, 5, 8, 4, 0, 0}
+	ans5 := []int{6, 0}
+	ans6 := []int{1, 2, 1, 4, 0, 1}
+
+	if !cmp.Equal(test1, ans1) {
+		t.Errorf("Expected multiplyArb to multiply the array %v, instead you got %v", ans1, test1)
 	}
-	if buyStock(test2) != 5 {
-		t.Errorf("Expected array %v to be 5", test2)
+	if !cmp.Equal(test2, ans2) {
+		t.Errorf("Expected multiplyArb to multiply the array %v, instead you got %v", ans2, test2)
 	}
 
-	if buyStock(test3) != 4 {
-		t.Errorf("Expected array %v to be 4", test3)
+	if !cmp.Equal(test3, ans3) {
+		t.Errorf("Expected multiplyArb to multiply the array %v, instead you got %v", ans3, test3)
 	}
 
-	if buyStock(test4) != 2 {
-		t.Errorf("Expected array %v to be 2", test4)
+	if !cmp.Equal(test4, ans4) {
+		t.Errorf("Expected multiplyArb to multiply the array %v, instead you got %v", ans4, test4)
 	}
 
-	if buyStock(test5) != 6 {
-		t.Errorf("Expected array %v to be 6", test5)
+	if !cmp.Equal(test5, ans5) {
+		t.Errorf("Expected multiplyArb to multiply the array %v, instead you got %v", ans5, test5)
 	}
 
-	if buyStock(test6) != 0 {
-		t.Errorf("Expected array %v to be 0", test6)
+	if !cmp.Equal(test6, ans6) {
+		t.Errorf("Expected multiplyArb to multiply the array %v, instead you got %v", ans6, test6)
 	}
 }
 
-func TestCheckPermutation(t *testing.T) {
-	test1 := checkPermutation("blah", "halb")
-	test2 := checkPermutation("baleen", "neelab")
-	test3 := checkPermutation("cactus", "flower")
-	test4 := checkPermutation("ballsy", "heptagon")
-	test5 := checkPermutation("winky face", "kin wafeyc")
+func TestIsPowerOfTwo(t *testing.T) {
+	test1 := isPowerOfTwo(1)
+	test2 := isPowerOfTwo(16)
+	test3 := isPowerOfTwo(64)
+	test4 := isPowerOfTwo(78)
+	test5 := isPowerOfTwo(0)
 
 	if test1 != true {
-		t.Errorf("Expected checkPermutation to detect that blah and halb are permutations of eachother")
+		t.Errorf("Expected isPowerOfTwo of 1 to be true, not %v", test1)
 	}
 
 	if test2 != true {
-		t.Errorf("Expected checkPermutation to detect that baleen and neelab are permutations of eachother")
+		t.Errorf("Expected isPowerOfTwo of 16 to be true, not %v", test2)
 	}
 
-	if test3 != false {
-		t.Errorf("Expected checkPermutation to detect that cactus and flower are not permutations of eachother")
+	if test3 != true {
+		t.Errorf("Expected isPowerOfTwo of 64 to be true, not %v", test3)
 	}
 
 	if test4 != false {
-		t.Errorf("Expected checkPermutation to detect that ballsy and heptagon are not permutations of eachother")
+		t.Errorf("Expected isPowerOfTwo of 78 to be false, not %v", test4)
 	}
 
-	if test5 != true {
-		t.Errorf("Expected checkPermutation to detect that winky face and kin wafeyc are permutations of eachother")
+	if test5 != false {
+		t.Errorf("Expected isPowerOfTwo of 0 to be false, not %v", test5)
 	}
 }
