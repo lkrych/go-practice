@@ -4,23 +4,24 @@ import (
 	"fmt"
 	"net/http"
 
+	"flatphoto.com/views"
 	"github.com/gorilla/mux"
 )
 
 //global variables are usually frowned upon b/c they make code harder to test and can have side effects
-var homeTemplate *views.View
-var contactTemplate *views.View
+var homeView *views.View
+var contactView *views.View
 
 func home(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
-	if err := homeTemplate.Execute(w, nil); err != nil {
+	if err := homeView.Template.Execute(w, nil); err != nil {
 		panic(err)
 	}
 }
 
 func contact(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
-	if err := contactTemplate.Execute(w, nil); err != nil {
+	if err := contactView.Template.Execute(w, nil); err != nil {
 		panic(err)
 	}
 }
