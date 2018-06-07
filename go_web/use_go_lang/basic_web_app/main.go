@@ -8,10 +8,13 @@ import (
 )
 
 //global variables are usually frowned upon b/c they make code harder to test and can have side effects
-var homeView *views.View
-var contactView *views.View
-var faqView *views.View
-var fourOhfourView *views.View
+var (
+	homeView       *views.View
+	contactView    *views.View
+	faqView        *views.View
+	fourOhfourView *views.View
+	signupView     *views.View
+)
 
 func home(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
@@ -33,17 +36,24 @@ func fourOhfour(w http.ResponseWriter, r *http.Request) {
 	must(fourOhfourView.Render(w, nil))
 }
 
+func signup(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html")
+	must(signupView.Render(w, nil))
+}
+
 func main() {
 	homeView = views.NewView("bootstrap", "views/home.gohtml")
 	contactView = views.NewView("bootstrap", "views/contact.gohtml")
 	faqView = views.NewView("bootstrap", "views/faq.gohtml")
 	fourOhfourView = views.NewView("bootstrap", "views/404.gohtml")
+	signupView = views.NewView("bootstrap", "views/signup.gohtml")
 
 	var h http.Handler = http.HandlerFunc(fourOhfour)
 	r := mux.NewRouter()
 	r.HandleFunc("/", home)
 	r.HandleFunc("/contact", contact)
 	r.HandleFunc("/faq", faq)
+	r.HandleFunc("/signup", signup)
 	r.NotFoundHandler = h
 	http.ListenAndServe(":3000", r)
 }
