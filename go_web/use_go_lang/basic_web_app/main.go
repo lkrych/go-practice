@@ -2,15 +2,14 @@ package main
 
 import (
 	"fmt"
-	"html/template"
 	"net/http"
 
 	"github.com/gorilla/mux"
 )
 
 //global variables are usually frowned upon b/c they make code harder to test and can have side effects
-var homeTemplate *template.Template
-var contactTemplate *template.Template
+var homeTemplate *views.View
+var contactTemplate *views.View
 
 func home(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
@@ -37,15 +36,8 @@ func fourOhfour(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	var err error
-	homeTemplate, err = template.ParseFiles("views/home.gohtml")
-	if err != nil {
-		panic(err)
-	}
-	contactTemplate, err = template.ParseFiles("views/contact.gohtml")
-	if err != nil {
-		panic(err)
-	}
+	homeView = views.NewView("views/home.gohtml")
+	contactView = views.NewView("views/contact.gohtml")
 
 	var h http.Handler = http.HandlerFunc(fourOhfour)
 	r := mux.NewRouter()
