@@ -35,23 +35,24 @@ type Token struct {
 }
 
 const (
-	privKeyPath = "keys/app.rsa"
-	pubKeyPath  = "keys/app.rsa.pub"
+	privKeyPath = "./api/keys/app.rsa"
+	pubKeyPath  = "./api/keys/app.rsa.pub"
 )
 
 var VerifyKey, SignKey []byte
 
-func initKeys() {
+func InitKeys() {
+
 	var err error
 	//These keys sign your token
 	SignKey, err = ioutil.ReadFile(privKeyPath)
 	if err != nil {
-		log.Fatal("Error reading private key")
+		log.Fatalf("Error reading private key: ", err)
 		return
 	}
 	VerifyKey, err = ioutil.ReadFile(pubKeyPath)
 	if err != nil {
-		log.Fatal("Error reading public key")
+		log.Fatal("Error reading public key: ", err)
 		return
 	}
 }
