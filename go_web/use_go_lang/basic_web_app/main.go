@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 
 	"flatphoto.com/views"
@@ -11,34 +10,34 @@ import (
 //global variables are usually frowned upon b/c they make code harder to test and can have side effects
 var homeView *views.View
 var contactView *views.View
+var faqView *views.View
+var fourOhfourView *views.View
 
 func home(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
-	if err := homeView.Template.ExecuteTemplate(w, homeView.Layout, nil); err != nil {
-		panic(err)
-	}
+	must(homeView.Render(w, nil))
 }
 
 func contact(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
-	if err := contactView.Template.ExecuteTemplate(w, contactView.Layout, nil); err != nil {
-		panic(err)
-	}
+	must(contactView.Render(w, nil))
 }
 
 func faq(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
-	fmt.Fprint(w, "<ul><li>Q: How do I get home?</li> <li>A: Search for the URL http://localhost:3000/ or click <a href=\"http://localhost:3000/\">here</a></li></ul>")
+	must(faqView.Render(w, nil))
 }
 
 func fourOhfour(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	fmt.Fprint(w, "<h1>🌼 Whoopsy Daisy 🌼</h1><p>This isn't what you were looking for! Get on back <a href=\"http://localhost:3000/\">home</a>!</p>")
+	must(fourOhfourView.Render(w, nil))
 }
 
 func main() {
 	homeView = views.NewView("bootstrap", "views/home.gohtml")
 	contactView = views.NewView("bootstrap", "views/contact.gohtml")
+	faqView = views.NewView("bootstrap", "views/faq.gohtml")
+	fourOhfourView = views.NewView("bootstrap", "views/404.gohtml")
 
 	var h http.Handler = http.HandlerFunc(fourOhfour)
 	r := mux.NewRouter()
@@ -47,4 +46,11 @@ func main() {
 	r.HandleFunc("/faq", faq)
 	r.NotFoundHandler = h
 	http.ListenAndServe(":3000", r)
+}
+
+// A helper function that panics on any error
+func must(err error) {
+	if err != nil {
+		panic(err)
+	}
 }
