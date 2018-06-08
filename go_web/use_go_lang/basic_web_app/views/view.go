@@ -40,7 +40,7 @@ type View struct {
 }
 
 func (v *View) Render(w http.ResponseWriter, data interface{}) error {
-	w.Header().Set("Content-Type", "text/html")
+	w.Header().Set("Content-Type", "text/html; charset=utf-8 ")
 	return v.Template.ExecuteTemplate(w, v.Layout, data)
 }
 
