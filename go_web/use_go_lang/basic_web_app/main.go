@@ -6,7 +6,6 @@ import (
 
 	"flatphoto.com/controllers"
 	"flatphoto.com/models"
-	"flatphoto.com/views"
 	"github.com/gorilla/mux"
 )
 
@@ -16,16 +15,6 @@ const (
 	user   = "postgres"
 	dbname = "flatphoto_dev"
 )
-
-//global variables are usually frowned upon b/c they make code harder to test and can have side effects
-var (
-	fourOhfourView *views.View
-)
-
-func fourOhfour(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	must(fourOhfourView.Render(w, nil))
-}
 
 func main() {
 	//Create a DB connection string and then use it to create our model services
@@ -37,19 +26,16 @@ func main() {
 	defer us.Close()
 	us.AutoMigrate()
 
-	fourOhfourView = views.NewView("bootstrap", "views/404.gohtml")
-
-	usersC := controllers.NewUsers()
+	usersC := controllers.NewUsers(us)
 	staticC := controllers.NewStatic()
 
-	var h http.Handler = http.HandlerFunc(fourOhfour)
 	r := mux.NewRouter()
 	r.Handle("/", staticC.Home).Methods("GET")
 	r.Handle("/contact", staticC.Contact).Methods("GET")
 	r.Handle("/faq", staticC.Faq).Methods("GET")
 	r.HandleFunc("/signup", usersC.New).Methods("GET")
 	r.HandleFunc("/signup", usersC.Create).Methods("POST")
-	r.NotFoundHandler = h
+	r.NotFoundHandler = staticC.FourOhfour
 	http.ListenAndServe(":3000", r)
 }
 
