@@ -10,26 +10,8 @@ import (
 
 //global variables are usually frowned upon b/c they make code harder to test and can have side effects
 var (
-	homeView       *views.View
-	contactView    *views.View
-	faqView        *views.View
 	fourOhfourView *views.View
 )
-
-func home(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/html")
-	must(homeView.Render(w, nil))
-}
-
-func contact(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/html")
-	must(contactView.Render(w, nil))
-}
-
-func faq(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/html")
-	must(faqView.Render(w, nil))
-}
 
 func fourOhfour(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
@@ -37,19 +19,18 @@ func fourOhfour(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	homeView = views.NewView("bootstrap", "views/home.gohtml")
-	contactView = views.NewView("bootstrap", "views/contact.gohtml")
-	faqView = views.NewView("bootstrap", "views/faq.gohtml")
 	fourOhfourView = views.NewView("bootstrap", "views/404.gohtml")
 
 	usersC := controllers.NewUsers()
+	staticC := controllers.NewStatic()
 
 	var h http.Handler = http.HandlerFunc(fourOhfour)
 	r := mux.NewRouter()
-	r.HandleFunc("/", home)
-	r.HandleFunc("/contact", contact)
-	r.HandleFunc("/faq", faq)
-	r.HandleFunc("/signup", usersC.New)
+	r.Handle("/", staticC.Home).Methods("GET")
+	r.Handle("/contact", staticC.Contact).Methods("GET")
+	r.Handle("/faq", staticC.Faq).Methods("GET")
+	r.HandleFunc("/signup", usersC.New).Methods("GET")
+	r.HandleFunc("/signup", usersC.Create).Methods("POST")
 	r.NotFoundHandler = h
 	http.ListenAndServe(":3000", r)
 }
