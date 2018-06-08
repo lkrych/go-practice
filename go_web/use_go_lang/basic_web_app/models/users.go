@@ -3,6 +3,8 @@ package models
 import (
 	"errors"
 
+	"golang.org/x/crypto/bcrypt"
+
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
@@ -12,12 +14,15 @@ var (
 	ErrNotFound = errors.New("models: resource not found")
 	//ErrInvalidID is returned when invalid ID is provided to a method like delete
 	ErrInvalidID = errors.New("models: ID provided was invalid")
+	userPwPepper = "thisisadummyvariable"
 )
 
 type User struct {
 	gorm.Model
-	Username string
-	Email    string `gorm:"not null;unique_index"`
+	Username     string
+	Email        string `gorm:"not null;unique_index"`
+	Password     string `gorm:"-"`
+	PasswordHash string `gorm:"not null"`
 }
 
 //abstraction layer that provides methods for querying, creating and updating users
@@ -72,6 +77,15 @@ func (us *UserService) ByEmail(email string) (*User, error) {
 
 //Create will create the provided user and backfill data like the ID, CreatedAt, etc.
 func (us *UserService) Create(user *User) error {
+	pwBytes := []byte(user.Password + userPwPepper) //add pepper to password
+	hashedBytes, err := bcrypt.GenerateFromPassword(
+		pwBytes, bcrypt.DefaultCost)
+	if err != nil {
+		return err
+	}
+	//assign passwordFields
+	user.PasswordHash = string(hashedBytes)
+	user.Password = ""
 	return us.db.Create(user).Error
 }
 
