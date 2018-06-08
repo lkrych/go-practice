@@ -4,17 +4,20 @@ import (
 	"fmt"
 	"net/http"
 
+	"flatphoto.com/models"
 	"flatphoto.com/views"
 )
 
-func NewUsers() *Users {
+func NewUsers(us *models.UserService) *Users {
 	return &Users{
 		NewView: views.NewView("bootstrap", "views/users/new.gohtml"),
+		us:      us,
 	}
 }
 
 type Users struct {
 	NewView *views.View
+	us      *models.UserService
 }
 
 type SignupForm struct {
@@ -33,14 +36,21 @@ func (u *Users) New(w http.ResponseWriter, r *http.Request) {
 
 //Create is used to process the signup form when a user tries to create a new user account
 //POST /signup
-
 func (u *Users) Create(w http.ResponseWriter, r *http.Request) {
 	var form SignupForm
 	if err := parseForm(r, &form); err != nil {
 		panic(err)
 	}
-	fmt.Fprintln(w, "Email is", form.Email)
-	fmt.Fprintln(w, "Password is", form.Password)
-	fmt.Fprintln(w, "Username is", form.Username)
+	user := models.User{
+		Username: form.Username,
+		Email:    form.Email,
+	}
+
+	if err := u.us.Create(&user); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	fmt.Fprintln(w, "User is", user)
 
 }
