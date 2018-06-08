@@ -1,5 +1,10 @@
 package rand
 
+import (
+	"crypto/rand"
+	"encoding/base64"
+)
+
 //this is an arbitrary number
 const RememberTokenBytes = 32
 
@@ -12,13 +17,12 @@ func RememberToken() (string, error) {
 //Bytes will help us generate n random bytes, or wil
 //return an error if there was one. This uses the
 func Bytes(n int) ([]byte, error) {
-	b := make([]byte, error) 
-		_, err := rand.Read(b)
-		if err != nil {
-			return nil, err
-		}
-		return b, nil
+	b := make([]byte, n)
+	_, err := rand.Read(b)
+	if err != nil {
+		return nil, err
 	}
+	return b, nil
 }
 
 //return a string that is the base64 URL encoded version of that byte slice
@@ -29,4 +33,3 @@ func String(nBytes int) (string, error) {
 	}
 	return base64.URLEncoding.EncodeToString(b), nil
 }
-
