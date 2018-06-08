@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 
+	"flatphoto.com/controllers"
 	"flatphoto.com/views"
 	"github.com/gorilla/mux"
 )
@@ -13,7 +14,6 @@ var (
 	contactView    *views.View
 	faqView        *views.View
 	fourOhfourView *views.View
-	signupView     *views.View
 )
 
 func home(w http.ResponseWriter, r *http.Request) {
@@ -36,24 +36,20 @@ func fourOhfour(w http.ResponseWriter, r *http.Request) {
 	must(fourOhfourView.Render(w, nil))
 }
 
-func signup(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/html")
-	must(signupView.Render(w, nil))
-}
-
 func main() {
 	homeView = views.NewView("bootstrap", "views/home.gohtml")
 	contactView = views.NewView("bootstrap", "views/contact.gohtml")
 	faqView = views.NewView("bootstrap", "views/faq.gohtml")
 	fourOhfourView = views.NewView("bootstrap", "views/404.gohtml")
-	signupView = views.NewView("bootstrap", "views/signup.gohtml")
+
+	usersC := controllers.NewUsers()
 
 	var h http.Handler = http.HandlerFunc(fourOhfour)
 	r := mux.NewRouter()
 	r.HandleFunc("/", home)
 	r.HandleFunc("/contact", contact)
 	r.HandleFunc("/faq", faq)
-	r.HandleFunc("/signup", signup)
+	r.HandleFunc("/signup", usersC.New)
 	r.NotFoundHandler = h
 	http.ListenAndServe(":3000", r)
 }
