@@ -10,6 +10,8 @@ import (
 var (
 	//ErrNotFound is returned when a resource cannot be found
 	ErrNotFound = errors.New("models: resource not found")
+	//ErrInvalidID is returned when invalid ID is provided to a method like delete
+	ErrInvalidID = errors.New("models: ID provided was invalid")
 )
 
 type User struct {
@@ -68,16 +70,30 @@ func (us *UserService) ByEmail(email string) (*User, error) {
 	return &user, err
 }
 
+//Create will create the provided user and backfill data like the ID, CreatedAt, etc.
+func (us *UserService) Create(user *User) error {
+	return us.db.Create(user).Error
+}
+
+//Update will update the provided user with all the data in the provided user object
+func (us *UserService) Update(user *User) error {
+	return us.db.Save(user).Error
+}
+
+//Delete will delete the user with the provided ID
+func (us *UserService) Delete(id uint) error {
+	if id == 0 {
+		return ErrInvalidID
+	}
+	user := User{Model: gorm.Model{ID: id}}
+	return us.db.Delete(&user).Error
+}
+
 //DestructiveReset drops the user table and rebuilds it
 //only useful for development
 func (us *UserService) DestructiveReset() {
 	us.db.DropTableIfExists(&User{})
 	us.db.AutoMigrate(&User{})
-}
-
-//Create will create the provided user and backfill data like the ID, CreatedAt, etc.
-func (us *UserService) Create(user *User) error {
-	return us.db.Create(user).Error
 }
 
 // first will query using the provided gorm.Db and it will
