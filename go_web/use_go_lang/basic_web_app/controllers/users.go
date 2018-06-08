@@ -18,6 +18,7 @@ type Users struct {
 }
 
 type SignupForm struct {
+	Username string `schema:"name"`
 	Email    string `schema:"email"`
 	Password string `schema:"password"`
 }
@@ -40,5 +41,6 @@ func (u *Users) Create(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Fprintln(w, "Email is", form.Email)
 	fmt.Fprintln(w, "Password is", form.Password)
+	fmt.Fprintln(w, "Username is", form.Username)
 
 }
