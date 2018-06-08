@@ -4,79 +4,89 @@ import (
 	"testing"
 )
 
-func TestSumNums(t *testing.T) {
-	test1 := sumNums(1)
-	test2 := sumNums(2)
-	test3 := sumNums(5)
+func TestDasherizeNumber(t *testing.T) {
+	test1 := dasherizeNumber(203)
+	test2 := dasherizeNumber(303)
+	test3 := dasherizeNumber(333)
+	test4 := dasherizeNumber(3223)
+
+	if test1 != "20-3" {
+		t.Errorf("Expected dasherizeNumber of 203  to be 20-3, not %v", test1)
+	}
+
+	if test2 != "3-0-3" {
+		t.Errorf("Expected dasherizeNumber of 303  to be 3-0-3, not %v", test2)
+	}
+
+	if test3 != "3-3-3" {
+		t.Errorf("Expected dasherizeNumber of 333 to be 3-3-3, not %v", test3)
+	}
+
+	if test4 != "3-22-3" {
+		t.Errorf("Expected dasherizeNumber of 3223  to be 3-22-3, not %v", test4)
+	}
+}
+
+func TestCheckSum(t *testing.T) {
+	test1 := checkSum([][]int{{1, 2, 3}, {1, 2, 3}, {1, 2, 3}})
+	test2 := checkSum([][]int{{1, 2, 3, 4}, {1, 2, 3}, {1, 2, 3}})
+	test3 := checkSum([][]int{{1, 2, 3, 10}, {1, 2, 3, 12}, {1, 2, 3, 15}})
+	test4 := checkSum([][]int{{3, 22, 124}, {3, 70}, {1, 2, 5}})
+	test5 := checkSum([][]int{{1, 2, 10}, {1, 11, 3}, {500, 2, 3}})
+	// test6 := checkSum(checkSumAdvent())
+
+	if test1 != 6 {
+		t.Errorf("Expected answer to be 6, not %v", test1)
+	}
+	if test2 != 7 {
+		t.Errorf("Expected answer to be 7, not %v", test2)
+	}
+
+	if test3 != 34 {
+		t.Errorf("Expected answer to be 34, not %v", test3)
+	}
+
+	if test4 != 192 {
+		t.Errorf("Expected answer to be 192, not %v", test4)
+	}
+
+	if test5 != 517 {
+		t.Errorf("Expected answer to be 517, not %v", test5)
+	}
+
+	// if test6 != 53978 {
+	// 	t.Errorf("Expected answer to be 53978, not %v", test6)
+	// }
+}
+
+func TestCountVowels(t *testing.T) {
+	test1 := countVowels("abcd")
+	test2 := countVowels("colour")
+	test3 := countVowels("cecilia nutley")
 
 	if test1 != 1 {
-		t.Errorf("Expected sumNums(1) to equal 1, not %v", test1)
+		t.Errorf("Expected countVowels of abcd to be 1, not %v", test1)
 	}
 
 	if test2 != 3 {
-		t.Errorf("Expected sumNums(2) to equal 3, not %v", test2)
+		t.Errorf("Expected countVowels of colour to be 3, not %v", test2)
 	}
 
-	if test3 != 15 {
-		t.Errorf("Expected sumNums(5) to equal 15, not %v", test3)
-	}
-}
-
-func TestIsPalindrome(t *testing.T) {
-	test1 := isPalindrome("abc")
-	test2 := isPalindrome("racecar")
-	test3 := isPalindrome("z")
-
-	if test1 != false {
-		t.Errorf("Expected isPalindrome of abc to be false, not %v", test1)
-	}
-
-	if test2 != true {
-		t.Errorf("Expected isPalindrome of racecar to be true, not %v", test2)
-	}
-
-	if test3 != true {
-		t.Errorf("Expected isPalindrome of z to be true, not %v", test3)
+	if test3 != 6 {
+		t.Errorf("Expected countVowels of mom to be 6, not %v", test3)
 	}
 }
 
-func TestNthPrime(t *testing.T) {
-	test1 := nthPrime(3)
-	test2 := nthPrime(4)
-	test3 := nthPrime(15)
-	test4 := nthPrime(28)
-	test5 := nthPrime(77)
+func TestReverse(t *testing.T) {
+	word := reverse("candelabra")
+	sentence := reverse("reverse this sentence")
 
-	if test1 != 5 {
-		t.Errorf("Expected nthPrime of 3 to be 5, not %v", test1)
+	if word != "arbalednac" {
+		t.Errorf("Expected reverse to be able to reverse a string")
 	}
 
-	if test2 != 7 {
-		t.Errorf("Expected nthPrime of 4 to be 7, not %v", test2)
+	if sentence != "ecnetnes siht esrever" {
+		t.Errorf("Expected reverse to be able to reverse a sentence, but got %v", sentence)
 	}
 
-	if test3 != 47 {
-		t.Errorf("Expected nthPrime of 15 to be 47, not %v", test3)
-	}
-
-	if test4 != 107 {
-		t.Errorf("Expected nthPrime of 28 to be 107, not %v", test4)
-	}
-
-	if test5 != 389 {
-		t.Errorf("Expected nthPrime of 77 to be 389, not %v", test5)
-	}
-}
-
-func TestScrambleString(t *testing.T) {
-	test1 := scrambleString("abcd", []int{3, 1, 2, 0})
-	test2 := scrambleString("markov", []int{5, 3, 1, 4, 2, 0})
-
-	if test1 != "dbca" {
-		t.Errorf("Expected scrambleString of 'abcd' with inputs [3,1,2,0] to be 'dcba', not %v", test1)
-	}
-
-	if test2 != "vkaorm" {
-		t.Errorf("Expected scrambleString of 'markov' with inputs [5,3,1,4,2,0] to be 'vkaorm', not %v", test2)
-	}
 }
