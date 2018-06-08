@@ -40,6 +40,7 @@ func main() {
 	r.NotFoundHandler = staticC.FourOhfour
 	r.HandleFunc("/cookietest", usersC.CookieTest).Methods("GET")
 	http.ListenAndServe(":3000", r)
+
 }
 
 // A helper function that panics on any error
