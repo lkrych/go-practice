@@ -16,8 +16,8 @@ var (
 
 type User struct {
 	gorm.Model
-	Name  string
-	Email string `gorm:"not null;unique_index"`
+	Username string
+	Email    string `gorm:"not null;unique_index"`
 }
 
 //abstraction layer that provides methods for querying, creating and updating users
