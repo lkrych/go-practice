@@ -14,7 +14,9 @@ var (
 	ErrNotFound = errors.New("models: resource not found")
 	//ErrInvalidID is returned when invalid ID is provided to a method like delete
 	ErrInvalidID = errors.New("models: ID provided was invalid")
-	userPwPepper = "thisisadummyvariable"
+	//ErrInvalidPassword is returned when an invalid password is used when attempting to authenticate a user
+	ErrInvalidPassword = errors.New("models: incorrect password provided")
+	userPwPepper       = "thisisadummyvariable"
 )
 
 type User struct {
@@ -120,6 +122,26 @@ func (us *UserService) AutoMigrate() error {
 		return err
 	}
 	return nil
+}
+
+//Authenticate can be used to authenticate a user with the provided email and password
+func (us *UserService) Authenticate(email, password string) (*User, error) {
+	foundUser, err := us.ByEmail(email)
+	if err != nil {
+		return nil, err
+	}
+	err = bcrypt.CompareHashAndPassword(
+		[]byte(foundUser.PasswordHash),
+		[]byte(password+userPwPepper),
+	)
+	switch err {
+	case nil:
+		return foundUser, nil
+	case bcrypt.ErrMismatchedHashAndPassword:
+		return nil, ErrInvalidPassword
+	default:
+		return nil, err
+	}
 }
 
 // first will query using the provided gorm.Db and it will
