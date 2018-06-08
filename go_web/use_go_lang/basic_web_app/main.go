@@ -1,11 +1,20 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 
 	"flatphoto.com/controllers"
+	"flatphoto.com/models"
 	"flatphoto.com/views"
 	"github.com/gorilla/mux"
+)
+
+const (
+	host   = "localhost"
+	port   = 5432
+	user   = "postgres"
+	dbname = "flatphoto_dev"
 )
 
 //global variables are usually frowned upon b/c they make code harder to test and can have side effects
@@ -19,6 +28,15 @@ func fourOhfour(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	//Create a DB connection string and then use it to create our model services
+	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s dbname=%s sslmode=disable", host, port, user, dbname)
+	us, err := models.NewUserService(psqlInfo)
+	if err != nil {
+		panic(err)
+	}
+	defer us.Close()
+	us.AutoMigrate()
+
 	fourOhfourView = views.NewView("bootstrap", "views/404.gohtml")
 
 	usersC := controllers.NewUsers()
