@@ -33,9 +33,23 @@ type User struct {
 	RememberHash string `gorm:"not null;unique_index"`
 }
 
-//UserService is an abstraction layer that provides methods for querying, creating and updating users
-type UserService struct {
+//userService is an abstraction layer that provides methods for querying, creating and updating users
+type userService struct {
 	UserDB //embedded interface satisfied by userGorm
+}
+
+//userGorm represents our database interaction layer
+//and implements the UserDB interface fully.
+type userGorm struct {
+	db   *gorm.DB
+	hmac hash.HMAC
+}
+
+//userValidator is our validation layer that validates and
+//nromalizes data before passing it on to the next
+//userDB in our interface chain
+type userValidator struct {
+	UserDB
 }
 
 //UserDB is used to interact with the users database.
@@ -62,17 +76,14 @@ type UserDB interface {
 	DestructiveReset() error
 }
 
-//userGorm represents our database interaction layer
-//and implements the UserDB interface fully.
-type userGorm struct {
-	db   *gorm.DB
-	hmac hash.HMAC
-}
-
-//userValidator is our validation layer that validates and
-//nromalizes data before passing it on to the next
-//userDB in our interface chain
-type userValidator struct {
+//UserService is a set of methods used to manipulate and work
+//with the user model
+type UserService interface {
+	//Authenticate will verify the provided email address and
+	//passwords are correct. If they are correct, the user corresponding
+	//to that email will be returned. Otherwise you will receive either:
+	//ErrNotFound, ErrInvalidPassword, or another error if something goes wrong
+	Authenticate(email, password string) (*User, error)
 	UserDB
 }
 
@@ -90,13 +101,13 @@ func newUserGorm(connectionInfo string) (*userGorm, error) {
 	}, nil
 }
 
-//NewUserService instantiates a connection to the database in the Userservice object
-func NewUserService(connectionInfo string) (*UserService, error) {
+//NewUserService returns an UserService interface
+func NewUserService(connectionInfo string) (UserService, error) {
 	ug, err := newUserGorm(connectionInfo)
 	if err != nil {
 		return nil, err
 	}
-	return &UserService{
+	return &userService{
 		UserDB: userValidator{
 			UserDB: ug,
 		},
@@ -196,7 +207,7 @@ func (ug *userGorm) AutoMigrate() error {
 }
 
 //Authenticate can be used to authenticate a user with the provided email and password
-func (us *UserService) Authenticate(email, password string) (*User, error) {
+func (us *userService) Authenticate(email, password string) (*User, error) {
 	foundUser, err := us.ByEmail(email)
 	if err != nil {
 		return nil, err
