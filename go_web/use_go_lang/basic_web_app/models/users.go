@@ -33,29 +33,79 @@ type User struct {
 	RememberHash string `gorm:"not null;unique_index"`
 }
 
-//abstraction layer that provides methods for querying, creating and updating users
+//UserService is an abstraction layer that provides methods for querying, creating and updating users
 type UserService struct {
+	UserDB //embedded interface satisfied by userGorm
+}
+
+//UserDB is used to interact with the users database.
+// For pretty much all single user queries:
+// If the user is found we will return a nil error
+// if the user is not found, we will return ErrNotFound
+// if there is another error, we will return an error with
+// more information about what went wrong
+type UserDB interface {
+	ByID(id uint) (*User, error)
+	ByEmail(email string) (*User, error)
+	ByRemember(token string) (*User, error)
+
+	//Methods for altering users
+	Create(user *User) error
+	Update(user *User) error
+	Delete(id uint) error
+
+	//Used to close a DB connection
+	Close() error
+
+	//Migration helpers
+	AutoMigrate() error
+	DestructiveReset() error
+}
+
+//userGorm represents our database interaction layer
+//and implements the UserDB interface fully.
+type userGorm struct {
 	db   *gorm.DB
 	hmac hash.HMAC
 }
 
-//NewUserService instantiates a connection to the database in the Userservice object
-func NewUserService(connectionInfo string) (*UserService, error) {
+//userValidator is our validation layer that validates and
+//nromalizes data before passing it on to the next
+//userDB in our interface chain
+type userValidator struct {
+	UserDB
+}
+
+//NewUserGorm instantiates a connection to the database in the userGorm object
+func newUserGorm(connectionInfo string) (*userGorm, error) {
 	db, err := gorm.Open("postgres", connectionInfo)
 	if err != nil {
 		return nil, err
 	}
 	db.LogMode(true)
 	hmac := hash.NewHMAC(hmacSecretKey)
-	return &UserService{
+	return &userGorm{
 		db:   db,
 		hmac: hmac,
 	}, nil
 }
 
+//NewUserService instantiates a connection to the database in the Userservice object
+func NewUserService(connectionInfo string) (*UserService, error) {
+	ug, err := newUserGorm(connectionInfo)
+	if err != nil {
+		return nil, err
+	}
+	return &UserService{
+		UserDB: userValidator{
+			UserDB: ug,
+		},
+	}, nil
+}
+
 //Close closes the UserService database connection
-func (us *UserService) Close() error {
-	return us.db.Close()
+func (ug *userGorm) Close() error {
+	return ug.db.Close()
 }
 
 //ByID will look up a user with a provided ID
@@ -63,9 +113,9 @@ func (us *UserService) Close() error {
 // if the user is not found, we will return ErrNotFound
 // if there is another error, we will return an error with
 // more information about what went wrong
-func (us *UserService) ByID(id uint) (*User, error) {
+func (ug *userGorm) ByID(id uint) (*User, error) {
 	var user User
-	db := us.db.Where("id = ?", id)
+	db := ug.db.Where("id = ?", id)
 	err := first(db, &user)
 	if err != nil {
 		return nil, err
@@ -79,15 +129,15 @@ func (us *UserService) ByID(id uint) (*User, error) {
 // if the user is not found, we will return ErrNotFound
 // if there is another error, we will return an error with
 // more information about what went wrong
-func (us *UserService) ByEmail(email string) (*User, error) {
+func (ug *userGorm) ByEmail(email string) (*User, error) {
 	var user User
-	db := us.db.Where("email = ?", email)
+	db := ug.db.Where("email = ?", email)
 	err := first(db, &user)
 	return &user, err
 }
 
 //Create will create the provided user and backfill data like the ID, CreatedAt, etc.
-func (us *UserService) Create(user *User) error {
+func (ug *userGorm) Create(user *User) error {
 	pwBytes := []byte(user.Password + userPwPepper) //add pepper to password
 	hashedBytes, err := bcrypt.GenerateFromPassword(
 		pwBytes, bcrypt.DefaultCost)
@@ -105,41 +155,41 @@ func (us *UserService) Create(user *User) error {
 		}
 		user.Remember = token
 	}
-	user.RememberHash = us.hmac.Hash(user.Remember)
-	return us.db.Create(user).Error
+	user.RememberHash = ug.hmac.Hash(user.Remember)
+	return ug.db.Create(user).Error
 }
 
 //Update will update the provided user with all the data in the provided user object
-func (us *UserService) Update(user *User) error {
+func (ug *userGorm) Update(user *User) error {
 	if user.Remember != "" {
-		user.RememberHash = us.hmac.Hash(user.Remember)
+		user.RememberHash = ug.hmac.Hash(user.Remember)
 	}
-	return us.db.Save(user).Error
+	return ug.db.Save(user).Error
 }
 
 //Delete will delete the user with the provided ID
-func (us *UserService) Delete(id uint) error {
+func (ug *userGorm) Delete(id uint) error {
 	if id == 0 {
 		return ErrInvalidID
 	}
 	user := User{Model: gorm.Model{ID: id}}
-	return us.db.Delete(&user).Error
+	return ug.db.Delete(&user).Error
 }
 
 //DestructiveReset drops the user table and rebuilds it
 //only useful for development
-func (us *UserService) DestructiveReset() error {
-	err := us.db.DropTableIfExists(&User{}).Error
+func (ug *userGorm) DestructiveReset() error {
+	err := ug.db.DropTableIfExists(&User{}).Error
 	if err != nil {
 		return err
 	}
-	return us.AutoMigrate()
+	return ug.AutoMigrate()
 
 }
 
 //AutoMigrate will attempt to automatically migrate the users table
-func (us *UserService) AutoMigrate() error {
-	if err := us.db.AutoMigrate(&User{}).Error; err != nil {
+func (ug *userGorm) AutoMigrate() error {
+	if err := ug.db.AutoMigrate(&User{}).Error; err != nil {
 		return err
 	}
 	return nil
@@ -167,10 +217,10 @@ func (us *UserService) Authenticate(email, password string) (*User, error) {
 
 //ByRemember looks up a user with the given remember token
 //and returns that the user. This method will handle hashing the token for us
-func (us *UserService) ByRemember(token string) (*User, error) {
+func (ug *userGorm) ByRemember(token string) (*User, error) {
 	var user User
-	rememberHash := us.hmac.Hash(token)
-	err := first(us.db.Where("remember_hash = ?", rememberHash), &user)
+	rememberHash := ug.hmac.Hash(token)
+	err := first(ug.db.Where("remember_hash = ?", rememberHash), &user)
 	if err != nil {
 		return nil, err
 	}
