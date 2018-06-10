@@ -61,8 +61,11 @@ func makeExercises(numExercises int) {
 	testFile, err := os.OpenFile("./go_exercises/exercises_test.go", os.O_RDWR, 0666)
 	checkErr(err)
 	defer testFile.Close()
+	solnFile, err := os.OpenFile("./go_exercises/exercises_solns.go", os.O_RDWR, 0666)
+	checkErr(err)
+	defer solnFile.Close()
 
-	initFiles(exerciseFile, testFile)
+	initFiles(exerciseFile, testFile, solnFile)
 
 	// add exercises and tests to file
 	for _, idx := range randIdxs {
@@ -78,6 +81,10 @@ func makeExercises(numExercises int) {
 		test, err := ioutil.ReadFile(fmt.Sprintf("./exercises_test/%v", testName))
 		checkErr(err)
 
+		//read exercise soln file
+		solnName := fmt.Sprintf("%v_soln.go", split[0])
+		soln, err := ioutil.ReadFile(fmt.Sprintf("./exercises_solutions/%v", solnName))
+
 		//check to make sure files are being read correctly
 		fmt.Println("Exercises and Tests for", fileName)
 
@@ -88,6 +95,10 @@ func makeExercises(numExercises int) {
 		_, err = testFile.Write(test)
 		checkErr(err)
 		_, err = testFile.Write([]byte("\n \n"))
+		checkErr(err)
+		_, err = solnFile.Write(soln)
+		checkErr(err)
+		_, err = solnFile.Write([]byte("\n \n"))
 		checkErr(err)
 	}
 }
@@ -100,6 +111,9 @@ func createFiles() {
 	tests, err := os.Create("./go_exercises/exercises_test.go")
 	checkErr(err)
 	tests.Close()
+	solns, err := os.Create("./go_exercises/exercises_solns.go")
+	checkErr(err)
+	solns.Close()
 }
 
 func randomIndices(n int, arrLen int) []int {
@@ -134,7 +148,7 @@ func randomIndices(n int, arrLen int) []int {
 }
 
 //initialize files with package and import statements
-func initFiles(exerciseFile *os.File, testFile *os.File) {
+func initFiles(exerciseFile *os.File, testFile *os.File, solnFile *os.File) {
 	//init files with package main
 	_, err := exerciseFile.Write([]byte("package goExercises"))
 	checkErr(err)
@@ -148,6 +162,11 @@ func initFiles(exerciseFile *os.File, testFile *os.File) {
 	_, err = testFile.Write([]byte("import (\n\"fmt\"\n\"testing\"\n\"github.com/google/go-cmp/cmp\"\n)"))
 	checkErr(err)
 	_, err = testFile.Write([]byte("\n \n"))
+	checkErr(err)
+
+	_, err = solnFile.Write([]byte("package goExercises"))
+	checkErr(err)
+	_, err = solnFile.Write([]byte("\n \n"))
 	checkErr(err)
 }
 
