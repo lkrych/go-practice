@@ -7,32 +7,32 @@ func TestBuyStockTwice(t *testing.T) {
 	test4 := []int{5, 3, 2, 4, 1}
 	test5 := []int{3, 3, 1, 0, 2, 0, 1, 3, 1, 0, 6}
 	test6 := []int{7, 6, 5, 4, 3, 2}
-	ans1 := 10
-	ans2 := 7
-	ans3 := 5
-	ans4 := 2
-	ans5 := 9
-	ans6 := 0
-	if buyStockTwice(test1) != ans1 {
-		t.Errorf("Expected array %v to be 2, not %v", test1, ans1)
+	ans1 := buyStockTwice(test1)
+	ans2 := buyStockTwice(test2)
+	ans3 := buyStockTwice(test3)
+	ans4 := buyStockTwice(test4)
+	ans5 := buyStockTwice(test5)
+	ans6 := buyStockTwice(test6)
+	if ans1 != 10 {
+		t.Errorf("Expected array %v to be 10, not %v", test1, ans1)
 	}
-	if buyStockTwice(test2) != ans2 {
+	if ans2 != 5 {
 		t.Errorf("Expected array %v to be 5, not %v", test2, ans2)
 	}
 
-	if buyStockTwice(test3) != ans3 {
+	if ans3 != 4 {
 		t.Errorf("Expected array %v to be 4, not %v", test3, ans3)
 	}
 
-	if buyStockTwice(test4) != ans4 {
+	if ans4 != 2 {
 		t.Errorf("Expected array %v to be 2, not %v", test4, ans4)
 	}
 
-	if buyStockTwice(test5) != ans5 {
+	if ans5 != 6 {
 		t.Errorf("Expected array %v to be 6, not %v", test5, ans5)
 	}
 
-	if buyStockTwice(test6) != ans6 {
+	if ans6 != 0 {
 		t.Errorf("Expected array %v to be 0, not %v", test6, ans6)
 	}
 }
