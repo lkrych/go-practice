@@ -1,33 +1,38 @@
 package goExercises
 
 import (
-	"fmt"
-	"math"
+	"strconv"
+	"strings"
 )
 
-//take in an array of digits encoding a decimal, d and update the array to rep d + 1
-//ex: 1.29 => 1.30 ~ [1,2,9] => [1,3,0]
-//ex 1.48372 => 1.48373
-//TAKE AWAY:  This algorithm should work in a language that has finite-precision arithmetic
-//Arrays can be used to break up numbers of arbitrary size, this allows us to handle very big numbers!
-func incrementArb(arr []int) []int {
-	lastIdx := len(arr) - 1
-	carry := (1 + arr[lastIdx]) / 10
-	arr[lastIdx] = (1 + arr[lastIdx]) % 10
-forLoop:
-	for i := lastIdx - 1; i > 0; i-- {
-		if carry > 0 {
-			sum := carry + arr[i]
-			carry = sum / 10
-			arr[i] = sum % 10
-		} else {
-			break forLoop
+//return the longest word in sentence
+func longestWord(sentence string) string {
+	longestWord := ""
+	for _, word := range strings.Split(sentence, " ") {
+		if len(word) > len(longestWord) {
+			longestWord = word
 		}
 	}
-	return arr
+	return longestWord
 }
 
-//return if the word is a palindrome
+//return the longest palindrome sequence in sentence
+func longestPalindrome(sentence string) string {
+	longestPal := ""
+	for i := 0; i < len(sentence)-1; i++ {
+		for j := len(sentence) - 1; j > i; j-- {
+			word := sentence[i : j+1]
+			if isPalindrome(word) {
+				if len(word) > len(longestPal) {
+					longestPal = word
+				}
+			}
+
+		}
+	}
+	return longestPal
+}
+
 func isPalindrome(word string) bool {
 	for i, j := 0, len(word)-1; i < j; i, j = i+1, j-1 {
 		if word[i] != word[j] {
@@ -37,82 +42,70 @@ func isPalindrome(word string) bool {
 	return true
 }
 
-//return sorted arr using mergesort
-func mergeSort(arr []int) []int {
-	if len(arr) <= 1 { //arr is sorted!
-		return arr
-	}
-	midIdx := len(arr) / 2
-	leftMerge := mergeSort(arr[:midIdx])
-	rightMerge := mergeSort(arr[midIdx:])
-	return merge(leftMerge, rightMerge)
-}
-
-func merge(left, right []int) []int {
-	merged := []int{}
-	for len(left) > 0 && len(right) > 0 {
-
-		if left[0] <= right[0] {
-			merged = append(merged, left[0])
-			left = left[1:]
-		} else {
-			merged = append(merged, right[0])
-			right = right[1:]
-		}
-	}
-	if len(left) == 0 {
-		merged = append(merged, right...)
-		right = []int{}
-	} else if len(right) == 0 {
-		merged = append(merged, left...)
-		left = []int{}
-	}
-	return merged
-}
-
-//return true if n is a power of two
-func isPowerOfTwo(n float64) bool {
-	exp := 0
-	for pow(2, exp) <= n {
-		if pow(2, exp) == n {
-			return true
-		}
-		exp++
-	}
-	return false
-}
-
-func pow(base, exp int) float64 {
-	if exp == 0 {
+//return sum of n + n-1 + ... 1
+func sumNums(n int) int {
+	if n == 1 {
 		return 1
-	} else if exp == 1 {
-		return float64(base)
 	} else {
-		return float64(base) * pow(base, exp-1)
+		return n + sumNums(n-1)
 	}
 }
 
-//think of this exercise like a variation of mancala.
-//Starting at the zeroth index, can you navigate to the last index using the number of hops given to you at each index?
-//You may use less than the number of hops given to you at each index
-//return true if you can, return false if it is impossible
-//ex [3,3,1,0,2,0,1] is true
-// hop once from 3 to 3, hop three times to two and hop twice to 1!
-//ex [3,2,0,0,2,0,1] is false
-// the farthest you can hop is to index 4
-func advancingArray(arr []int) bool {
-	farthestTraveled := arr[0]
-	for i := 0; i <= farthestTraveled; i++ {
-		fmt.Println("the board is", arr)
-		fmt.Println("Checking idx", i)
-		if farthestTraveled == len(arr)-1 {
-			fmt.Println("maneuvered to the end")
-			return true
+//return the most common character in a string with its count
+func mostCommonLetter(sentence string) []string {
+	charMap := map[string]int{}
+	maxCount := 0
+	maxChar := ""
+	for _, el := range strings.Split(sentence, "") {
+		if el == " " {
+			continue
 		}
-		fmt.Println("Comparing farthestTraveled", farthestTraveled, "to ", arr[i]+i)
 
-		farthestTraveled = int(math.Max(float64(farthestTraveled), float64(arr[i]+i)))
+		if count, ok := charMap[el]; ok {
+			if count+1 > maxCount {
+				maxCount = count + 1
+				maxChar = el
+			}
+			charMap[el] = count + 1
+		} else {
+			charMap[el] = 1
+		}
 	}
-	fmt.Println("didn't find the end")
-	return false
+
+	return []string{maxChar, strconv.Itoa(maxCount)}
+}
+
+//given an arr representing stock prices, return the maximum profit you could retrieve from buying and selling the stock twice
+//ex: [310, 315, 275, 295, 260, 270, 290, 230, 255, 250] => 50
+func buyStockTwice(arr []int) int {
+	maxProfits := make([]int, len(arr))
+	maxProfit := 0
+	minBuy := 1000000
+	for i := 0; i < len(arr); i++ {
+		if arr[i] < minBuy {
+			minBuy = arr[i]
+		}
+		if (arr[i] - minBuy) > maxProfit {
+			maxProfit = arr[i] - minBuy
+		}
+		maxProfits[i] = maxProfit
+	}
+	high := -1
+	maxProfit = 0
+	totalMaxProfit := 0
+	for j := len(arr) - 1; j > 0; j-- {
+		if arr[j] > high {
+			high = arr[j]
+		}
+		if (high - arr[j]) > maxProfit {
+			maxProfit = high - arr[j]
+		}
+		maxProfits[j] = maxProfit + maxProfits[j-1]
+		if maxProfits[j] > totalMaxProfit {
+			totalMaxProfit = maxProfits[j]
+		}
+
+	}
+	return totalMaxProfit
+
 }
