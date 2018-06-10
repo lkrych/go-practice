@@ -1,4 +1,4 @@
-//return sorted arr using quicksort
+//return sorted arr using mergesort
 func mergeSort(arr []int) []int {
-	
+
 }
