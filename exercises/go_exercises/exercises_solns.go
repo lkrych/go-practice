@@ -1,65 +1,63 @@
 package goExercises
- 
-// func binarySearch(arr []int, toFind int) int {
-// 	if len(arr) < 1 {
-// 		return -1
+
+// func incrementArb(arr []int) []int {
+// 	lastIdx := len(arr) - 1
+// 	arr[lastIdx] = (arr[lastIdx] + 1) % 10
+// 	if arr[lastIdx] == 0 {
+// 		arr = append(incrementArb(arr[:lastIdx]), arr[lastIdx])
 // 	}
-// 	midIdx := len(arr) / 2
-// 	if toFind == arr[midIdx] {
-// 		return midIdx
-// 	} else if toFind > arr[midIdx] {
-// 		search := binarySearch(arr[midIdx+1:], toFind)
-// 		if search != -1 {
-// 			return search + midIdx + 1
-// 		}
-// 		return search
+// 	return arr
+// }
+
+// func factorial(n int) int {
+// 	if n == 1 {
+// 		return 1
+// 	}
+// 	return n * factorial(n-1)
+// }
+
+// import "strconv"
+
+// func timeConversion(timeInMinutes int) string {
+// 	minutes := timeInMinutes % 60
+// 	hours := timeInMinutes / 60
+// 	var time string
+// 	if minutes < 10 {
+// 		time = strconv.Itoa(hours) + ":0" + strconv.Itoa(minutes)
 // 	} else {
-// 		return binarySearch(arr[0:midIdx], toFind)
+// 		time = strconv.Itoa(hours) + ":" + strconv.Itoa(minutes)
+// 	}
+// 	return time
+// }
+
+//before building the string, you should check to make sure that you need to build the string
+// func stringCompression(in string) out string {
+// 	if countCompressionLength(in) > len(in) {
+// 		return in
 // 	}
 
-// }
- 
-// import (
-// 	"strconv"
-// 	"strings"
-// )
+// 	compressed := []rune{}
+// 	countConsec := 0
+// 	for i := 0; i < len(in); i++ {
+// 		countConsec++
 
-// func dasherizeNumber(n int) string {
-// 	dasherized := []string{}
-// 	toString := strconv.Itoa(n)
-// 	for i, el := range strings.Split(toString, "") {
-
-// 		if int, _ := strconv.Atoi(el); int%2 != 0 {
-// 			if i == 0 {
-// 				dasherized = append(dasherized, el, "-")
-// 			} else if i == len(toString)-1 {
-// 				dasherized = append(dasherized, "-", el)
-// 			} else {
-// 				dasherized = append(dasherized, "-", el, "-")
-// 			}
-// 		} else {
-// 			dasherized = append(dasherized, el)
+// 		if (i+1 >= len(string) || in[i] != in[i+1]) {
+// 			compressed = append(compressed, in[i], countConsec)
+// 			countConsec = 0
 // 		}
 // 	}
-// 	joined := strings.Join(dasherized, "")
-// 	return strings.Replace(joined, "--", "-", -1)
+// 	return string(compressed)
 // }
- 
-// import "strings"
 
-// func countVowels(sentence string) int {
-// 	split := strings.Split(sentence, "")
-// 	vowels := "aeiou"
-// 	count := 0
-// 	for _, chars := range split {
-// 		count += strings.Count(vowels, chars)
+// func countCompressionLength(in string) bool {
+// 	compressedLength := 0
+// 	countConsec := 0
+// 	for i := 0; i < len(in); i++ {
+// 		countConsec++
+
+// 		if (i+1 >= len(string) || in[i] != in[i+1]) {
+// 			compressedLength += (1 + len(string(countConsec)))
+// 			countConsec = 0
+// 		}
 // 	}
-
-// 	return count
 // }
- 
-// //Given a string, find the length of the longest substring without repeating characters.
-// func longestSubString(sentence string) int {
-
-// }
- 

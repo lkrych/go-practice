@@ -1,102 +1,76 @@
 package goExercises
 
 import (
-	"regexp"
+	"fmt"
 	"strconv"
 	"strings"
 )
 
-//return index of toFind if it exists in arr, otherwise return -1
-func binarySearch(arr []int, toFind int) int {
-	if len(arr) == 0 {
-		return -1
+//take in an array of digits encoding a decimal, d and update the array to rep d + 1
+//ex: 1.29 => 1.30 ~ [1,2,9] => [1,3,0]
+//ex 1.48372 => 1.48373
+//TAKE AWAY:  This algorithm should work in a language that has finite-precision arithmetic
+//Arrays can be used to break up numbers of arbitrary size, this allows us to handle very big numbers!
+func incrementArb(arr []int) []int {
+	carry := 1
+	idx := len(arr) - 1
+	for carry > 0 {
+		sum := carry + arr[idx]
+		arr[idx] = sum % 10
+		carry = sum / 10
+		idx--
 	}
-	midIdx := len(arr) / 2
-	if arr[midIdx] == toFind {
-		return midIdx
-	}
-	if arr[midIdx] > toFind {
-		return binarySearch(arr[:midIdx], toFind)
-	} else {
-		returned := binarySearch(arr[midIdx+1:], toFind)
-		if returned == -1 {
-			return returned
-		}
-
-		return 1 + midIdx + returned
-	}
-
+	return arr
 }
 
-//add dashes around an odd number, except on first or last el. Only allow one dash
-//ex: 303 => 3-0-3
-//ex: 333 => 3-3-3
-//ex: 3223 => 3-22-3
-func dasherizeNumber(n int) string {
-	strArr := []string{}
-	for n > 0 {
-		digit := n % 10
-		if digit%2 == 0 {
-			strArr = append(strArr, strconv.Itoa(digit))
-		} else {
-			strArr = append(strArr, "-")
-			strArr = append(strArr, strconv.Itoa(digit))
-			strArr = append(strArr, "-")
-		}
-		n = n / 10
+//return n!
+func factorial(n int) int {
+	if n == 1 {
+		return 1
 	}
-
-	//replace first and last
-	if strArr[0] == "-" {
-		strArr = strArr[1:]
-	}
-
-	if strArr[len(strArr)-1] == "-" {
-		strArr = strArr[:len(strArr)-1]
-	}
-	//replace double dashes
-	r := regexp.MustCompile("--")
-	str := strings.Join(strArr, "")
-	str = r.ReplaceAllString(str, "-")
-
-	return reverse(str)
+	return n * factorial(n-1)
 }
 
-func reverse(s string) string {
-	r := []rune(s)
-	for i, j := 0, len(s)-1; i < j; i, j = i+1, j-1 {
-		r[i], r[j] = r[j], r[i]
-	}
-	return string(r)
+//take timeinminutes and convert it into a clock representation
+//ex: 15 => 0:15
+//ex: 150 => 2:30
+//ex: 360 => 6:00
+func timeConversion(timeInMinutes int) string {
+	mins := timeInMinutes % 60
+	hrs := timeInMinutes / 60
+	return fmt.Sprintf("%v:%02d", hrs, mins)
 }
 
-//return num of vowels in sentence
-func countVowels(sentence string) int {
-	vowelCount := 0
-	r := regexp.MustCompile("[aeiou]")
-	for _, char := range strings.Split(sentence, "") {
-		if r.MatchString(char) {
-			vowelCount++
+//implement a method to perform basic string compression using the counts of repeated chars
+//ex: aabcccccaaa = a2b1c5a3
+func stringCompression(in string) string {
+	if checkStringCompresionLength(in) > len(in) {
+		return in
+	}
+	compressed := []string{}
+	consecutive := 0
+	for i := 0; i < len(in); i++ {
+		consecutive++
+		char := in[i]
+		if i+1 >= len(in) || char != in[i+1] {
+			compressed = append(compressed, string(char), strconv.Itoa(consecutive))
+			consecutive = 0
 		}
 	}
-	return vowelCount
+
+	return strings.Join(compressed, "")
 }
 
-//Given a string, find the length of the longest substring without repeating characters.
-func longestSubString(sentence string) int {
-	bs := []byte(sentence)
-	var maxLen, start int
-	idxMap := map[byte]int{}
-	for i := 0; i < len(bs); i++ {
-		if _, ok := idxMap[bs[i]]; ok && start <= idxMap[bs[i]] {
-			start = idxMap[bs[i]] + 1
-		} else {
-			if maxLen < i-start+1 {
-				maxLen = i - start + 1
-			}
+func checkStringCompresionLength(in string) int {
+	compressedCount := 0
+	consecutive := 0
+	for i := 0; i < len(in)-1; i++ {
+		consecutive++
+		char := in[i]
+		if char != in[i+1] {
+			compressedCount = compressedCount + (1 + len(strconv.Itoa(consecutive)))
+			consecutive = 0
 		}
-		idxMap[bs[i]] = i
 	}
-	return maxLen
-
+	return compressedCount
 }
