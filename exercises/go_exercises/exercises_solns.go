@@ -1,99 +1,65 @@
 package goExercises
-
-// func longestWord(sentence string) string {
-// 	split := strings.Split(sentence, " ")
-// 	longest := ""
-// 	for _, word := range split {
-// 		if len(word) > len(longest) {
-// 			longest = word
+ 
+// func binarySearch(arr []int, toFind int) int {
+// 	if len(arr) < 1 {
+// 		return -1
+// 	}
+// 	midIdx := len(arr) / 2
+// 	if toFind == arr[midIdx] {
+// 		return midIdx
+// 	} else if toFind > arr[midIdx] {
+// 		search := binarySearch(arr[midIdx+1:], toFind)
+// 		if search != -1 {
+// 			return search + midIdx + 1
 // 		}
+// 		return search
+// 	} else {
+// 		return binarySearch(arr[0:midIdx], toFind)
 // 	}
-// 	return longest
-// }
 
-// func longestPalindrome(sentence string) string {
-// 	startIdx := 0
-// 	longest := ""
-// 	for startIdx < len(sentence)-1 {
-// 		for endIdx := len(sentence) - 1; endIdx > startIdx; endIdx-- {
-// 			subString := sentence[startIdx : endIdx+1]
-// 			if subString == reverse(subString) && len(subString) > len(longest) {
-// 				longest = subString
-// 			}
-// 		}
-// 		startIdx++
-// 	}
-// 	return longest
 // }
-
-// func sumNums(n int) int {
-// 	if n == 1 {
-// 		return 1
-// 	}
-// 	return n + sumNums(n-1)
-// }
-
+ 
 // import (
 // 	"strconv"
 // 	"strings"
 // )
 
-// func mostCommonLetter(sentence string) []string {
-// 	lettersMap := map[string]int{}
-// 	for _, char := range strings.Split(sentence, "") {
-// 		if char == " " {
-// 			continue
-// 		}
-// 		if lettersMap[char] >= 1 {
-// 			lettersMap[char]++
+// func dasherizeNumber(n int) string {
+// 	dasherized := []string{}
+// 	toString := strconv.Itoa(n)
+// 	for i, el := range strings.Split(toString, "") {
+
+// 		if int, _ := strconv.Atoi(el); int%2 != 0 {
+// 			if i == 0 {
+// 				dasherized = append(dasherized, el, "-")
+// 			} else if i == len(toString)-1 {
+// 				dasherized = append(dasherized, "-", el)
+// 			} else {
+// 				dasherized = append(dasherized, "-", el, "-")
+// 			}
 // 		} else {
-// 			lettersMap[char] = 1
+// 			dasherized = append(dasherized, el)
 // 		}
 // 	}
+// 	joined := strings.Join(dasherized, "")
+// 	return strings.Replace(joined, "--", "-", -1)
+// }
+ 
+// import "strings"
+
+// func countVowels(sentence string) int {
+// 	split := strings.Split(sentence, "")
+// 	vowels := "aeiou"
 // 	count := 0
-// 	mostCommon := []string{}
-// 	for key, val := range lettersMap {
-// 		if val > count {
-// 			count = val
-// 			mostCommon = []string{key, strconv.Itoa(val)}
-// 		}
+// 	for _, chars := range split {
+// 		count += strings.Count(vowels, chars)
 // 	}
-// 	return mostCommon
+
+// 	return count
 // }
+ 
+// //Given a string, find the length of the longest substring without repeating characters.
+// func longestSubString(sentence string) int {
 
-// import "fmt"
-
-// //iterate forward O(n) and then backward O(n), combining the results in one array.
-// func buyStockTwice(arr []int) int {
-// 	maxProfit := 0
-// 	maxProfits := make([]int, len(arr))
-// 	low := 1000000
-// 	for i := 0; i < len(arr); i++ {
-// 		if arr[i] < low {
-// 			low = arr[i]
-// 		}
-// 		if (arr[i] - low) > maxProfit {
-// 			maxProfit = arr[i] - low
-// 		}
-// 		maxProfits[i] = maxProfit
-
-// 	}
-// 	fmt.Printf("Before backwards iteration: %v \n", maxProfits)
-// 	totalMaxProfit := 0
-// 	maxProfit = 0
-// 	high := -1
-// 	for j := len(arr) - 1; j > 0; j-- {
-// 		if arr[j] > high {
-// 			high = arr[j]
-// 		}
-// 		if (high - arr[j]) > maxProfit {
-// 			maxProfit = high - arr[j]
-// 		}
-// 		maxProfits[j] = maxProfit + maxProfits[j-1]
-// 		if maxProfits[j] > totalMaxProfit {
-// 			totalMaxProfit = maxProfits[j]
-// 		}
-// 	}
-// 	fmt.Printf("After backwards iteration: %v \n", maxProfits)
-// 	return totalMaxProfit
 // }
+ 

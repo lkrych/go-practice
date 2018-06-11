@@ -1,111 +1,102 @@
 package goExercises
 
 import (
+	"regexp"
 	"strconv"
 	"strings"
 )
 
-//return the longest word in sentence
-func longestWord(sentence string) string {
-	longestWord := ""
-	for _, word := range strings.Split(sentence, " ") {
-		if len(word) > len(longestWord) {
-			longestWord = word
-		}
+//return index of toFind if it exists in arr, otherwise return -1
+func binarySearch(arr []int, toFind int) int {
+	if len(arr) == 0 {
+		return -1
 	}
-	return longestWord
-}
-
-//return the longest palindrome sequence in sentence
-func longestPalindrome(sentence string) string {
-	longestPal := ""
-	for i := 0; i < len(sentence)-1; i++ {
-		for j := len(sentence) - 1; j > i; j-- {
-			word := sentence[i : j+1]
-			if isPalindrome(word) {
-				if len(word) > len(longestPal) {
-					longestPal = word
-				}
-			}
-
-		}
+	midIdx := len(arr) / 2
+	if arr[midIdx] == toFind {
+		return midIdx
 	}
-	return longestPal
-}
-
-func isPalindrome(word string) bool {
-	for i, j := 0, len(word)-1; i < j; i, j = i+1, j-1 {
-		if word[i] != word[j] {
-			return false
-		}
-	}
-	return true
-}
-
-//return sum of n + n-1 + ... 1
-func sumNums(n int) int {
-	if n == 1 {
-		return 1
+	if arr[midIdx] > toFind {
+		return binarySearch(arr[:midIdx], toFind)
 	} else {
-		return n + sumNums(n-1)
-	}
-}
-
-//return the most common character in a string with its count
-func mostCommonLetter(sentence string) []string {
-	charMap := map[string]int{}
-	maxCount := 0
-	maxChar := ""
-	for _, el := range strings.Split(sentence, "") {
-		if el == " " {
-			continue
+		returned := binarySearch(arr[midIdx+1:], toFind)
+		if returned == -1 {
+			return returned
 		}
 
-		if count, ok := charMap[el]; ok {
-			if count+1 > maxCount {
-				maxCount = count + 1
-				maxChar = el
-			}
-			charMap[el] = count + 1
+		return 1 + midIdx + returned
+	}
+
+}
+
+//add dashes around an odd number, except on first or last el. Only allow one dash
+//ex: 303 => 3-0-3
+//ex: 333 => 3-3-3
+//ex: 3223 => 3-22-3
+func dasherizeNumber(n int) string {
+	strArr := []string{}
+	for n > 0 {
+		digit := n % 10
+		if digit%2 == 0 {
+			strArr = append(strArr, strconv.Itoa(digit))
 		} else {
-			charMap[el] = 1
+			strArr = append(strArr, "-")
+			strArr = append(strArr, strconv.Itoa(digit))
+			strArr = append(strArr, "-")
 		}
+		n = n / 10
 	}
 
-	return []string{maxChar, strconv.Itoa(maxCount)}
+	//replace first and last
+	if strArr[0] == "-" {
+		strArr = strArr[1:]
+	}
+
+	if strArr[len(strArr)-1] == "-" {
+		strArr = strArr[:len(strArr)-1]
+	}
+	//replace double dashes
+	r := regexp.MustCompile("--")
+	str := strings.Join(strArr, "")
+	str = r.ReplaceAllString(str, "-")
+
+	return reverse(str)
 }
 
-//given an arr representing stock prices, return the maximum profit you could retrieve from buying and selling the stock twice
-//ex: [310, 315, 275, 295, 260, 270, 290, 230, 255, 250] => 50
-func buyStockTwice(arr []int) int {
-	maxProfits := make([]int, len(arr))
-	maxProfit := 0
-	minBuy := 1000000
-	for i := 0; i < len(arr); i++ {
-		if arr[i] < minBuy {
-			minBuy = arr[i]
-		}
-		if (arr[i] - minBuy) > maxProfit {
-			maxProfit = arr[i] - minBuy
-		}
-		maxProfits[i] = maxProfit
+func reverse(s string) string {
+	r := []rune(s)
+	for i, j := 0, len(s)-1; i < j; i, j = i+1, j-1 {
+		r[i], r[j] = r[j], r[i]
 	}
-	high := -1
-	maxProfit = 0
-	totalMaxProfit := 0
-	for j := len(arr) - 1; j > 0; j-- {
-		if arr[j] > high {
-			high = arr[j]
-		}
-		if (high - arr[j]) > maxProfit {
-			maxProfit = high - arr[j]
-		}
-		maxProfits[j] = maxProfit + maxProfits[j-1]
-		if maxProfits[j] > totalMaxProfit {
-			totalMaxProfit = maxProfits[j]
-		}
+	return string(r)
+}
 
+//return num of vowels in sentence
+func countVowels(sentence string) int {
+	vowelCount := 0
+	r := regexp.MustCompile("[aeiou]")
+	for _, char := range strings.Split(sentence, "") {
+		if r.MatchString(char) {
+			vowelCount++
+		}
 	}
-	return totalMaxProfit
+	return vowelCount
+}
+
+//Given a string, find the length of the longest substring without repeating characters.
+func longestSubString(sentence string) int {
+	bs := []byte(sentence)
+	var maxLen, start int
+	idxMap := map[byte]int{}
+	for i := 0; i < len(bs); i++ {
+		if _, ok := idxMap[bs[i]]; ok && start <= idxMap[bs[i]] {
+			start = idxMap[bs[i]] + 1
+		} else {
+			if maxLen < i-start+1 {
+				maxLen = i - start + 1
+			}
+		}
+		idxMap[bs[i]] = i
+	}
+	return maxLen
 
 }
