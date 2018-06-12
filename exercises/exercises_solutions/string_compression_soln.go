@@ -23,7 +23,7 @@
 // 	for i := 0; i < len(in); i++ {
 // 		countConsec++
 
-// 		if (i+1 >= len(string) || in[i] != in[i+1]) {
+// 		if (i+1 >= len(in) || in[i] != in[i+1]) {
 // 			compressedLength += (1 + len(string(countConsec)))
 // 			countConsec = 0
 // 		}
