@@ -2,77 +2,7 @@ package goExercises
 
 import (
 	"testing"
-
-	"github.com/google/go-cmp/cmp"
 )
-
-func TestIncrementArbitrary(t *testing.T) {
-	test1 := incrementArb([]int{1, 2, 9})
-	test2 := incrementArb([]int{1, 2, 9, 8, 2, 3, 4, 1, 3, 5, 0})
-	test3 := incrementArb([]int{1, 2, 5, 3, 2, 4, 6, 7, 8, 2})
-	test4 := incrementArb([]int{5, 3, 6, 3, 7, 9, 5, 0})
-	test5 := incrementArb([]int{1, 2, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9})
-	ans1 := []int{1, 3, 0}
-	ans2 := []int{1, 2, 9, 8, 2, 3, 4, 1, 3, 5, 1}
-	ans3 := []int{1, 2, 5, 3, 2, 4, 6, 7, 8, 3}
-	ans4 := []int{5, 3, 6, 3, 7, 9, 5, 1}
-	ans5 := []int{1, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
-
-	if !cmp.Equal(test1, ans1) {
-		t.Errorf("Expected incrementArb to increment the array %v, instead you got %v", ans1, test1)
-	}
-	if !cmp.Equal(test2, ans2) {
-		t.Errorf("Expected incrementArb to increment the array %v, instead you got %v", ans2, test2)
-	}
-
-	if !cmp.Equal(test3, ans3) {
-		t.Errorf("Expected incrementArb to increment the array %v, instead you got %v", ans3, test3)
-	}
-
-	if !cmp.Equal(test4, ans4) {
-		t.Errorf("Expected incrementArb to increment the array %v, instead you got %v", ans4, test4)
-	}
-
-	if !cmp.Equal(test5, ans5) {
-		t.Errorf("Expected incrementArb to increment the array %v, instead you got %v", ans5, test5)
-	}
-}
-
-func TestFactorial(t *testing.T) {
-	five := factorial(5)
-	ten := factorial(10)
-	one := factorial(1)
-
-	if five != 120 {
-		t.Errorf("Expected factorial of 5 to equal 120, not %v", five)
-	}
-
-	if ten != 3628800 {
-		t.Errorf("Expected factorial of 10 to equal 3628800, not %v", ten)
-	}
-
-	if one != 1 {
-		t.Errorf("Expected factorial of 1 to equal 1, not %v", one)
-	}
-}
-
-func TestTimeConversion(t *testing.T) {
-	test1 := timeConversion(15)
-	test2 := timeConversion(150)
-	test3 := timeConversion(360)
-
-	if test1 != "0:15" {
-		t.Errorf("Expected TimeConversion of 15 to be 0:15, not %v", test1)
-	}
-
-	if test2 != "2:30" {
-		t.Errorf("Expected TimeConversion of 150 to be 2:30, not %v", test2)
-	}
-
-	if test3 != "6:00" {
-		t.Errorf("Expected TimeConversion of 360 to be 6:00, not %v", test3)
-	}
-}
 
 func TestStringCompression(t *testing.T) {
 	test1 := stringCompression("abcd")
@@ -91,3 +21,113 @@ func TestStringCompression(t *testing.T) {
 		t.Errorf("Expected stringCompression of 'aabbbbcccccddd' to be 'a2b4c5d3', not %v", test3)
 	}
 }
+
+func TestLongestSubString(t *testing.T) {
+	test1 := longestSubString("abcabcbb")
+	test2 := longestSubString("bbbbb")
+	test3 := longestSubString("pwwkew")
+
+	if test1 != 3 {
+		t.Errorf("Expected longestSubString of abcabcbb to be 3, not %v", test1)
+	}
+
+	if test2 != 1 {
+		t.Errorf("Expected longestSubString of abba to be 1, not %v", test2)
+	}
+
+	if test3 != 3 {
+		t.Errorf("Expected longestSubString of pwwkew to be 3, not %v", test3)
+	}
+}
+
+func TestAdvancingArray(t *testing.T) {
+	test1 := []int{3, 3, 1, 0, 2, 0, 1}
+	test2 := []int{3, 2, 0, 0, 2, 0, 1}
+	test3 := []int{5, 3, 1, 0, 2, 0, 1}
+	test4 := []int{0, 3, 1, 0, 2, 0, 1}
+	test5 := []int{3, 3, 1, 0, 2, 0, 1, 3, 1, 0, 6}
+	if advancingArray(test1) != true {
+		t.Errorf("Expected array %v to be true", test1)
+	}
+	if advancingArray(test2) != false {
+		t.Errorf("Expected array %v to be false", test2)
+	}
+
+	if advancingArray(test3) != true {
+		t.Errorf("Expected array %v to be true", test3)
+	}
+
+	if advancingArray(test4) != false {
+		t.Errorf("Expected array %v to be false", test4)
+	}
+
+	if advancingArray(test5) != true {
+		t.Errorf("Expected array %v to be true", test5)
+	}
+}
+
+func TestPassPhrase(t *testing.T) {
+	test1 := passPhrase("doody goody woody")
+	test2 := passPhrase("doody doody woody")
+	test3 := passPhrase("woody goody woody")
+	test4 := passPhrase("It is not I who is the Creature!")
+	test5 := passPhrase("Hello, my name is Bill.")
+	test6 := passPhraseAdvent()
+
+	if test1 != true {
+		t.Errorf("Expected answer to be true, not %v", test1)
+	}
+
+	if test2 != false {
+		t.Errorf("Expected answer to be false, not %v", test2)
+	}
+
+	if test3 != false {
+		t.Errorf("Expected answer to be false, not %v", test3)
+	}
+
+	if test4 != false {
+		t.Errorf("Expected answer to be false, not %v", test4)
+	}
+
+	if test5 != true {
+		t.Errorf("Expected answer to be true, not %v", test5)
+	}
+
+	if test6 != 325 {
+		t.Errorf("Expected answer to be 325, not %v", test6)
+	}
+}
+
+// func TestPassPhraseAnagram(t *testing.T) {
+// 	test1 := passPhraseAnagram("abcde fghij")
+// 	test2 := passPhraseAnagram("abcde xyz ecdab")
+// 	test3 := passPhraseAnagram("a ab abc abd abf abj")
+// 	test4 := passPhraseAnagram("iiii oiii ooii oooi oooo")
+// 	test5 := passPhraseAnagram("oiii ioii iioi iiio")
+// 	test6 := passPhraseAnagramAdvent()
+
+// 	if test1 != true {
+// 		t.Errorf("Expected answer to be true, not %v", test1)
+// 	}
+
+// 	if test2 != false {
+// 		t.Errorf("Expected answer to be false, not %v", test2)
+// 	}
+
+// 	if test3 != true {
+// 		t.Errorf("Expected answer to be true, not %v", test3)
+// 	}
+
+// 	if test4 != true {
+// 		t.Errorf("Expected answer to be false, not %v", test4)
+// 	}
+
+// 	if test5 != false {
+// 		t.Errorf("Expected answer to be false, not %v", test5)
+// 	}
+
+// 	if test6 != 6 {
+// 		t.Errorf("Expected answer to be 6, not %v", test6)
+// 	}
+// }
