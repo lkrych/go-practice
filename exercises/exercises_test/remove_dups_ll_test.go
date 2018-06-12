@@ -82,3 +82,13 @@ func findValueInLL(head *Node, findVal int) bool {
 	}
 	return found
 }
+
+func printLL(head *Node) {
+	currentNode := head
+
+	for currentNode.next != nil {
+		fmt.Printf("  %v  ->", currentNode)
+		currentNode = currentNode.next
+	}
+	fmt.Printf("  %v  \n", currentNode)
+}
