@@ -1,114 +1,120 @@
 package goExercises
  
-//before building the string, you should check to make sure that you need to build the string
-// func stringCompression(in string) out string {
-// 	if countCompressionLength(in) > len(in) {
-// 		return in
+func deleteDupsLL(head *Node) *Node {
+	intMap := map[int]bool{}
+	prev := &Node{}
+	currentNode := head
+	for currentNode.next != nil {
+		if _, ok := intMap[currentNode.val]; ok {
+			prev.next = currentNode.next
+		} else {
+			intMap[currentNode.val] = true
+			prev = currentNode
+		}
+		currentNode = currentNode.next
+	}
+	if _, ok := intMap[currentNode.val]; ok {
+		prev.next = currentNode.next
+	}
+	return head
+}
+ 
+// import "strings"
+
+// func scrambleString(word string, idxArray []int) string {
+// 	split := strings.Split(word, "")
+// 	scrambled := []string{}
+// 	for _, el := range idxArray {
+// 		scrambled = append(scrambled, split[el])
 // 	}
-
-// 	compressed := []rune{}
-// 	countConsec := 0
-// 	for i := 0; i < len(in); i++ {
-// 		countConsec++
-
-// 		if (i+1 >= len(string) || in[i] != in[i+1]) {
-// 			compressed = append(compressed, in[i], countConsec)
-// 			countConsec = 0
-// 		}
-// 	}
-// 	return string(compressed)
-// }
-
-// func countCompressionLength(in string) bool {
-// 	compressedLength := 0
-// 	countConsec := 0
-// 	for i := 0; i < len(in); i++ {
-// 		countConsec++
-
-// 		if (i+1 >= len(string) || in[i] != in[i+1]) {
-// 			compressedLength += (1 + len(string(countConsec)))
-// 			countConsec = 0
-// 		}
-// 	}
+// 	return strings.Join(scrambled, "")
 // }
  
-// //Given a string, find the length of the longest substring without repeating characters.
-// func lengthOfLongestSubstring(s string) int {
-// 	bs := []byte(s)
-// 	var maxLen, start int
-// 	idxMap := map[byte]int{}
-// 	for i := 0; i < len(bs); i++ {
-// 			if _, ok := idxMap[bs[i]]; ok && start <= idxMap[bs[i]] {
-// 					start = idxMap[bs[i]] + 1
-// 			} else {
-// 					if maxLen < i - start + 1 {
-// 							maxLen = i - start + 1
-// 					}
-// 			}
-// 			idxMap[bs[i]] = i
+// func partitionEvenOdd(arr []int) []int {
+// 	partition := 0
+// 	for i := 0; i < len(arr); i++ {
+// 		if arr[i]%2 == 0 {
+// 			arr[i], arr[partition] = arr[partition], arr[i]
+// 			partition++
+// 		}
 // 	}
-// 	return maxLen
+// 	front := quickSort(arr[:partition])
+// 	back := quickSort(arr[partition:])
+// 	return append(front, back...)
+// }
+
+// func quickSort(arr []int) []int {
+// 	if len(arr) <= 1 {
+// 		return arr
+// 	}
+
+// 	pivot := arr[0]
+// 	left := []int{}
+// 	right := []int{}
+
+// 	for _, val := range arr[1:] {
+// 		if val >= pivot {
+// 			right = append(right, val)
+// 		} else {
+// 			left = append(left, val)
+// 		}
+// 	}
+// 	answer := []int{}
+// 	sortedLeft := quickSort(left)
+// 	sortedRight := quickSort(right)
+// 	answer = append(answer, sortedLeft...)
+// 	answer = append(answer, pivot)
+// 	answer = append(answer, sortedRight...)
+// 	return answer
 // }
  
 // import "math"
 
-// //func keep track of how far you have traveled, if you can reach the end, you made it!
-// func advancingArray(arr []int) bool {
-// 	farthestTraveled := arr[0]
-// 	for i := 0; i <= farthestTraveled; i++ {
-// 		if farthestTraveled == len(arr)-1 {
-// 			return true
-// 		}
-// 		farthestTraveled = int(math.Max(float64(farthestTraveled), float64(arr[i]+i)))
+// func multiplyArb(arr1 []int, arr2 []int) []int {
+// 	sign := 1
+// 	//check if numbers are negative
+// 	if (arr1[0] * arr2[0]) > 0 {
+// 		sign = 1
+// 	} else {
+// 		sign = -1
 // 	}
-// 	return false
+// 	//set to absolute val
+// 	arr1[0] = int(math.Abs(float64(arr1[0])))
+// 	arr2[0] = int(math.Abs(float64(arr2[0])))
+
+// 	total := make([]int, len(arr1)+len(arr2))
+// 	for i := len(arr1) - 1; i >= 0; i-- {
+// 		for j := len(arr2) - 1; j >= 0; j-- {
+// 			total[i+j+1] += arr1[i] * arr2[j]
+// 			total[i+j] += total[i+j+1] / 10
+// 			total[i+j+1] %= 10
+// 		}
+// 	}
+// 	zeroIdx := 0
+// 	for {
+// 		if total[zeroIdx] != 0 {
+// 			break
+// 		}
+// 		zeroIdx++
+// 	}
+// 	total = total[zeroIdx:]
+// 	total[0] = total[0] * sign
+
+// 	return total
 // }
  
-// import (
-// 	"fmt"
-// 	"io/ioutil"
-// 	"log"
-// 	"strings"
-// )
+// import "math"
 
-// func passPhrase(passphrase string) bool {
-// 	split := strings.Split(passphrase, " ")
-// 	wordMap := make(map[string]int)
-// 	for _, word := range split {
-// 		if _, ok := wordMap[word]; ok {
-// 			fmt.Printf("%v is the repeated word in %v \n", word, passphrase)
-// 			return false
+// func isPowerOfTwo(n float64) bool {
+// 	power := float64(0)
+// 	value := math.Exp2(power)
+// 	for value <= n {
+// 		if value == n {
+// 			return true
 // 		}
-// 		wordMap[word] = 1
+// 		power++
+// 		value = math.Exp2(power)
 // 	}
-// 	return true
-// }
-
-// func passPhraseAdvent() int {
-// 	phraseCount := 0
-// 	content, err := ioutil.ReadFile("./advent_input/passphrase_input.txt")
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-// 	splitByLine := strings.Split(string(content), "\n")
-// 	for _, line := range splitByLine {
-// 		if passPhrase(line) {
-// 			phraseCount++
-// 		}
-// 	}
-// 	return phraseCount
-// }
-
-// func passPhraseAnagram(passphrase string) bool {
-// 	split := strings.Split(passphrase, " ")
-// 	wordMap := make(map[string]int)
-// 	for _, word := range split {
-// 		sorted := SortString(word)
-// 		if _, ok := wordMap[sorted]; ok {
-// 			return false
-// 		}
-// 		wordMap[sorted] = 1
-// 	}
-// 	return true
+// 	return false
 // }
  
