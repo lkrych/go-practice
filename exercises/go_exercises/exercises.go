@@ -1,89 +1,74 @@
 package goExercises
 
-import "log"
+import "math"
 
-//build a stack data structure
-type stack struct {
-	data []int
-}
-
-func (s *stack) push(el int) {
-	s.data = append(s.data, el)
-}
-
-func (s *stack) pop() int {
-	if s.isEmpty() {
-		log.Fatal("There are no elements on the stack")
+//if the sum of digits in n is less than ten, return that sum, otherwise try to find the digital root of that sum
+func digitalRoot(n int) int {
+	sum := n/10 + n%10
+	if sum < 10 {
+		return sum
 	}
-	lastIdx := len(s.data) - 1
-	popped := s.data[lastIdx]
-	s.data = s.data[:lastIdx]
-	return popped
+	return digitalRoot(sum)
+
 }
 
-func (s *stack) peek() int {
-	return s.data[len(s.data)-1]
-}
+//there are three types of edits that can be performed on strings
+// 1) insert a character
+// 2) remove a character
+// 3) replace a character
+// given two strings, write a function to check if they are one edit(or zero edits) away
+//ex: pale, ple -> true
+//	  pales, pale -> true
+//    pale, bale -> true
+//    pale, bake -> false
+func oneAway(s1, s2 string) bool {
+	if math.Abs(float64(len(s1)-len(s2))) > 1 {
+		return false
+	}
 
-func (s *stack) isEmpty() bool {
-	return len(s.data) == 0
-}
+	shorter := ""
+	longer := ""
 
-type Node struct {
-	val  int
-	next *Node
-}
+	if len(s1) < len(s2) {
+		shorter = s1
+		longer = s2
+	} else {
+		shorter = s2
+		longer = s1
+	}
 
-//write code to partition a linked list around a value x, such that all nodes less than
-//x come before all nodes greater than or equal to x
-func partitionLL(head *Node, partition int) *Node {
-	beforeStart := &Node{}
-	afterStart := &Node{}
-	beforeEnd := &Node{}
-	afterEnd := &Node{}
-	currentNode := head
-	for currentNode != nil {
-		next := currentNode.next
-		currentNode.next = nil
-		if currentNode.val < partition {
-			if beforeStart.val == 0 {
-				beforeStart = currentNode
-				beforeEnd = beforeStart
-			} else {
-				beforeEnd.next = currentNode
-				beforeEnd = currentNode
+	idx1 := 0
+	idx2 := 0
+	foundDiff := false
+
+	for idx2 < len(longer) && idx1 < len(shorter) {
+		if shorter[idx1] != longer[idx2] {
+			if foundDiff {
+				return false
 			}
-		} else { // if less than partiation
-			if afterStart.val == 0 {
-				afterStart = currentNode
-				afterEnd = afterStart
-			} else {
-				afterEnd.next = currentNode
-				afterEnd = currentNode
-			}
-		}
-		currentNode = next
-	}
-	if beforeStart.val == 0 {
-		return afterStart
-	}
-	beforeEnd.next = afterStart
-	return beforeStart
-}
+			foundDiff = true
 
-//write code that removes duplicates from an unsorted linked list
-func deleteDupsLL(head *Node) *Node {
-	intMap := map[int]bool{}
-	currentNode := head
-	prev := &Node{}
-	for currentNode != nil {
-		if _, ok := intMap[currentNode.val]; ok {
-			prev.next = currentNode.next
+			if len(shorter) == len(longer) {
+				idx1++ //make sure you are moving indices together unless there is replacement
+			}
 		} else {
-			intMap[currentNode.val] = true
-			prev = currentNode
+			idx1++
 		}
-		currentNode = currentNode.next
+		idx2++
 	}
-	return head
+	return true
+}
+
+//Implement an algorithm to determine if a string has all unique characters. What if you cannot use additional data structures?
+func isUnique(word string) bool {
+	charMap := map[byte]bool{}
+	for i := 0; i < len(word); i++ {
+		ch := word[i]
+		if _, ok := charMap[ch]; ok {
+			return false
+		} else {
+			charMap[ch] = true
+		}
+	}
+	return true
 }
