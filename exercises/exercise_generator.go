@@ -144,6 +144,7 @@ func randomIndices(n int, arrLen int) []int {
 		keys[i] = k
 		i++
 	}
+	fmt.Printf("The indexes we are using are %v \n", keys)
 	return keys
 }
 
