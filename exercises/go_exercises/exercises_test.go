@@ -1,15 +1,146 @@
 package goExercises
- 
-import (
-"fmt"
-"testing"
-"github.com/google/go-cmp/cmp"
-)
- 
+
 import (
 	"fmt"
 	"testing"
 )
+
+func TestCreatingAStack(t *testing.T) {
+	s := &stack{
+		data: []int{1, 2, 3, 4, 5, 6},
+	}
+	testPop := s.pop()
+	testPop2 := s.pop()
+
+	if len(s.data) != 4 {
+		t.Errorf("Expected pop to return elements from the top of the stack: %v, popped: %v", s.data, testPop)
+	}
+	if s.peek() != 4 {
+		t.Errorf("Expected peek to return the element at the top of the stack, not %v", s.peek())
+	}
+	if len(s.data) != 4 {
+		t.Errorf("Expected peek to not delete elements from the top of the stack")
+	}
+	if s.isEmpty() {
+		t.Errorf("The isEmpty function doesnt work because the stack has %v elements", len(s.data))
+	}
+
+	s.push(testPop)
+	if len(s.data) != 5 {
+		t.Errorf("Expected pop to return elements from the top of the stack: %v, popped: %v", s.data, testPop2)
+	}
+	if s.peek() != 6 {
+		t.Errorf("Expected peek to return the element at the top of the stack, not %v", s.peek())
+	}
+	if len(s.data) != 5 {
+		t.Errorf("Expected peek to not delete elements from the top of the stack")
+	}
+	if s.isEmpty() {
+		t.Errorf("The isEmpty function doesnt work because the stack has %v elements\n", len(s.data))
+	}
+
+	s.push(testPop2)
+	if len(s.data) != 6 {
+		t.Errorf("Expected push to return elements to the top of the stack")
+	}
+	if s.peek() != 5 {
+		t.Errorf("Expected peek to return the element at the top of the stack, not %v", s.peek())
+	}
+	if len(s.data) != 6 {
+		t.Errorf("Expected peek to not delete elements from the top of the stack")
+	}
+	if s.isEmpty() {
+		t.Errorf("The isEmpty function doesnt work because the stack has %v elements\n", len(s.data))
+	}
+
+	for i := 0; i < 6; i++ {
+		s.pop()
+	}
+	if !s.isEmpty() {
+		t.Errorf("The isEmpty function doesnt work because the stack should be empty")
+	}
+}
+
+func TestCreateALinkedList(t *testing.T) {
+	input1 := []int{10, 5, 8, 1, 3, 2, 4}
+	input2 := []int{4, 7, 2, 3, 1}
+	input3 := []int{105, 783, 98, 77, 33, 102}
+
+	list1 := createALinkedList(input1)
+	list2 := createALinkedList(input2)
+	list3 := createALinkedList(input3)
+
+	partition1 := partitionLL(list1, 5)
+	partition2 := partitionLL(list2, 3)
+	partition3 := partitionLL(list3, 105)
+
+	if findIdxOfVal(partition1, 4) > 5 {
+		t.Errorf("Expected partition to adjust the position of nodes")
+		printLL(partition1)
+	}
+
+	if findIdxOfVal(partition1, 10) < 4 {
+		t.Errorf("Expected partition to adjust the position of nodes")
+		printLL(partition1)
+	}
+
+	if findIdxOfVal(partition2, 7) < 3 {
+		t.Errorf("Expected partition to adjust the position of nodes")
+		printLL(partition2)
+	}
+
+	if findIdxOfVal(partition1, 2) > 3 {
+		t.Errorf("Expected partition to adjust the position of nodes")
+		printLL(partition2)
+	}
+
+	if findIdxOfVal(partition3, 102) > 5 {
+		t.Errorf("Expected partition to adjust the position of nodes")
+		printLL(partition3)
+	}
+
+	if findIdxOfVal(partition3, 783) < 3 {
+		t.Errorf("Expected partition to adjust the position of nodes")
+		printLL(partition3)
+	}
+
+}
+
+func findIdxOfVal(head *Node, search int) int {
+	idx := 0
+	for head.val != search {
+		idx++
+		head = head.next
+	}
+	return idx
+}
+
+func createALinkedList(input []int) *Node {
+	head := &Node{
+		val:  input[0],
+		next: nil,
+	}
+	currentNode := head
+	for i := 1; i < len(input); i++ {
+		nextNode := &Node{
+			val:  input[i],
+			next: nil,
+		}
+		currentNode.next = nextNode
+		currentNode = nextNode
+	}
+	return head
+}
+
+func printLL(head *Node) {
+	currentNode := head
+
+	for currentNode.next != nil {
+		fmt.Printf("  %v  ->", currentNode)
+		currentNode = currentNode.next
+	}
+	fmt.Printf("  %v  \n", currentNode)
+}
 
 func TestRemoveDuplicatesLL(t *testing.T) {
 	input1 := []int{1, 2, 3, 3, 4, 4, 5}
@@ -47,24 +178,6 @@ func TestRemoveDuplicatesLL(t *testing.T) {
 	}
 }
 
-//if you created your own function, comment this out!
-func createALinkedList(input []int) *Node {
-	head := &Node{
-		val:  input[0],
-		next: nil,
-	}
-	currentNode := head
-	for i := 1; i < len(input); i++ {
-		nextNode := &Node{
-			val:  input[i],
-			next: nil,
-		}
-		currentNode.next = nextNode
-		currentNode = nextNode
-	}
-	return head
-}
-
 func countLengthOfLL(head *Node) int {
 	count := 0
 	currentNode := head
@@ -90,129 +203,3 @@ func findValueInLL(head *Node, findVal int) bool {
 	}
 	return found
 }
-
-func printLL(head *Node) {
-	currentNode := head
-
-	for currentNode.next != nil {
-		fmt.Printf("  %v  ->", currentNode)
-		currentNode = currentNode.next
-	}
-	fmt.Printf("  %v  \n", currentNode)
-}
-
- 
-func TestScrambleString(t *testing.T) {
-	test1 := scrambleString("abcd", []int{3, 1, 2, 0})
-	test2 := scrambleString("markov", []int{5, 3, 1, 4, 2, 0})
-
-	if test1 != "dbca" {
-		t.Errorf("Expected scrambleString of 'abcd' with inputs [3,1,2,0] to be 'dcba', not %v", test1)
-	}
-
-	if test2 != "vkaorm" {
-		t.Errorf("Expected scrambleString of 'markov' with inputs [5,3,1,4,2,0] to be 'vkaorm', not %v", test2)
-	}
-}
- 
-func TestPartitionEvenOdd(t *testing.T) {
-	test1 := partitionEvenOdd([]int{7, 5, 2, 4, 8, 9, 3})
-	test2 := partitionEvenOdd([]int{7, 5, 2, 4, 8, 9, 3, 1, 6, 10})
-	test3 := partitionEvenOdd([]int{7, 5, 2, 4, 8, 9, 3, 3, 3, 3})
-	test4 := partitionEvenOdd([]int{7, 5, 2, 4, 8, 9, 3, 100, 102, 6, 1, 10})
-	test5 := partitionEvenOdd([]int{7, 5, 2, 4, 8, 9, 3, 11, 10, 6, 1})
-	ans1 := []int{2, 4, 8, 3, 5, 7, 9}
-	ans2 := []int{2, 4, 6, 8, 10, 1, 3, 5, 7, 9}
-	ans3 := []int{2, 4, 8, 3, 3, 3, 3, 5, 7, 9}
-	ans4 := []int{2, 4, 6, 8, 10, 100, 102, 1, 3, 5, 7, 9}
-	ans5 := []int{2, 4, 6, 8, 10, 1, 3, 5, 7, 9, 11}
-
-	if !cmp.Equal(test1, ans1) {
-		t.Errorf("Expected partitionEvenOdd to separate the array %v, instead you got %v", ans1, test1)
-	}
-	if !cmp.Equal(test2, ans2) {
-		t.Errorf("Expected partitionEvenOdd to separate the array %v, instead you got %v", ans2, test2)
-	}
-
-	if !cmp.Equal(test3, ans3) {
-		t.Errorf("Expected partitionEvenOdd to separate the array %v, instead you got %v", ans3, test3)
-	}
-
-	if !cmp.Equal(test4, ans4) {
-		t.Errorf("Expected partitionEvenOdd to separate the array %v, instead you got %v", ans4, test4)
-	}
-
-	if !cmp.Equal(test5, ans5) {
-		t.Errorf("Expected partitionEvenOdd to separate the array %v, instead you got %v", ans5, test5)
-	}
-}
-
- 
-func TestMultiplyArbitrary(t *testing.T) {
-	test1 := multiplyArb([]int{1, 9, 3, 7, 0, 7, 7, 2, 1}, []int{-7, 6, 1, 8, 3, 8, 2, 5, 7, 2, 8, 7})
-	test2 := multiplyArb([]int{1, 2, 9, 8, 2, 3, 4, 1, 3, 5, 0}, []int{4, 5})
-	test3 := multiplyArb([]int{1, 2, 5, 3, 2, 4, 6, 7, 8, 2}, []int{-4, 0, 0, 2, 3})
-	test4 := multiplyArb([]int{5, 3, 6, 3, 7, 9, 5, 0}, []int{3, 5, 2})
-	test5 := multiplyArb([]int{1, 2}, []int{5})
-	test6 := multiplyArb([]int{1, 2, 3}, []int{9, 8, 7})
-	ans1 := []int{-1, 4, 7, 5, 7, 3, 9, 5, 2, 5, 8, 9, 6, 7, 6, 4, 1, 2, 9, 2, 7}
-	ans2 := []int{5, 8, 4, 2, 0, 5, 3, 6, 0, 7, 5, 0}
-	ans3 := []int{-5, 0, 1, 5, 8, 6, 9, 5, 9, 5, 5, 9, 8, 6}
-	ans4 := []int{1, 8, 8, 8, 0, 5, 5, 8, 4, 0, 0}
-	ans5 := []int{6, 0}
-	ans6 := []int{1, 2, 1, 4, 0, 1}
-
-	if !cmp.Equal(test1, ans1) {
-		t.Errorf("Expected multiplyArb to multiply the array %v, instead you got %v", ans1, test1)
-	}
-	if !cmp.Equal(test2, ans2) {
-		t.Errorf("Expected multiplyArb to multiply the array %v, instead you got %v", ans2, test2)
-	}
-
-	if !cmp.Equal(test3, ans3) {
-		t.Errorf("Expected multiplyArb to multiply the array %v, instead you got %v", ans3, test3)
-	}
-
-	if !cmp.Equal(test4, ans4) {
-		t.Errorf("Expected multiplyArb to multiply the array %v, instead you got %v", ans4, test4)
-	}
-
-	if !cmp.Equal(test5, ans5) {
-		t.Errorf("Expected multiplyArb to multiply the array %v, instead you got %v", ans5, test5)
-	}
-
-	if !cmp.Equal(test6, ans6) {
-		t.Errorf("Expected multiplyArb to multiply the array %v, instead you got %v", ans6, test6)
-	}
-}
-
- 
-func TestIsPowerOfTwo(t *testing.T) {
-	test1 := isPowerOfTwo(1)
-	test2 := isPowerOfTwo(16)
-	test3 := isPowerOfTwo(64)
-	test4 := isPowerOfTwo(78)
-	test5 := isPowerOfTwo(0)
-
-	if test1 != true {
-		t.Errorf("Expected isPowerOfTwo of 1 to be true, not %v", test1)
-	}
-
-	if test2 != true {
-		t.Errorf("Expected isPowerOfTwo of 16 to be true, not %v", test2)
-	}
-
-	if test3 != true {
-		t.Errorf("Expected isPowerOfTwo of 64 to be true, not %v", test3)
-	}
-
-	if test4 != false {
-		t.Errorf("Expected isPowerOfTwo of 78 to be false, not %v", test4)
-	}
-
-	if test5 != false {
-		t.Errorf("Expected isPowerOfTwo of 0 to be false, not %v", test5)
-	}
-}
-
- 
