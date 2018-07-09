@@ -1,150 +1,108 @@
 package goExercises
-
-// import "math"
-
-// func isPowerOfTwo(n float64) bool {
-// 	power := float64(0)
-// 	value := math.Exp2(power)
-// 	for value <= n {
-// 		if value == n {
-// 			return true
-// 		}
-// 		power++
-// 		value = math.Exp2(power)
-// 	}
-// 	return false
+ 
+// type Node struct {
+// 	val  int
+// 	next *Node
 // }
 
-// func partitionEvenOdd(arr []int) []int {
-// 	partition := 0
-// 	for i := 0; i < len(arr); i++ {
-// 		if arr[i]%2 == 0 {
-// 			arr[i], arr[partition] = arr[partition], arr[i]
-// 			partition++
-// 		}
+// //if you created your own function, comment this out!
+// func createALinkedList(input []int) *Node {
+// 	head := &Node{
+// 		val:  input[0],
+// 		next: nil,
 // 	}
-// 	front := quickSort(arr[:partition])
-// 	back := quickSort(arr[partition:])
-// 	return append(front, back...)
-// }
-
-// func quickSort(arr []int) []int {
-// 	if len(arr) <= 1 {
-// 		return arr
-// 	}
-
-// 	pivot := arr[0]
-// 	left := []int{}
-// 	right := []int{}
-
-// 	for _, val := range arr[1:] {
-// 		if val >= pivot {
-// 			right = append(right, val)
-// 		} else {
-// 			left = append(left, val)
-// 		}
-// 	}
-// 	answer := []int{}
-// 	sortedLeft := quickSort(left)
-// 	sortedRight := quickSort(right)
-// 	answer = append(answer, sortedLeft...)
-// 	answer = append(answer, pivot)
-// 	answer = append(answer, sortedRight...)
-// 	return answer
-// }
-
-// import (
-// 	"fmt"
-// 	"io/ioutil"
-// 	"log"
-// 	"strings"
-// )
-
-// func passPhrase(passphrase string) bool {
-// 	split := strings.Split(passphrase, " ")
-// 	wordMap := make(map[string]int)
-// 	for _, word := range split {
-// 		if _, ok := wordMap[word]; ok {
-// 			fmt.Printf("%v is the repeated word in %v \n", word, passphrase)
-// 			return false
-// 		}
-// 		wordMap[word] = 1
-// 	}
-// 	return true
-// }
-
-// func passPhraseAdvent() int {
-// 	phraseCount := 0
-// 	content, err := ioutil.ReadFile("./advent_input/passphrase_input.txt")
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-// 	splitByLine := strings.Split(string(content), "\n")
-// 	for _, line := range splitByLine {
-// 		if passPhrase(line) {
-// 			phraseCount++
-// 		}
-// 	}
-// 	return phraseCount
-// }
-
-// func passPhraseAnagram(passphrase string) bool {
-// 	split := strings.Split(passphrase, " ")
-// 	wordMap := make(map[string]int)
-// 	for _, word := range split {
-// 		sorted := SortString(word)
-// 		if _, ok := wordMap[sorted]; ok {
-// 			return false
-// 		}
-// 		wordMap[sorted] = 1
-// 	}
-// 	return true
-// }
-
-// func partitionLL(head *Node, partition int) *Node {
-// 	beforeStart := &Node{}
-// 	beforeEnd := &Node{}
-// 	afterStart := &Node{}
-// 	afterEnd := &Node{}
-
-// 	//partition
 // 	currentNode := head
-// 	for currentNode != nil {
-// 		next := currentNode.next
-// 		currentNode.next = nil
-// 		if currentNode.val < partition {
-// 			//insert node into end of before list
-// 			if beforeStart.val == 0 {
-// 				beforeStart = currentNode
-// 				beforeEnd = beforeStart
-// 			} else {
-// 				beforeEnd.next = currentNode
-// 				beforeEnd = currentNode
-// 			}
-// 		} else {
-// 			//insert node into end of after list
-// 			if afterStart.val == 0 {
-// 				afterStart = currentNode
-// 				afterEnd = afterStart
-// 			} else {
-// 				afterEnd.next = currentNode
-// 				afterEnd = currentNode
-// 			}
+// 	for i := 1; i < len(input); i++ {
+// 		nextNode := &Node{
+// 			val:  input[i],
+// 			next: nil,
 // 		}
-// 		currentNode = next
+// 		currentNode.next = nextNode
+// 		currentNode = nextNode
 // 	}
-// 	if beforeStart.val == 0 {
-// 		return afterStart
-// 	}
-
-// 	//merge the two lists
-// 	beforeEnd.next = afterStart
-// 	return beforeStart
+// 	return head
 // }
 
-// func sumNums(n int) int {
+// func deleteANode(head *Node, deleteVal int) *Node {
+// 	if head.val == deleteVal { //in case the head is the value we want to delete!
+// 		head = head.next
+// 	}
+// 	currentNode := head
+// 	for currentNode.next != nil {
+// 		if currentNode.next.val == deleteVal {
+// 			currentNode.next = currentNode.next.next
+// 		}
+// 		currentNode = currentNode.next
+// 	}
+
+// 	return head
+// }
+
+ 
+// func factorial(n int) int {
 // 	if n == 1 {
 // 		return 1
 // 	}
-// 	return n + sumNums(n-1)
+// 	return n * factorial(n-1)
 // }
+ 
+// //Given a string, find the length of the longest substring without repeating characters.
+// func lengthOfLongestSubstring(s string) int {
+// 	bs := []byte(s)
+// 	var maxLen, start int
+// 	idxMap := map[byte]int{}
+// 	for i := 0; i < len(bs); i++ {
+// 			if _, ok := idxMap[bs[i]]; ok && start <= idxMap[bs[i]] {
+// 					start = idxMap[bs[i]] + 1
+// 			} else {
+// 					if maxLen < i - start + 1 {
+// 							maxLen = i - start + 1
+// 					}
+// 			}
+// 			idxMap[bs[i]] = i
+// 	}
+// 	return maxLen
+// }
+ 
+// import (
+// 	"fmt"
+// 	"strconv"
+// 	"strings"
+// )
+
+// func baseConverter(n int, base int) string {
+// 	base16 := map[int]string{
+// 		10: "a",
+// 		11: "b",
+// 		12: "c",
+// 		13: "d",
+// 		14: "e",
+// 		15: "f"}
+// 	answer := []string{}
+// 	for n > 0 {
+// 		answer = append(answer, strconv.Itoa(n%base))
+// 		n = n / base
+// 	}
+// 	if base == 16 {
+// 		for i, el := range answer {
+// 			intEl, err := strconv.Atoi(el)
+// 			if err != nil {
+// 				fmt.Println("There was an error!")
+// 			}
+// 			if hex, exists := base16[intEl]; exists {
+// 				answer[i] = hex
+// 			}
+// 		}
+// 	}
+// 	return reverse(strings.Join(answer, ""))
+// }
+ 
+// func incrementArb(arr []int) []int {
+// 	lastIdx := len(arr) - 1
+// 	arr[lastIdx] = (arr[lastIdx] + 1) % 10
+// 	if arr[lastIdx] == 0 {
+// 		arr = append(incrementArb(arr[:lastIdx]), arr[lastIdx])
+// 	}
+// 	return arr
+// }
+ 

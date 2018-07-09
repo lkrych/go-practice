@@ -1,48 +1,53 @@
 package goExercises
 
-//return true if n is a power of two
-func isPowerOfTwo(n float64) bool {
-	power := 0
-	for power(2, power) < n {
-		if power(2, power) == n {
-			return true
-		}
-		power++
+//given a linked list, delete nodes with the the value of x
+//optional create a function that builds a linked list with an input array of integers
+//if you don't want to do this, you can just look in the test file for this problem and grab one
+
+type Node struct {
+	val  int
+	next *Node
+}
+
+func deleteANode(h *Node) *Node {
+
+}
+
+func createLinkedList(input []int) *Node {
+	head := &Node{
+		val:  input[0],
+		next: nil,
 	}
+	currentNode := head
+	for _, el := range input[1:]
 }
 
-func power(base, exp int) float64 {
-
+//return n!
+func factorial(n int) int {
+	if n == 1 {
+		return 1
+	}
+	return n * factorial(n-1)
 }
 
-//return a sorted arr, partitioned by odd and even, with even in the front and odd in the back of the result array
-func partitionEvenOdd(arr []int) []int {
-
+//Given a string, find the length of the longest substring without repeating characters.
+func longestSubString(sentence string) int {
+	//iterate through each character in string
+	//checking to see if that character exists in the currentLongest subString
+	//if it does, start building the longest subString from the next index
+	//otherwise, keep adding to it.
 }
 
-//check to see if a passphrase is valid, it must not contain any duplicate words
-func passPhrase(passphrase string) bool {
-
+//convert base ten int n, into hexadecimal or binary representation
+func baseConverter(n int, base int) string {
+	// use the % and / operator to slowly build a number
 }
 
-func passPhraseAdvent() int {
-	//read from ../practice/passphrase_input.txt
-	//each line has a different passphrase, return how many are valid
-}
-
-//bonus, check to see if a passphrase is valid, it must not contain any words that are anagrams of eachother
-// abcde == dcabe
-// func passPhraseAnagram(passphrase string) bool {
-
-// }
-
-//write code to partition a linked list around a value x, such that all nodes less than
-//x come before all nodes greater than or equal to x
-func partitionLL(head *Node, partition int) *Node {
-
-}
-
-//return sum of n + n-1 + ... 1
-func sumNums(n int) int {
+//take in an array of digits encoding a decimal, d and update the array to rep d + 1
+//ex: 1.29 => 1.30 ~ [1,2,9] => [1,3,0]
+//ex 1.48372 => 1.48373
+//TAKE AWAY:  This algorithm should work in a language that has finite-precision arithmetic
+//Arrays can be used to break up numbers of arbitrary size, this allows us to handle very big numbers!
+func incrementArb(arr []int) []int {
 
 }
