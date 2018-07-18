@@ -1,53 +1,80 @@
 package goExercises
 
-//given a linked list, delete nodes with the the value of x
-//optional create a function that builds a linked list with an input array of integers
-//if you don't want to do this, you can just look in the test file for this problem and grab one
+import (
+	"regexp"
+	"strings"
+)
 
-type Node struct {
-	val  int
-	next *Node
+//build a queue data structure
+type queue struct {
+	data []int
 }
 
-func deleteANode(h *Node) *Node {
-
+func (q *queue) add(n int) {
+	q.data = append(q.data, n)
 }
 
-func createLinkedList(input []int) *Node {
-	head := &Node{
-		val:  input[0],
-		next: nil,
+func (q *queue) remove() int {
+	first := q.data[0]
+	q.data = q.data[1:]
+	return first
+}
+
+func (q *queue) peek() int {
+	return q.data[0]
+}
+
+func (q *queue) isEmpty() bool {
+	return len(q.data) < 1
+}
+
+//return a sorted arr using bubblesort!
+func bubbleSort(arr []int) []int {
+	sorted := false
+
+	for !sorted {
+		sorted = true
+		for i := 0; i < len(arr)-1; i++ {
+			if arr[i] > arr[i+1] {
+				sorted = false
+				arr[i], arr[i+1] = arr[i+1], arr[i]
+			}
+		}
 	}
-	currentNode := head
-	for _, el := range input[1:]
+	return arr
 }
 
-//return n!
-func factorial(n int) int {
-	if n == 1 {
-		return 1
+//Implement an algorithm to determine if a string has all unique characters. What if you cannot use additional data structures?
+func isUnique(word string) bool {
+	chMap := map[string]bool{}
+	for _, ch := range strings.Split(word, "") {
+		if ok, _ := chMap[ch]; ok {
+			return false
+		} else {
+			chMap[ch] = true
+		}
 	}
-	return n * factorial(n-1)
+	return true
 }
 
-//Given a string, find the length of the longest substring without repeating characters.
-func longestSubString(sentence string) int {
-	//iterate through each character in string
-	//checking to see if that character exists in the currentLongest subString
-	//if it does, start building the longest subString from the next index
-	//otherwise, keep adding to it.
+//return num of vowels in sentence
+func countVowels(sentence string) int {
+	vowelCount := 0
+	vowelRegexp := regexp.MustCompile("[aeiou]")
+	for _, ch := range strings.Split(sentence, "") {
+		if vowelRegexp.Match([]byte(ch)) {
+			vowelCount++
+		}
+	}
+	return vowelCount
 }
 
-//convert base ten int n, into hexadecimal or binary representation
-func baseConverter(n int, base int) string {
-	// use the % and / operator to slowly build a number
-}
-
-//take in an array of digits encoding a decimal, d and update the array to rep d + 1
-//ex: 1.29 => 1.30 ~ [1,2,9] => [1,3,0]
-//ex 1.48372 => 1.48373
-//TAKE AWAY:  This algorithm should work in a language that has finite-precision arithmetic
-//Arrays can be used to break up numbers of arbitrary size, this allows us to handle very big numbers!
-func incrementArb(arr []int) []int {
-
+//assume you have a method isSubstring which checks if one word is asubstring of another
+//given two strings s1 and s2, write code to check if s2 is a rotation of s1 using
+//only 1 call to isSubstring
+//ex: waterbottle is a rotation of erbottlewat
+func stringRotation(s1, s2 string) bool {
+	newString := s2 + s2
+	s1regex := regexp.MustCompile(s1)
+	return s1regex.Match([]byte(newString))
 }
