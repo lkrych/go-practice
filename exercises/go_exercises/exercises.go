@@ -1,80 +1,113 @@
 package goExercises
 
-import (
-	"regexp"
-	"strings"
-)
+import "errors"
 
-//build a queue data structure
-type queue struct {
-	data []int
-}
-
-func (q *queue) add(n int) {
-	q.data = append(q.data, n)
-}
-
-func (q *queue) remove() int {
-	first := q.data[0]
-	q.data = q.data[1:]
-	return first
-}
-
-func (q *queue) peek() int {
-	return q.data[0]
-}
-
-func (q *queue) isEmpty() bool {
-	return len(q.data) < 1
-}
-
-//return a sorted arr using bubblesort!
-func bubbleSort(arr []int) []int {
-	sorted := false
-
-	for !sorted {
-		sorted = true
-		for i := 0; i < len(arr)-1; i++ {
-			if arr[i] > arr[i+1] {
-				sorted = false
-				arr[i], arr[i+1] = arr[i+1], arr[i]
-			}
+//given an arr representing stock prices, return the maximum profit you could retrieve from buying and selling the stock
+//ex: [310, 315, 275, 295, 260, 270, 290, 230, 255, 250] => 30
+func buyStock(arr []int) int {
+	//buy low sell high
+	low := 9999999
+	diff := 0
+	for _, el := range arr {
+		if el < low {
+			low = el
+		}
+		if el-low > diff {
+			diff = el - low
 		}
 	}
-	return arr
+	return diff
 }
 
-//Implement an algorithm to determine if a string has all unique characters. What if you cannot use additional data structures?
-func isUnique(word string) bool {
-	chMap := map[string]bool{}
-	for _, ch := range strings.Split(word, "") {
-		if ok, _ := chMap[ch]; ok {
+//return index of toFind if it exists in arr, otherwise return -1
+func binarySearch(arr []int, toFind int) int {
+	if len(arr) < 1 {
+		return -1
+	}
+	midIdx := len(arr) / 2
+	if arr[midIdx] == toFind {
+		return midIdx
+	}
+	if arr[midIdx] > toFind {
+		return binarySearch(arr[:midIdx], toFind)
+	}
+	returned := binarySearch(arr[midIdx+1:], toFind)
+	if returned != -1 {
+		return midIdx + 1 + returned
+	}
+	return returned
+
+}
+
+// return true if n is prime
+func isPrime(n int) bool {
+	for i := 2; i < n; i++ {
+		if n%i == 0 {
 			return false
-		} else {
-			chMap[ch] = true
 		}
 	}
 	return true
 }
 
-//return num of vowels in sentence
-func countVowels(sentence string) int {
-	vowelCount := 0
-	vowelRegexp := regexp.MustCompile("[aeiou]")
-	for _, ch := range strings.Split(sentence, "") {
-		if vowelRegexp.Match([]byte(ch)) {
-			vowelCount++
-		}
+//create a function fibonacci(n) that prints returns n fibonacci numbers in an array
+func fibonacci(n int) ([]int, error) {
+	if n < 1 {
+		return nil, errors.New("n must be greater than 0")
 	}
-	return vowelCount
+	fibs := []int{1, 1}
+	for len(fibs) != n {
+		fibs = append(fibs, fibs[len(fibs)-1]+fibs[len(fibs)-2])
+	}
+	return fibs, nil
 }
 
-//assume you have a method isSubstring which checks if one word is asubstring of another
-//given two strings s1 and s2, write code to check if s2 is a rotation of s1 using
-//only 1 call to isSubstring
-//ex: waterbottle is a rotation of erbottlewat
-func stringRotation(s1, s2 string) bool {
-	newString := s2 + s2
-	s1regex := regexp.MustCompile(s1)
-	return s1regex.Match([]byte(newString))
+//you have two numbers represented by a linked list, where each node contains a single digit
+//the digits are stored in reverse order, such that 1's digit is at the head of the list
+//write a function that adds the two numbers and returns the sum as a linked list
+//example:
+//(7 -> 1 -> 6) + (5 -> 9 -> 2) = (2 -> 1 -> 9)
+type Node struct {
+	val  int
+	next *Node
+}
+
+func sumLists(h1, h2 *Node) *Node {
+	remainder := 0
+	sum := 0
+	head := &Node{}
+	currentNode := head
+	for h1 != nil || h2 != nil {
+		sum = h1.val + h2.val + remainder
+		remainder = sum / 10
+		currentNode.val = sum % 10
+
+		newNode := &Node{}
+		//move up the lists
+		h1 = h1.next
+		h2 = h2.next
+
+		if h1 != nil || h2 != nil {
+			currentNode.next = newNode
+			currentNode = newNode
+		}
+	}
+	if h1 != nil {
+		sum = h1.val + remainder
+		remainder = sum / 10
+		currentNode.val = sum % 10
+	}
+
+	if h2 != nil {
+		sum = h2.val + remainder
+		remainder = sum / 10
+		currentNode.val = sum % 10
+	}
+
+	if remainder > 0 {
+		currentNode.next = &Node{
+			val: remainder,
+		}
+	}
+
+	return head
 }
