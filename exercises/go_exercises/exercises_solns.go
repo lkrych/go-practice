@@ -1,38 +1,113 @@
 package goExercises
- 
-// func buyStock(arr []int) int {
-// 	low := 1000000
-// 	diff := 0
-// 	for i := 0; i < len(arr); i++ {
-// 		if arr[i] < low {
-// 			low = arr[i]
-// 		}
-// 		if (arr[i] - low) > diff {
-// 			diff = arr[i] - low
-// 		}
-// 	}
-// 	return diff
+
+// type Node struct {
+// 	val  int
+// 	next *Node
 // }
- 
-// func binarySearch(arr []int, toFind int) int {
-// 	if len(arr) < 1 {
-// 		return -1
+
+// //if you created your own function, comment this out!
+// func createALinkedList(input []int) *Node {
+// 	head := &Node{
+// 		val:  input[0],
+// 		next: nil,
 // 	}
-// 	midIdx := len(arr) / 2
-// 	if toFind == arr[midIdx] {
-// 		return midIdx
-// 	} else if toFind > arr[midIdx] {
-// 		search := binarySearch(arr[midIdx+1:], toFind)
-// 		if search != -1 {
-// 			return search + midIdx + 1
+// 	currentNode := head
+// 	for i := 1; i < len(input); i++ {
+// 		nextNode := &Node{
+// 			val:  input[i],
+// 			next: nil,
 // 		}
-// 		return search
-// 	} else {
-// 		return binarySearch(arr[0:midIdx], toFind)
+// 		currentNode.next = nextNode
+// 		currentNode = nextNode
+// 	}
+// 	return head
+// }
+
+// func deleteANode(head *Node, deleteVal int) *Node {
+// 	if head.val == deleteVal { //in case the head is the value we want to delete!
+// 		head = head.next
+// 	}
+// 	currentNode := head
+// 	for currentNode.next != nil {
+// 		if currentNode.next.val == deleteVal {
+// 			currentNode.next = currentNode.next.next
+// 		}
+// 		currentNode = currentNode.next
 // 	}
 
+// 	return head
 // }
- 
+
+// func partitionLL(head *Node, partition int) *Node {
+// 	beforeStart := &Node{}
+// 	beforeEnd := &Node{}
+// 	afterStart := &Node{}
+// 	afterEnd := &Node{}
+
+// 	//partition
+// 	currentNode := head
+// 	for currentNode != nil {
+// 		next := currentNode.next
+// 		currentNode.next = nil
+// 		if currentNode.val < partition {
+// 			//insert node into end of before list
+// 			if beforeStart.val == 0 {
+// 				beforeStart = currentNode
+// 				beforeEnd = beforeStart
+// 			} else {
+// 				beforeEnd.next = currentNode
+// 				beforeEnd = currentNode
+// 			}
+// 		} else {
+// 			//insert node into end of after list
+// 			if afterStart.val == 0 {
+// 				afterStart = currentNode
+// 				afterEnd = afterStart
+// 			} else {
+// 				afterEnd.next = currentNode
+// 				afterEnd = currentNode
+// 			}
+// 		}
+// 		currentNode = next
+// 	}
+// 	if beforeStart.val == 0 {
+// 		return afterStart
+// 	}
+
+// 	//merge the two lists
+// 	beforeEnd.next = afterStart
+// 	return beforeStart
+// }
+
+// //Given two strings, write a method to decide if one is a permutation of the other
+// func checkPermutation(s1 string, s2 string) bool {
+// 	//sort and compare
+// }
+
+// func thirdGreatest(arr []int) int {
+// 	var first int
+// 	var second int
+// 	var third int
+
+// 	for _, el := range arr {
+// 		if el >= first {
+// 			third = second
+// 			second = first
+// 			first = el
+// 			continue
+// 		}
+// 		if el >= second {
+// 			third = second
+// 			second = el
+// 			continue
+// 		}
+// 		if el >= third {
+// 			third = el
+// 		}
+// 	}
+// 	return third
+// }
+
 // func isPrime(n int) bool {
 // 	for i := 2; i < n/2+1; i++ {
 // 		if n%i == 0 {
@@ -41,82 +116,15 @@ package goExercises
 // 	}
 // 	return true
 // }
- 
-// import "errors"
 
-// func fibonacci(n int) ([]int, error) {
-// 	if n < 1 {
-// 		return nil, errors.New("n must be greater than 0")
+// func nthPrime(nth int) int {
+// 	primeCount := 0
+// 	n := 2
+// 	for primeCount < nth {
+// 		if isPrime(n) {
+// 			primeCount++
+// 		}
+// 		n++
 // 	}
-// 	fibArr := []int{}
-// 	if n < 2 {
-// 		fibArr = append(fibArr, n)
-// 		return fibArr, nil
-// 	}
-// 	fibArr = append(fibArr, (fibArr[n-1] + fibArr[n-2]))
-// 	return fibArr, nil
+// 	return n - 1
 // }
- 
-// //given two numbers represented by linked lists, where each node contains a single digit, add them together
-// func sumLists(l1 *Node, l2 *Node) *Node {
-// 	carry := 0
-// 	sum := 0
-
-// 	head := &Node{
-// 		val:  0,
-// 		next: nil,
-// 	}
-// 	currentNode := head
-
-// forLoop:
-// 	for l1 != nil || l2 != nil {
-// 		intermediate := 0
-// 		switch {
-// 		case l1 != nil && l2 != nil:
-// 			intermediate = (l1.val + l2.val + carry)
-// 			sum = intermediate % 10
-// 			carry = intermediate / 10
-// 			l1 = l1.next
-// 			l2 = l2.next
-
-// 		case l1 != nil:
-// 			intermediate = (l1.val + carry)
-// 			sum = intermediate % 10
-// 			carry = intermediate / 10
-// 			l1 = l1.next
-// 		case l2 != nil:
-// 			intermediate = (l2.val + carry)
-// 			sum = intermediate % 10
-// 			carry = intermediate / 10
-// 			l2 = l2.next
-// 		default:
-// 			intermediate = carry
-// 			sum = intermediate % 10
-// 			carry = intermediate / 10
-// 		}
-
-// 		currentNode.val = sum
-// 		nextNode := &Node{
-// 			val:  0,
-// 			next: nil,
-// 		}
-// 		//breaking logic
-// 		switch {
-// 		case l1 == nil && l2 == nil && carry == 0:
-// 			break forLoop
-// 		case l1 == nil && l2 == nil && carry != 0:
-// 			currentNode.next = nextNode
-// 			currentNode = nextNode
-// 			currentNode.val = carry
-// 			break forLoop
-// 		}
-
-// 		currentNode.next = nextNode
-// 		currentNode = nextNode
-// 	}
-
-// 	return head
-
-// }
-
- 

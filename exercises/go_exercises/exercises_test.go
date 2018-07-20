@@ -1,210 +1,217 @@
 package goExercises
 
 import (
+	"fmt"
 	"testing"
-
-	"github.com/google/go-cmp/cmp"
 )
 
-func TestBuyStock(t *testing.T) {
-	test1 := []int{3, 3, 1, 0, 2, 0, 1}
-	test2 := []int{3, 2, 0, 0, 2, 0, 1, 5}
-	test3 := []int{5, 3, 1, 5, 2, 0, 1}
-	test4 := []int{5, 3, 2, 4, 1}
-	test5 := []int{3, 3, 1, 0, 2, 0, 1, 3, 1, 0, 6}
-	test6 := []int{7, 6, 5, 4, 3, 2}
-	if buyStock(test1) != 2 {
-		t.Errorf("Expected array %v to be 2 not %v", test1, buyStock(test1))
+func TestCreateALinkedList(t *testing.T) {
+	input1 := []int{1, 2, 3, 4, 5}
+	input2 := []int{5, 6, 7, 8, 9, 10}
+	input3 := []int{100, 101, 102}
+
+	list1 := createALinkedList(input1)
+	list2 := createALinkedList(input2)
+	list3 := createALinkedList(input3)
+
+	len1 := countLengthOfLL(list1)
+	len2 := countLengthOfLL(list2)
+	len3 := countLengthOfLL(list3)
+
+	if len1 != 5 {
+		t.Errorf("Expected createALinkedList to make a list of length 5 not %v", len1)
 	}
-	if buyStock(test2) != 5 {
-		t.Errorf("Expected array %v to be 5 not %v", test2, buyStock(test2))
+	if !findValueInLL(list1, 2) {
+		t.Errorf("Expected createALinkedList to contain 2")
+	}
+	if !findValueInLL(list1, 5) {
+		t.Errorf("Expected createALinkedList to contain 5")
+	}
+	if findValueInLL(list1, 10) {
+		t.Errorf("Expected createALinkedList to not contain 10 ")
 	}
 
-	if buyStock(test3) != 4 {
-		t.Errorf("Expected array %v to be 4 not %v", test3, buyStock(test3))
+	if len2 != 6 {
+		t.Errorf("Expected createALinkedList to make a list of length 6 not %v", len2)
+	}
+	if !findValueInLL(list2, 7) {
+		t.Errorf("Expected createALinkedList to contain 7")
+	}
+	if !findValueInLL(list2, 9) {
+		t.Errorf("Expected createALinkedList to contain 9")
+	}
+	if findValueInLL(list2, 101) {
+		t.Errorf("Expected createALinkedList to not contain 101 ")
 	}
 
-	if buyStock(test4) != 2 {
-		t.Errorf("Expected array %v to be 2 not %v", test4, buyStock(test4))
+	if len3 != 3 {
+		t.Errorf("Expected createALinkedList to make a list of length 3 not %v", len3)
+	}
+	if !findValueInLL(list3, 101) {
+		t.Errorf("Expected createALinkedList to contain 101")
+	}
+	if !findValueInLL(list3, 102) {
+		t.Errorf("Expected createALinkedList to contain 102")
+	}
+	if findValueInLL(list1, 10) {
+		t.Errorf("Expected createALinkedList to not contain 10 ")
 	}
 
-	if buyStock(test5) != 6 {
-		t.Errorf("Expected array %v to be 6 not %v", test5, buyStock(test5))
+	//testing delete
+
+	list4 := createALinkedList(input1)
+	list5 := createALinkedList(input2)
+	list6 := createALinkedList(input3)
+
+	d4 := deleteANode(list4, 3)
+	d5 := deleteANode(list5, 7)
+	d6 := deleteANode(list6, 100)
+
+	dlen4 := countLengthOfLL(d4)
+	dlen5 := countLengthOfLL(d5)
+	dlen6 := countLengthOfLL(d6)
+
+	if dlen4 != 4 {
+		t.Errorf("Expected deleteANode to make a list of length 4 not %v", dlen4)
+		fmt.Println("Printing d4")
+		printLL(d4)
+	}
+	if findValueInLL(d4, 3) {
+		t.Errorf("Expected deleteANode(3) to delete nodes with the value of 3")
+		fmt.Println("Printing d4")
+		printLL(d4)
 	}
 
-	if buyStock(test6) != 0 {
-		t.Errorf("Expected array %v to be 0 not %v", test6, buyStock(test6))
+	if dlen5 != 5 {
+		t.Errorf("Expected deleteANode to make a list of length 5 not %v", dlen5)
+		fmt.Println("Printing d5")
+		printLL(d5)
 	}
+	if findValueInLL(d5, 7) {
+		t.Errorf("Expected deleteANode(7) to delete nodes with the value of 7")
+		fmt.Println("Printing d5")
+		printLL(d5)
+	}
+
+	if dlen6 != 2 {
+		t.Errorf("Expected deleteANode to make a list of length 2 not %v", dlen6)
+		fmt.Println("Printing d6")
+		printLL(d6)
+	}
+	if findValueInLL(d6, 100) {
+		t.Errorf("Expected deleteANode(100) to delete nodes with the value of 100")
+		fmt.Println("Printing d6")
+		printLL(d6)
+	}
+
 }
 
-func TestBinarySearch(t *testing.T) {
-	test1 := binarySearch([]int{0, 1, 2, 3, 4, 5}, 3)
-	test2 := binarySearch([]int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, 9)
-	test3 := binarySearch([]int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, 0)
-	test4 := binarySearch([]int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, 10)
-	test5 := binarySearch([]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, 0)
+//if you created your own function, comment this out!
+// func createALinkedList(input []int) *Node {
+// 	head := &Node{
+// 		val:  input[0],
+// 		next: nil,
+// 	}
+// 	currentNode := head
+// 	for i := 1; i < len(input); i++ {
+// 		nextNode := &Node{
+// 			val:  input[i],
+// 			next: nil,
+// 		}
+// 		currentNode.next = nextNode
+// 		currentNode = nextNode
+// 	}
+// 	return head
+// }
 
-	if test1 != 3 {
-		t.Errorf("Expected binarySearch to find the index of 3 at 4, not %v", test1)
+func countLengthOfLL(head *Node) int {
+	count := 0
+	currentNode := head
+	for currentNode.next != nil {
+		count++
+		currentNode = currentNode.next
 	}
-	if test2 != 9 {
-		t.Errorf("Expected binarySearch to find the index of 9 at 10, not %v", test2)
-	}
-
-	if test3 != 0 {
-		t.Errorf("Expected binarySearch to find the index of 0 at 0, not %v", test3)
-	}
-
-	if test4 != -1 {
-		t.Errorf("Expected binarySearch to find the index of 10 at -1, not %v", test4)
-	}
-
-	if test5 != -1 {
-		t.Errorf("Expected binarySearch to find the index of 0 at -1, not %v", test5)
-	}
+	count++ //b/c you won't count the last one
+	return count
 }
 
-func TestIsPrime(t *testing.T) {
-	test1 := isPrime(2)
-	test2 := isPrime(3)
-	test3 := isPrime(4)
-	test4 := isPrime(9)
-	test5 := isPrime(227)
-
-	if test1 != true {
-		t.Errorf("Expected isPrime of 2 to be true, not false")
+func findValueInLL(head *Node, findVal int) bool {
+	found := false
+	currentNode := head
+	for currentNode.next != nil {
+		if currentNode.val == findVal {
+			found = true
+		}
+		currentNode = currentNode.next
 	}
-
-	if test2 != true {
-		t.Errorf("Expected isPrime of 3 to be true, not false")
+	if currentNode.val == findVal { //catch the last node
+		found = true
 	}
-
-	if test3 != false {
-		t.Errorf("Expected isPrime of 4 to be false, not true")
-	}
-
-	if test4 != false {
-		t.Errorf("Expected isPrime of 9 to be false, not true")
-	}
-
-	if test5 != true {
-		t.Errorf("Expected isPrime of 227 to be true, not false")
-	}
+	return found
 }
 
-func testFibonacci(t *testing.T) {
-	t1, err1 := fibonacci(3)
-	t2, err2 := fibonacci(6)
-	t3, err3 := fibonacci(7)
-	t4, err4 := fibonacci(9)
-	t5, err5 := fibonacci(15)
-	_, err6 := fibonacci(-1)
-	_, err7 := fibonacci(0)
-	ans1 := []int{1, 1, 2}
-	ans2 := []int{1, 1, 2, 3, 5, 8}
-	ans3 := []int{1, 1, 2, 3, 5, 8, 13}
-	ans4 := []int{1, 1, 2, 3, 5, 8, 13, 21, 34}
-	ans5 := []int{1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610}
-	errorMessage := "n must be greater than 0"
+// func printLL(head *Node) {
+// 	currentNode := head
 
-	if !cmp.Equal(t1, ans1) {
-		t.Errorf("Expected the fibonacci sequence of %v to be %v not %v", 3, ans1, t1)
-	}
+// 	for currentNode.next != nil {
+// 		fmt.Printf("  %v  ->", currentNode)
+// 		currentNode = currentNode.next
+// 	}
+// 	fmt.Printf("  %v  \n", currentNode)
+// }
 
-	if err1 != nil {
-		t.Errorf("There was not supposed to be an error for t1")
-	}
+func TestPartitionALinkedList(t *testing.T) {
+	input1 := []int{10, 5, 8, 1, 3, 2, 4}
+	input2 := []int{4, 7, 2, 3, 1}
+	input3 := []int{105, 783, 98, 77, 33, 102}
 
-	if !cmp.Equal(t2, ans2) {
-		t.Errorf("Expected the fibonacci sequence of %v to be %v not %v", 6, ans2, t2)
-	}
+	list1 := createALinkedList(input1)
+	list2 := createALinkedList(input2)
+	list3 := createALinkedList(input3)
 
-	if err2 != nil {
-		t.Errorf("There was not supposed to be an error for t2")
+	partition1 := partitionLL(list1, 5)
+	partition2 := partitionLL(list2, 3)
+	partition3 := partitionLL(list3, 105)
+
+	if findIdxOfVal(partition1, 4) > 5 {
+		t.Errorf("Expected partition to adjust the position of nodes")
+		printLL(partition1)
 	}
 
-	if !cmp.Equal(t3, ans3) {
-		t.Errorf("Expected the fibonacci sequence of %v to be %v not %v", 7, ans3, t3)
+	if findIdxOfVal(partition1, 10) < 4 {
+		t.Errorf("Expected partition to adjust the position of nodes")
+		printLL(partition1)
 	}
 
-	if err3 != nil {
-		t.Errorf("There was not supposed to be an error for t3")
+	if findIdxOfVal(partition2, 7) < 3 {
+		t.Errorf("Expected partition to adjust the position of nodes")
+		printLL(partition2)
 	}
 
-	if !cmp.Equal(t4, ans4) {
-		t.Errorf("Expected the fibonacci sequence of %v to be %v not %v", 9, ans4, t4)
+	if findIdxOfVal(partition1, 2) > 3 {
+		t.Errorf("Expected partition to adjust the position of nodes")
+		printLL(partition2)
 	}
 
-	if err4 != nil {
-		t.Errorf("There was not supposed to be an error for t4")
+	if findIdxOfVal(partition3, 102) > 5 {
+		t.Errorf("Expected partition to adjust the position of nodes")
+		printLL(partition3)
 	}
 
-	if !cmp.Equal(t5, ans5) {
-		t.Errorf("Expected the fibonacci sequence of %v to be %v not %v", 15, ans5, t5)
-	}
-	if err5 != nil {
-		t.Errorf("There was not supposed to be an error for t5")
+	if findIdxOfVal(partition3, 783) < 3 {
+		t.Errorf("Expected partition to adjust the position of nodes")
+		printLL(partition3)
 	}
 
-	if err6.Error() != errorMessage {
-		t.Errorf("Expected the function to throw an error for input less than 1")
-	}
-
-	if err7.Error() != errorMessage {
-		t.Errorf("Expected the function to throw an error for input less than 1")
-	}
 }
 
-func TestSumLists(t *testing.T) {
-	i1 := []int{1, 2, 3}
-	i2 := []int{5, 8, 6}
-	sum1 := []int{6, 0, 0, 1}
-
-	i3 := []int{3, 5}
-	i4 := []int{1, 8}
-	sum2 := []int{4, 3, 1}
-
-	i5 := []int{6, 4, 5}
-	i6 := []int{1, 1, 1}
-	sum3 := []int{7, 5, 6}
-
-	list1 := createALinkedList(i1)
-	list2 := createALinkedList(i2)
-	answer1 := listToArray(createALinkedList(sum1))
-
-	list3 := createALinkedList(i3)
-	list4 := createALinkedList(i4)
-	answer2 := listToArray(createALinkedList(sum2))
-
-	list5 := createALinkedList(i5)
-	list6 := createALinkedList(i6)
-	answer3 := listToArray(createALinkedList(sum3))
-
-	returned1 := listToArray(sumLists(list1, list2))
-	returned2 := listToArray(sumLists(list3, list4))
-	returned3 := listToArray(sumLists(list5, list6))
-
-	if !cmp.Equal(answer1, returned1) {
-		t.Errorf("Expected sumLists of %v and %v to be %v not %v", list1, list2, answer1, returned1)
-
-	}
-
-	if !cmp.Equal(answer2, returned2) {
-		t.Errorf("Expected sumLists of %v and %v to be %v not %v", list3, list4, answer2, returned2)
-	}
-
-	if !cmp.Equal(answer3, returned3) {
-		t.Errorf("Expected sumLists of %v and %v to be %v not %v", list5, list6, answer3, returned3)
-	}
-}
-
-func listToArray(head *Node) []int {
-	vals := []int{}
-	for head != nil {
-		vals = append(vals, head.val)
+func findIdxOfVal(head *Node, search int) int {
+	idx := 0
+	for head.val != search {
+		idx++
 		head = head.next
 	}
-	return vals
+	return idx
 }
 
 func createALinkedList(input []int) *Node {
@@ -222,4 +229,88 @@ func createALinkedList(input []int) *Node {
 		currentNode = nextNode
 	}
 	return head
+}
+
+func printLL(head *Node) {
+	currentNode := head
+
+	for currentNode.next != nil {
+		fmt.Printf("  %v  ->", currentNode)
+		currentNode = currentNode.next
+	}
+	fmt.Printf("  %v  \n", currentNode)
+}
+
+func TestCheckPermutation(t *testing.T) {
+	test1 := checkPermutation("blah", "halb")
+	test2 := checkPermutation("baleen", "neelab")
+	test3 := checkPermutation("cactus", "flower")
+	test4 := checkPermutation("ballsy", "heptagon")
+	test5 := checkPermutation("winky face", "kin wafeyc")
+
+	if test1 != true {
+		t.Errorf("Expected checkPermutation to detect that blah and halb are permutations of eachother")
+	}
+
+	if test2 != true {
+		t.Errorf("Expected checkPermutation to detect that baleen and neelab are permutations of eachother")
+	}
+
+	if test3 != false {
+		t.Errorf("Expected checkPermutation to detect that cactus and flower are not permutations of eachother")
+	}
+
+	if test4 != false {
+		t.Errorf("Expected checkPermutation to detect that ballsy and heptagon are not permutations of eachother")
+	}
+
+	if test5 != true {
+		t.Errorf("Expected checkPermutation to detect that winky face and kin wafeyc are permutations of eachother")
+	}
+}
+
+func TestThirdGreatest(t *testing.T) {
+	test1 := thirdGreatest([]int{5, 3, 7})
+	test2 := thirdGreatest([]int{5, 3, 4, 7})
+	test3 := thirdGreatest([]int{2, 3, 4, 7})
+
+	if test1 != 3 {
+		t.Errorf("Expected thirdGreatest of [5, 3, 7] to be 3, not %v", test1)
+	}
+
+	if test2 != 4 {
+		t.Errorf("Expected thirdGreatest of [5, 3, 4, 7] to be 4, not %v", test2)
+	}
+
+	if test3 != 3 {
+		t.Errorf("Expected thirdGreatest of [2, 3, 4, 7] to be 3, not %v", test3)
+	}
+}
+
+func TestNthPrime(t *testing.T) {
+	test1 := nthPrime(3)
+	test2 := nthPrime(4)
+	test3 := nthPrime(15)
+	test4 := nthPrime(28)
+	test5 := nthPrime(77)
+
+	if test1 != 5 {
+		t.Errorf("Expected nthPrime of 3 to be 5, not %v", test1)
+	}
+
+	if test2 != 7 {
+		t.Errorf("Expected nthPrime of 4 to be 7, not %v", test2)
+	}
+
+	if test3 != 47 {
+		t.Errorf("Expected nthPrime of 15 to be 47, not %v", test3)
+	}
+
+	if test4 != 107 {
+		t.Errorf("Expected nthPrime of 28 to be 107, not %v", test4)
+	}
+
+	if test5 != 389 {
+		t.Errorf("Expected nthPrime of 77 to be 389, not %v", test5)
+	}
 }

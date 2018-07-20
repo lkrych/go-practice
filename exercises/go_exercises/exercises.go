@@ -1,45 +1,144 @@
 package goExercises
 
-import "errors"
+import (
+	"strings"
+)
 
-//given an arr representing stock prices, return the maximum profit you could retrieve from buying and selling the stock
-//ex: [310, 315, 275, 295, 260, 270, 290, 230, 255, 250] => 30
-func buyStock(arr []int) int {
-	//buy low sell high
-	low := 9999999
-	diff := 0
+type Node struct {
+	val  int
+	next *Node
+}
+
+//given a linked list, delete nodes with the the value of x
+//optional create a function that builds a linked list with an input array of integers
+//if you don't want to do this, you can just look in the test file for this problem and grab one
+func deleteANode(head *Node, delete int) *Node {
+	lastNode := &Node{}
+	if head.val == delete {
+		head = head.next
+	}
+
+	currentNode := head.next
+	for currentNode != nil {
+		if currentNode.val == delete {
+			lastNode.next = currentNode.next
+		}
+		lastNode = currentNode
+		currentNode = currentNode.next
+	}
+	return head
+}
+
+//write code to partition a linked list around a value x, such that all nodes less than
+//x come before all nodes greater than or equal to x
+func partitionLL(head *Node, partition int) *Node {
+	beforeStart := &Node{}
+	beforeEnd := &Node{}
+	afterStart := &Node{}
+	afterEnd := &Node{}
+
+	//partition
+	currentNode := head
+	for currentNode != nil {
+		next := currentNode.next
+		currentNode.next = nil
+		if currentNode.val < partition {
+			//insert node into end of before list
+			if beforeStart.val == 0 {
+				beforeStart = currentNode
+				beforeEnd = beforeStart
+			} else {
+				beforeEnd.next = currentNode
+				beforeEnd = currentNode
+			}
+		} else {
+			//insert node into end of after list
+			if afterStart.val == 0 {
+				afterStart = currentNode
+				afterEnd = afterStart
+			} else {
+				afterEnd.next = currentNode
+				afterEnd = currentNode
+			}
+		}
+		currentNode = next
+	}
+	if beforeStart.val == 0 {
+		return afterStart
+	}
+
+	//merge the two lists
+	beforeEnd.next = afterStart
+	return beforeStart
+}
+
+//Given two strings, write a method to decide if one is a permutation of the other
+func checkPermutation(s1 string, s2 string) bool {
+	if len(s1) != len(s2) {
+		return false
+	}
+
+	charMap1 := map[string]int{}
+	for _, ch := range strings.Split(s1, "") {
+		if count, ok := charMap1[ch]; ok {
+			charMap1[ch] = count + 1
+		} else {
+			charMap1[ch] = 1
+		}
+	}
+
+	charMap2 := map[string]int{}
+	for _, ch := range strings.Split(s2, "") {
+		if count, ok := charMap2[ch]; ok {
+			charMap2[ch] = count + 1
+		} else {
+			charMap2[ch] = 1
+		}
+	}
+
+	for k, v := range charMap1 {
+		count, _ := charMap2[k]
+		if count != v {
+			return false
+		}
+	}
+	return true
+}
+
+//return the third greatest el in arr
+func thirdGreatest(arr []int) int {
+	first := 0
+	second := 0
+	third := 0
+
 	for _, el := range arr {
-		if el < low {
-			low = el
-		}
-		if el-low > diff {
-			diff = el - low
+		if el > first {
+			third = second
+			second = first
+			first = el
+		} else if el > second {
+			third = second
+			second = el
+		} else if el > third {
+			third = el
 		}
 	}
-	return diff
+	return third
 }
 
-//return index of toFind if it exists in arr, otherwise return -1
-func binarySearch(arr []int, toFind int) int {
-	if len(arr) < 1 {
-		return -1
+//return the nth prime
+func nthPrime(nth int) int {
+	primeCount := 0
+	checkIfPrime := 2
+	for primeCount < nth {
+		if isPrime(checkIfPrime) {
+			primeCount++
+		}
+		checkIfPrime++
 	}
-	midIdx := len(arr) / 2
-	if arr[midIdx] == toFind {
-		return midIdx
-	}
-	if arr[midIdx] > toFind {
-		return binarySearch(arr[:midIdx], toFind)
-	}
-	returned := binarySearch(arr[midIdx+1:], toFind)
-	if returned != -1 {
-		return midIdx + 1 + returned
-	}
-	return returned
-
+	return checkIfPrime - 1
 }
 
-// return true if n is prime
 func isPrime(n int) bool {
 	for i := 2; i < n; i++ {
 		if n%i == 0 {
@@ -47,67 +146,4 @@ func isPrime(n int) bool {
 		}
 	}
 	return true
-}
-
-//create a function fibonacci(n) that prints returns n fibonacci numbers in an array
-func fibonacci(n int) ([]int, error) {
-	if n < 1 {
-		return nil, errors.New("n must be greater than 0")
-	}
-	fibs := []int{1, 1}
-	for len(fibs) != n {
-		fibs = append(fibs, fibs[len(fibs)-1]+fibs[len(fibs)-2])
-	}
-	return fibs, nil
-}
-
-//you have two numbers represented by a linked list, where each node contains a single digit
-//the digits are stored in reverse order, such that 1's digit is at the head of the list
-//write a function that adds the two numbers and returns the sum as a linked list
-//example:
-//(7 -> 1 -> 6) + (5 -> 9 -> 2) = (2 -> 1 -> 9)
-type Node struct {
-	val  int
-	next *Node
-}
-
-func sumLists(h1, h2 *Node) *Node {
-	remainder := 0
-	sum := 0
-	head := &Node{}
-	currentNode := head
-	for h1 != nil || h2 != nil {
-		sum = h1.val + h2.val + remainder
-		remainder = sum / 10
-		currentNode.val = sum % 10
-
-		newNode := &Node{}
-		//move up the lists
-		h1 = h1.next
-		h2 = h2.next
-
-		if h1 != nil || h2 != nil {
-			currentNode.next = newNode
-			currentNode = newNode
-		}
-	}
-	if h1 != nil {
-		sum = h1.val + remainder
-		remainder = sum / 10
-		currentNode.val = sum % 10
-	}
-
-	if h2 != nil {
-		sum = h2.val + remainder
-		remainder = sum / 10
-		currentNode.val = sum % 10
-	}
-
-	if remainder > 0 {
-		currentNode.next = &Node{
-			val: remainder,
-		}
-	}
-
-	return head
 }
