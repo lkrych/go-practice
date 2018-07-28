@@ -20,39 +20,43 @@ var opts struct {
 }
 
 func main() {
+	//interpret the CL stdin
 	flags.Parse(&opts)
 
-	//check if file exists, if it doesn't use func to create a file
+	//make sure that the random number generator has a unique seed
 	rand.Seed(time.Now().UTC().UnixNano())
+	//check if file exists, if it doesn't use func to create a file
 	createFile()
 
-	//read exercises
+	//read from the file
 	file, err := ioutil.ReadFile(opts.File)
 	checkErr(err)
+	//create an array of strings that is split by the newline character
 	splitByNewline := strings.Split(string(file), "\n")
-	//deduplicate words by throwing into hash
+	//deduplicate words by throwing them into hash
 	deDup := map[string]bool{}
 	for _, word := range splitByNewline {
 		deDup[word] = true
 	}
-	//get an array of keys
+	//get an array of keys from the hash
 	keys := make([]string, len(deDup))
-
 	i := 0
 	for k := range deDup {
 		keys[i] = k
 		i++
 	}
+
 	//sort the keys
 	sorted := quickSort(keys)
 	for _, word := range sorted {
 		fmt.Println(word)
 	}
+
 }
 
 func createFile() {
 	if _, err := os.Stat("./generatedStrings.txt"); err != nil {
-		//file does not exist
+		//if file does not exist
 		//create file
 		f, err := os.Create("./generatedStrings.txt")
 		checkErr(err)
