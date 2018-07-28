@@ -7,6 +7,7 @@ import (
 	"math/rand"
 	"os"
 	"strings"
+	"time"
 
 	flags "github.com/jessevdk/go-flags"
 )
@@ -22,6 +23,7 @@ func main() {
 	flags.Parse(&opts)
 
 	//check if file exists, if it doesn't use func to create a file
+	rand.Seed(time.Now().UTC().UnixNano())
 	createFile()
 
 	//read exercises
@@ -55,6 +57,7 @@ func createFile() {
 		f, err := os.Create("./generatedStrings.txt")
 		checkErr(err)
 		defer f.Close()
+
 		for i := 0; i < 500; i++ {
 			strings := createStringInput()
 			f.Write(strings)
@@ -70,7 +73,6 @@ func checkErr(err error) {
 }
 
 func createStringInput() []byte {
-
 	newWord := generateNewWord(rand.Intn(12))
 	newWord = append(newWord, '\n')
 	return newWord
