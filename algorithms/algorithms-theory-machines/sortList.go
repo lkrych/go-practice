@@ -1,10 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 	"math/rand"
 	"os"
+	"strings"
 
 	flags "github.com/jessevdk/go-flags"
 )
@@ -23,8 +25,27 @@ func main() {
 	createFile()
 
 	//read exercises
-	files, err := ioutil.ReadDir(opts.File)
+	file, err := ioutil.ReadFile(opts.File)
 	checkErr(err)
+	splitByNewline := strings.Split(string(file), "\n")
+	//deduplicate words by throwing into hash
+	deDup := map[string]bool{}
+	for _, word := range splitByNewline {
+		deDup[word] = true
+	}
+	//get an array of keys
+	keys := make([]string, len(deDup))
+
+	i := 0
+	for k := range deDup {
+		keys[i] = k
+		i++
+	}
+	//sort the keys
+	sorted := quickSort(keys)
+	for _, word := range sorted {
+		fmt.Println(word)
+	}
 }
 
 func createFile() {
@@ -34,8 +55,10 @@ func createFile() {
 		f, err := os.Create("./generatedStrings.txt")
 		checkErr(err)
 		defer f.Close()
-		strings := createStringInput()
-		f.Write(strings)
+		for i := 0; i < 500; i++ {
+			strings := createStringInput()
+			f.Write(strings)
+		}
 	}
 	return
 }
@@ -47,13 +70,10 @@ func checkErr(err error) {
 }
 
 func createStringInput() []byte {
-	strings := []byte{}
-	for i := 0; i < 500; i++ {
-		newWord := generateNewWord(rand.Intn(12))
-		newWord = append(newWord, '\n')
-		strings = append(strings, newWord)
-	}
-	return strings
+
+	newWord := generateNewWord(rand.Intn(12))
+	newWord = append(newWord, '\n')
+	return newWord
 }
 
 const letterBytes = "abcdefghijklmnopqrstuvwxyz"
@@ -64,4 +84,31 @@ func generateNewWord(n int) []byte {
 		b[i] = letterBytes[rand.Intn(len(letterBytes))]
 	}
 	return b
+}
+
+func quickSort(strings []string) []string {
+	if len(strings) <= 1 {
+		return strings
+	}
+
+	pivot := strings[0]
+	left := []string{}
+	right := []string{}
+
+	for i := 1; i < len(strings); i++ {
+		currString := strings[i]
+		if currString > pivot {
+			right = append(right, currString)
+		} else {
+			left = append(left, currString)
+		}
+	}
+
+	sortedLeft := quickSort(left)
+	sortedRight := quickSort(right)
+
+	sorted := append(sortedLeft, pivot)
+	sorted = append(sorted, sortedRight...)
+
+	return sorted
 }
