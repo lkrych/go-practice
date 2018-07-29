@@ -1,43 +1,51 @@
 package goExercises
 
 import (
-	"regexp"
 	"strings"
 )
 
-//return num of vowels in sentence
-func countVowels(sentence string) int {
-	re := regexp.MustCompile("[aeiou]")
-	vowelCount := 0
-	for _, ch := range strings.Split(sentence, "") {
-		if ok := re.Match([]byte(ch)); ok {
-			vowelCount++
+//Implement an algorithm to determine if a string has all unique characters. What if you cannot use additional data structures?
+func isUnique(word string) bool {
+	wordMap := make(map[string]bool)
+	for _, ch := range strings.Split(word, "") {
+		if ok, _ := wordMap[ch]; ok {
+			return false
+		} else {
+			wordMap[ch] = true
 		}
 	}
-	return vowelCount
+	return true
 }
 
-//build a queue data structure
-type queue struct {
-	data []int
+//return a sorted arr using bubblesort!
+func bubbleSort(arr []int) []int {
+	sorted := false
+	for !sorted {
+		sorted = true
+		for i := 0; i < len(arr)-1; i++ {
+			if arr[i] > arr[i+1] {
+				sorted = false
+				arr[i], arr[i+1] = arr[i+1], arr[i]
+			}
+		}
+	}
+	return arr
 }
 
-//isEmpty, peek, add, remove
+//return the number of repeated characters in word
+func numRepeats(word string) int {
+	repeat := 0
+	wordMap := make(map[string]int)
+	for _, ch := range strings.Split(word, "") {
+		if val, ok := wordMap[ch]; ok {
+			if val == 1 {
+				repeat++
+			}
+			wordMap[ch] = val + 1
+		} else {
+			wordMap[ch] = 1
+		}
+	}
 
-func (q *queue) isEmpty() bool {
-	return len(q.data) < 1
-}
-
-func (q *queue) peek() int {
-	return q.data[0]
-}
-
-func (q *queue) add(n int) {
-	q.data = append(q.data, n)
-}
-
-func (q *queue) remove() int {
-	first := q.data[0]
-	q.data = q.data[1:]
-	return first
+	return repeat
 }
