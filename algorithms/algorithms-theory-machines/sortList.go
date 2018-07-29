@@ -16,17 +16,21 @@ import (
 //and prints them to standard output, in sorted order with all duplicate strings removed.
 
 var opts struct {
-	File string `short:"f" long:"file" default:"generatedStrings.txt" description:"a file to read strings from."`
+	File     string `short:"f" long:"file" default:"generatedStrings.txt" description:"a file to read strings from."`
+	NumWords int    `short:"n" long:"num" default:"500" description:"a number of strings to create."`
 }
 
 func main() {
 	//interpret the CL stdin
 	flags.Parse(&opts)
+	fmt.Println(opts)
 
 	//make sure that the random number generator has a unique seed
 	rand.Seed(time.Now().UTC().UnixNano())
-	//check if file exists, if it doesn't use func to create a file
-	createFile()
+	//check if file is default, if so, create the file if it doesn't exist
+	if opts.File == "generatedStrings.txt" {
+		createFile(opts.NumWords)
+	}
 
 	//read from the file
 	file, err := ioutil.ReadFile(opts.File)
@@ -54,7 +58,7 @@ func main() {
 
 }
 
-func createFile() {
+func createFile(numWords int) {
 	if _, err := os.Stat("./generatedStrings.txt"); err != nil {
 		//if file does not exist
 		//create file
@@ -62,7 +66,7 @@ func createFile() {
 		checkErr(err)
 		defer f.Close()
 
-		for i := 0; i < 500; i++ {
+		for i := 0; i < numWords; i++ {
 			strings := createStringInput()
 			f.Write(strings)
 		}
