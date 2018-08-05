@@ -23,7 +23,6 @@ var opts struct {
 func main() {
 	//interpret the CL stdin
 	flags.Parse(&opts)
-	fmt.Println(opts)
 
 	//make sure that the random number generator has a unique seed
 	rand.Seed(time.Now().UTC().UnixNano())
@@ -53,6 +52,7 @@ func main() {
 	//sort the keys
 	sorted := quickSort(keys)
 	for _, word := range sorted {
+		//print to stdout
 		fmt.Println(word)
 	}
 
