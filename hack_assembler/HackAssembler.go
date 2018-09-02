@@ -12,7 +12,7 @@ import (
 )
 
 var opts struct {
-	Filename string `short:"f" long:"file"  description:"a file to read DFA input from."`
+	Filename string `short:"f" long:"file"  description:"a file to read file input from."`
 }
 
 func main() {
@@ -116,7 +116,6 @@ func checkErr(err error) {
 func int2bin(num int) string {
 	var bin string
 	for i := 1 << 14; i > 0; i = i >> 1 {
-		fmt.Printf("%v\n", i)
 		if i&num != 0 {
 			bin += "1"
 		} else {
