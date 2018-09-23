@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -46,15 +45,15 @@ func main() {
 	f, err := os.Create(asmFile)
 	checkErr(err)
 	defer f.Close()
-	w := bufio.NewWriter(f)
+	// w := bufio.NewWriter(f)
 
-	for _, fp := range filePointers {
-		scanner := bufio.NewScanner(fp)
+	// for _, fp := range filePointers {
+	// 	scanner := bufio.NewScanner(fp)
 
-		// construct a parser to handle the input
-		// construct a codewriter to handle the output
-		//move through the lines in the input
-	}
+	// 	// construct a parser to handle the input
+	// 	// construct a codewriter to handle the output
+	// 	//move through the lines in the input
+	// }
 }
 
 // findVMFiles takes in the CL input and returns an array of all
