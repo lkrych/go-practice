@@ -30,6 +30,7 @@ var vmCode = `
 	`
 var expects = []expectParserData{
 	{C_NULL, "", "", 0},
+	{C_NULL, "", "", 0},
 	{C_FUNCTION, "function SimpleFunction.test 2", "SimpleFunction.test", 2},
 	{C_PUSH, "push local 0", "local", 0},
 	{C_PUSH, "push local 1", "local", 1},
@@ -38,7 +39,7 @@ var expects = []expectParserData{
 	{C_PUSH, "push argument 0", "argument", 0},
 	{C_ARITHMETIC, "add", "add", 0},
 	{C_RETURN, "return", "", 0},
-	{C_CALL, "call blah 2", "blah", 0},
+	{C_CALL, "call blah 2", "blah", 2},
 	{C_LABEL, "label SYMBOL", "SYMBOL", 0},
 	{C_GOTO, "goto CYMBAL", "CYMBAL", 0},
 	{C_IF, "if-goto SYMBOL", "SYMBOL", 0},
@@ -59,7 +60,7 @@ func TestParser(t *testing.T) {
 		expect := &expects[i]
 		actualType := p.CommandType()
 		if expect.ctype != actualType {
-			t.Fatalf("%v: expect %v, but %v", p.text, expect.ctype, actualType)
+			t.Fatalf("%v: expect %v, but got %v", p.text, expect.ctype, actualType)
 		}
 
 		if expect.text != p.text {
