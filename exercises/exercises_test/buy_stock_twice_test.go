@@ -16,20 +16,20 @@ func TestBuyStockTwice(t *testing.T) {
 	if ans1 != 10 {
 		t.Errorf("Expected array %v to be 10, not %v", test1, ans1)
 	}
-	if ans2 != 5 {
-		t.Errorf("Expected array %v to be 5, not %v", test2, ans2)
+	if ans2 != 7 {
+		t.Errorf("Expected array %v to be 7, not %v", test2, ans2)
 	}
 
-	if ans3 != 4 {
-		t.Errorf("Expected array %v to be 4, not %v", test3, ans3)
+	if ans3 != 5 {
+		t.Errorf("Expected array %v to be 5, not %v", test3, ans3)
 	}
 
 	if ans4 != 2 {
 		t.Errorf("Expected array %v to be 2, not %v", test4, ans4)
 	}
 
-	if ans5 != 6 {
-		t.Errorf("Expected array %v to be 6, not %v", test5, ans5)
+	if ans5 != 9 {
+		t.Errorf("Expected array %v to be 9, not %v", test5, ans5)
 	}
 
 	if ans6 != 0 {

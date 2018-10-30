@@ -2,38 +2,59 @@ package goExercises
 
 import (
 	"testing"
-
-	"github.com/google/go-cmp/cmp"
 )
 
-func TestBubbleSort(t *testing.T) {
-	test1 := bubbleSort([]int{7, 5, 2, 4, 8, 9, 3})
-	test2 := bubbleSort([]int{7, 5, 2, 4, 8, 9, 3, 1, 6, 10})
-	test3 := bubbleSort([]int{7, 5, 2, 4, 8, 9, 3, 3, 3, 3})
-	test4 := bubbleSort([]int{7, 5, 2, 4, 8, 9, 3, 100, 102, 6, 1, 10})
-	test5 := bubbleSort([]int{7, 5, 2, 4, 8, 9, 3, 11, 10, 6, 1})
-	ans1 := []int{2, 3, 4, 5, 7, 8, 9}
-	ans2 := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
-	ans3 := []int{2, 3, 3, 3, 3, 4, 5, 7, 8, 9}
-	ans4 := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 100, 102}
-	ans5 := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}
-
-	if !cmp.Equal(test1, ans1) {
-		t.Errorf("Expected bubbleSort to sort the array %v, instead you got %v", test1, ans1)
+func TestBuyStockTwice(t *testing.T) {
+	test1 := []int{12, 11, 13, 9, 12, 8, 14, 13, 15}
+	test2 := []int{3, 2, 0, 0, 2, 0, 1, 5}
+	test3 := []int{5, 3, 1, 5, 2, 0, 1}
+	test4 := []int{5, 3, 2, 4, 1}
+	test5 := []int{3, 3, 1, 0, 2, 0, 1, 3, 1, 0, 6}
+	test6 := []int{7, 6, 5, 4, 3, 2}
+	ans1 := buyStockTwice(test1)
+	ans2 := buyStockTwice(test2)
+	ans3 := buyStockTwice(test3)
+	ans4 := buyStockTwice(test4)
+	ans5 := buyStockTwice(test5)
+	ans6 := buyStockTwice(test6)
+	if ans1 != 10 {
+		t.Errorf("Expected array %v to be 10, not %v", test1, ans1)
 	}
-	if !cmp.Equal(test2, ans2) {
-		t.Errorf("Expected bubbleSort to sort the array %v, instead you got %v", test2, ans2)
-	}
-
-	if !cmp.Equal(test3, ans3) {
-		t.Errorf("Expected bubbleSort to sort the array %v, instead you got %v", test3, ans3)
+	if ans2 != 7 {
+		t.Errorf("Expected array %v to be 7, not %v", test2, ans2)
 	}
 
-	if !cmp.Equal(test4, ans4) {
-		t.Errorf("Expected bubbleSort to sort the array %v, instead you got %v", test4, ans4)
+	if ans3 != 5 {
+		t.Errorf("Expected array %v to be 5, not %v", test3, ans3)
 	}
 
-	if !cmp.Equal(test5, ans5) {
-		t.Errorf("Expected bubbleSort to sort the array %v, instead you got %v", test5, ans5)
+	if ans4 != 2 {
+		t.Errorf("Expected array %v to be 2, not %v", test4, ans4)
+	}
+
+	if ans5 != 9 {
+		t.Errorf("Expected array %v to be 9, not %v", test5, ans5)
+	}
+
+	if ans6 != 0 {
+		t.Errorf("Expected array %v to be 0, not %v", test6, ans6)
+	}
+}
+
+func TestSumNums(t *testing.T) {
+	test1 := sumNums(1)
+	test2 := sumNums(2)
+	test3 := sumNums(5)
+
+	if test1 != 1 {
+		t.Errorf("Expected sumNums(1) to equal 1, not %v", test1)
+	}
+
+	if test2 != 3 {
+		t.Errorf("Expected sumNums(2) to equal 3, not %v", test2)
+	}
+
+	if test3 != 15 {
+		t.Errorf("Expected sumNums(5) to equal 15, not %v", test3)
 	}
 }
