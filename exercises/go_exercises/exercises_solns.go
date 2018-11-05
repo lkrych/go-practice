@@ -1,46 +1,60 @@
 package goExercises
  
-// import "fmt"
+// import "strings"
 
-// //iterate forward O(n) and then backward O(n), combining the results in one array.
-// func buyStockTwice(arr []int) int {
-// 	maxProfit := 0
-// 	maxProfits := make([]int, len(arr))
-// 	low := 1000000
-// 	for i := 0; i < len(arr); i++ {
-// 		if arr[i] < low {
-// 			low = arr[i]
+// func numRepeats(word string) int {
+// 	lettersMap := map[string]int{}
+// 	for _, ch := range strings.Split(word, "") {
+// 		if ch == " " {
+// 			continue
 // 		}
-// 		if (arr[i] - low) > maxProfit {
-// 			maxProfit = arr[i] - low
-// 		}
-// 		maxProfits[i] = maxProfit
-
-// 	}
-// 	fmt.Printf("Before backwards iteration: %v \n", maxProfits)
-// 	totalMaxProfit := 0
-// 	maxProfit = 0
-// 	high := -1
-// 	for j := len(arr) - 1; j > 0; j-- {
-// 		if arr[j] > high {
-// 			high = arr[j]
-// 		}
-// 		if (high - arr[j]) > maxProfit {
-// 			maxProfit = high - arr[j]
-// 		}
-// 		maxProfits[j] = maxProfit + maxProfits[j-1]
-// 		if maxProfits[j] > totalMaxProfit {
-// 			totalMaxProfit = maxProfits[j]
+// 		if lettersMap[ch] >= 1 {
+// 			lettersMap[ch]++
+// 		} else {
+// 			lettersMap[ch] = 1
 // 		}
 // 	}
-// 	fmt.Printf("After backwards iteration: %v \n", maxProfits)
-// 	return totalMaxProfit
+// 	count := 0
+// 	for _, v := range lettersMap {
+// 		if v > 1 {
+// 			count++
+// 		}
+// 	}
+// 	return count
 // }
  
-// func sumNums(n int) int {
-// 	if n == 1 {
-// 		return 1
+// import "math"
+
+// //the key insight to this one is noticing that these edits are very similar and that all
+// //we need to do is check to see if the characters are same
+// func oneAway(first, second string) bool {
+// 	//check lengths
+// 	if math.Abs(len(first)-len(second)) > 1 {
+// 		return false
 // 	}
-// 	return n + sumNums(n-1)
+
+// 	//get shorter or longer string
+// 	s1 = len(first) < len(second) ? first : second
+// 	s2 = len(first) < len(second) ? second : first
+
+// 	idx1 := 0
+// 	idx2 := 0
+// 	foundDiff := false
+// 	for idx2 < len(s2) && idx1 < len(s1) {
+// 		if s1[idx1] != s2[idx2] {
+// 			if foundDiff { //there should only be one edit
+// 				return false
+// 			}
+// 			foundDiff = true
+
+// 			if len(s1) == len(s2) {
+// 				idx1++ //on replace, move shorter idx
+// 			}
+// 		} else {
+// 			idx1++ //if matching, move shorter idx
+// 		}
+// 		idx2++ //always move idx for longer
+// 	}
+// 	return true
 // }
  

@@ -1,61 +1,82 @@
 package goExercises
 
-import "fmt"
+import "strings"
 
-//given an arr representing stock prices, return the maximum profit you could retrieve from buying and selling the stock twice
-//ex: [310, 315, 275, 295, 260, 270, 290, 230, 255, 250] => 50
-func buyStockTwice(arr []int) int {
-	//hold the current state of the difference between days if larger than previous
-	maxProfit := 0
-	//make storage array for keeping track fo maxProfits, most useful for step 2
-	//O(n) space
-	maxProfits := make([]int, len(arr))
-	//loop over arr O(n)
-	currLow := 1000000 // big number
-	for i := 0; i < len(arr); i++ {
-		if arr[i] < currLow {
-			currLow = arr[i]
-		}
-
-		currentDifference := arr[i] - currLow
-		if currentDifference > maxProfit {
-			maxProfit = currentDifference
-		}
-
-		maxProfits[i] = maxProfit
-	}
-	// we now have an array maxProfits that represents the current maxProfit per day
-	fmt.Println("Max profits:", maxProfits)
-	// in step 2 we do the exact same procedure in reverse.
-	currHigh := -1
-	maxProfit = 0
-	//store the addition of the current profit with the past profit computed in step 1 in this variable
-	totalProfit := 0
-	//step through the array going backwards O(n)
-	for j := len(arr) - 1; j > 0; j-- {
-		if arr[j] > currHigh {
-			currHigh = arr[j]
-		}
-
-		currentDifference := currHigh - arr[j]
-		if currentDifference > maxProfit {
-			maxProfit = currentDifference
-		}
-
-		maxProfits[j] = maxProfit + maxProfits[j-1]
-		if maxProfits[j] > totalProfit {
-			totalProfit = maxProfits[j]
+//return the number of repeated characters in word
+func numRepeats(word string) int {
+	m := make(map[string]int)
+	count := 0
+	for _, ch := range strings.Split(word, "") {
+		if val, ok := m[ch]; ok {
+			m[ch] = val + 1
+		} else {
+			m[ch] = 1
 		}
 	}
 
-	return totalProfit
+	for _, v := range m {
+		if v > 1 {
+			count++
+		}
+	}
+
+	return count
+
 }
 
-//return sum of n + n-1 + ... 1
-func sumNums(n int) int {
-	if n == 1 {
-		return 1
+//there are three types of edits that can be performed on strings
+// 1) insert a character
+// 2) remove a character
+// 3) replace a character
+// given two strings, write a function to check if they are one edit(or zero edits) away
+//ex: pale, ple -> true
+//	  pales, pale -> true
+//    pale, bale -> true
+//    pale, bake -> false
+func oneAway(s1, s2 string) bool {
+	sameLength := len(s1) == len(s2)
+	foundDiff := false
+	if sameLength {
+		for i := 0; i < len(s1); i++ {
+			if s1[i] != s2[i] {
+				if foundDiff {
+					//there are more than two edit differences in a same length string
+					return false
+				}
+				foundDiff = true
+			}
+		}
+		return foundDiff
 	} else {
-		return sumNums(n-1) + n
+		if len(s1) > len(s2) {
+			for i := 0; i < len(s2); i++ {
+				if foundDiff {
+					if s1[i] != s2[i-1] {
+						return false
+					}
+				}
+				if s1[i] != s2[i] {
+					//found deleted char in s2
+					foundDiff = true
+				}
+			}
+			//s1 > s2, if foundDiff not found than s1 has an extra char
+			return true
+		} else {
+			for i := 0; i < len(s1); i++ {
+				if foundDiff {
+					if s2[i] != s1[i-1] {
+						return false
+					}
+				}
+				if s1[i] != s2[i] {
+					//found deleted char in s1
+					foundDiff = true
+				}
+			}
+			//same case as above
+			return true
+		}
 	}
+	return foundDiff
 }
