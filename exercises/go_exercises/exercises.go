@@ -1,39 +1,58 @@
 package goExercises
 
-//return the GCF of the two inputs
-func greatestCommonFactor(n1 int, n2 int) int {
-	greater := 0
-	lesser := 0
-	if n1 == n2 {
-		return n1
-	} else if n1 > n2 {
-		greater = n1
-		lesser = n2
-	} else {
-		greater = n2
-		lesser = n1
-	}
+import (
+	"strings"
+)
 
-	for i := lesser; i > 1; i-- {
-		if (greater%i) == 0 && (lesser%i) == 0 {
+//return a string where every char in sentence is shifted by shift
+func caesarCipher(shift int, sentence string) string {
+	encryptedString := []string{}
+	for _, ch := range strings.Split(sentence, "") {
+		if ch == " " {
+			encryptedString = append(encryptedString, " ")
+			continue
+		}
+		encryptedString = append(encryptedString, shiftChar(shift, ch))
+	}
+	return strings.Join(encryptedString, "")
+}
+
+func shiftChar(shift int, character string) string {
+	alpha := []string{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"}
+	intVal := indexOf(character, alpha)
+	newVal := alpha[(intVal+shift)%26]
+	return newVal
+}
+
+func indexOf(item string, arr []string) int {
+	for i, v := range arr {
+		if v == item {
 			return i
 		}
 	}
+	return -1
+}
+
+//check to see if a passphrase is valid, it must not contain any duplicate words
+func passPhrase(passphrase string) bool {
+	m := map[string]bool{}
+	for _, word := range strings.Split(passphrase, " ") {
+		if _, ok := m[word]; ok {
+			return false
+		}
+		m[word] = true
+	}
+	return true
+}
+
+func passPhraseAdvent() int {
+	//read from ../practice/passphrase_input.txt
+	//each line has a different passphrase, return how many are valid
 	return 1
 }
 
-//return a sorted arr using bubblesort!
-func bubbleSort(arr []int) []int {
-	var switched bool
-	switched = true
-	for switched {
-		switched = false
-		for i := 0; i < len(arr)-1; i++ {
-			if arr[i] > arr[i+1] {
-				arr[i], arr[i+1] = arr[i+1], arr[i]
-				switched = true
-			}
-		}
-	}
-	return arr
-}
+//bonus, check to see if a passphrase is valid, it must not contain any words that are anagrams of eachother
+// abcde == dcabe
+// func passPhraseAnagram(passphrase string) bool {
+
+// }

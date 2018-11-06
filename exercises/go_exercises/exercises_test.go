@@ -2,56 +2,88 @@ package goExercises
 
 import (
 	"testing"
-
-	"github.com/google/go-cmp/cmp"
 )
 
-func TestGreatestCommonFactor(t *testing.T) {
-	test1 := greatestCommonFactor(3, 9)
-	test2 := greatestCommonFactor(16, 24)
-	test3 := greatestCommonFactor(7, 38)
+func TestCaesarCipher(t *testing.T) {
+	test1 := caesarCipher(3, "abc")
+	test2 := caesarCipher(3, "abc xyz")
+	test3 := caesarCipher(29, "abc xyz")
 
-	if test1 != 3 {
-		t.Errorf("Expected greatestCommonFactor of 3 and 9 to be 3, not %v", test1)
+	if test1 != "def" {
+		t.Errorf("Expected caesarCipher with a shift of 3 and input of abc to be def, not %v", test1)
 	}
 
-	if test2 != 8 {
-		t.Errorf("Expected greatestCommonFactor of 16 and 24 to be 8, not %v", test2)
+	if test2 != "def abc" {
+		t.Errorf("Expected caesarCipher with a shift of 3 and input of abc xyz to be def abc, not %v", test2)
 	}
 
-	if test3 != 1 {
-		t.Errorf("Expected greatestCommonFactor of 7 and 38 to be 1, not %v", test3)
-	}
-}
-
-func TestBubbleSort(t *testing.T) {
-	test1 := bubbleSort([]int{7, 5, 2, 4, 8, 9, 3})
-	test2 := bubbleSort([]int{7, 5, 2, 4, 8, 9, 3, 1, 6, 10})
-	test3 := bubbleSort([]int{7, 5, 2, 4, 8, 9, 3, 3, 3, 3})
-	test4 := bubbleSort([]int{7, 5, 2, 4, 8, 9, 3, 100, 102, 6, 1, 10})
-	test5 := bubbleSort([]int{7, 5, 2, 4, 8, 9, 3, 11, 10, 6, 1})
-	ans1 := []int{2, 3, 4, 5, 7, 8, 9}
-	ans2 := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
-	ans3 := []int{2, 3, 3, 3, 3, 4, 5, 7, 8, 9}
-	ans4 := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 100, 102}
-	ans5 := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}
-
-	if !cmp.Equal(test1, ans1) {
-		t.Errorf("Expected bubbleSort to sort the array %v, instead you got %v", test1, ans1)
-	}
-	if !cmp.Equal(test2, ans2) {
-		t.Errorf("Expected bubbleSort to sort the array %v, instead you got %v", test2, ans2)
-	}
-
-	if !cmp.Equal(test3, ans3) {
-		t.Errorf("Expected bubbleSort to sort the array %v, instead you got %v", test3, ans3)
-	}
-
-	if !cmp.Equal(test4, ans4) {
-		t.Errorf("Expected bubbleSort to sort the array %v, instead you got %v", test4, ans4)
-	}
-
-	if !cmp.Equal(test5, ans5) {
-		t.Errorf("Expected bubbleSort to sort the array %v, instead you got %v", test5, ans5)
+	if test3 != "def abc" {
+		t.Errorf("Expected caesarCipher with a shift of 29 and input of abc xyz to be def abc, not %v", test3)
 	}
 }
+
+func TestPassPhrase(t *testing.T) {
+	test1 := passPhrase("doody goody woody")
+	test2 := passPhrase("doody doody woody")
+	test3 := passPhrase("woody goody woody")
+	test4 := passPhrase("It is not I who is the Creature!")
+	test5 := passPhrase("Hello, my name is Bill.")
+	// test6 := passPhraseAdvent()
+
+	if test1 != true {
+		t.Errorf("Expected answer to be true, not %v", test1)
+	}
+
+	if test2 != false {
+		t.Errorf("Expected answer to be false, not %v", test2)
+	}
+
+	if test3 != false {
+		t.Errorf("Expected answer to be false, not %v", test3)
+	}
+
+	if test4 != false {
+		t.Errorf("Expected answer to be false, not %v", test4)
+	}
+
+	if test5 != true {
+		t.Errorf("Expected answer to be true, not %v", test5)
+	}
+
+	// if test6 != 325 {
+	// 	t.Errorf("Expected answer to be 325, not %v", test6)
+	// }
+}
+
+// func TestPassPhraseAnagram(t *testing.T) {
+// 	test1 := passPhraseAnagram("abcde fghij")
+// 	test2 := passPhraseAnagram("abcde xyz ecdab")
+// 	test3 := passPhraseAnagram("a ab abc abd abf abj")
+// 	test4 := passPhraseAnagram("iiii oiii ooii oooi oooo")
+// 	test5 := passPhraseAnagram("oiii ioii iioi iiio")
+// 	test6 := passPhraseAnagramAdvent()
+
+// 	if test1 != true {
+// 		t.Errorf("Expected answer to be true, not %v", test1)
+// 	}
+
+// 	if test2 != false {
+// 		t.Errorf("Expected answer to be false, not %v", test2)
+// 	}
+
+// 	if test3 != true {
+// 		t.Errorf("Expected answer to be true, not %v", test3)
+// 	}
+
+// 	if test4 != true {
+// 		t.Errorf("Expected answer to be false, not %v", test4)
+// 	}
+
+// 	if test5 != false {
+// 		t.Errorf("Expected answer to be false, not %v", test5)
+// 	}
+
+// 	if test6 != 6 {
+// 		t.Errorf("Expected answer to be 6, not %v", test6)
+// 	}
+// }
