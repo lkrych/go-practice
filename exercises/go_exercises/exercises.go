@@ -1,58 +1,44 @@
 package goExercises
 
-import (
-	"strings"
-)
-
-//return a string where every char in sentence is shifted by shift
-func caesarCipher(shift int, sentence string) string {
-	encryptedString := []string{}
-	for _, ch := range strings.Split(sentence, "") {
-		if ch == " " {
-			encryptedString = append(encryptedString, " ")
-			continue
+//Given a string, find the length of the longest substring without repeating characters.
+func longestSubString(sentence string) int {
+	mIdxs := map[string]int{}
+	idx1 := 0
+	longestSub := 0
+	lenCurrSub := 0
+	for idx1 < len(sentence)-1 {
+		currChar := string(sentence[idx1])
+		if lastIdx, ok := mIdxs[currChar]; !ok {
+			lenCurrSub++
+		} else {
+			lenCurrSub = idx1 - lastIdx
 		}
-		encryptedString = append(encryptedString, shiftChar(shift, ch))
-	}
-	return strings.Join(encryptedString, "")
-}
-
-func shiftChar(shift int, character string) string {
-	alpha := []string{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"}
-	intVal := indexOf(character, alpha)
-	newVal := alpha[(intVal+shift)%26]
-	return newVal
-}
-
-func indexOf(item string, arr []string) int {
-	for i, v := range arr {
-		if v == item {
-			return i
+		//keep track of longest sub
+		if lenCurrSub > longestSub {
+			longestSub = lenCurrSub
 		}
+		mIdxs[currChar] = idx1
+		idx1++
 	}
-	return -1
+	return longestSub
 }
 
-//check to see if a passphrase is valid, it must not contain any duplicate words
-func passPhrase(passphrase string) bool {
-	m := map[string]bool{}
-	for _, word := range strings.Split(passphrase, " ") {
-		if _, ok := m[word]; ok {
-			return false
-		}
-		m[word] = true
+type Node struct {
+	val  int
+	next *Node
+}
+
+//find the kth to last element of a singly-linked list
+func findKthElement(head *Node, k int) (*Node, int) {
+	if head.next == nil {
+		return head, 1
 	}
-	return true
+
+	node, i := findKthElement(head.next, k)
+	i++
+	if i == k {
+		return head, i
+	}
+
+	return node, i
 }
-
-func passPhraseAdvent() int {
-	//read from ../practice/passphrase_input.txt
-	//each line has a different passphrase, return how many are valid
-	return 1
-}
-
-//bonus, check to see if a passphrase is valid, it must not contain any words that are anagrams of eachother
-// abcde == dcabe
-// func passPhraseAnagram(passphrase string) bool {
-
-// }

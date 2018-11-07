@@ -1,72 +1,59 @@
 package goExercises
  
-// import "strings"
-
-// func caesarCipher(shift int, sentence string) string {
-// 	shifted := []string{}
-// 	for _, ascii := range []byte(sentence) {
-// 		if ascii == 32 {
-// 			shifted = append(shifted, " ")
-// 		} else {
-// 			shifted = append(shifted, shiftChar(shift, ascii))
-// 		}
+// //Given a string, find the length of the longest substring without repeating characters.
+// func lengthOfLongestSubstring(s string) int {
+// 	bs := []byte(s)
+// 	var maxLen, start int
+// 	idxMap := map[byte]int{}
+// 	for i := 0; i < len(bs); i++ {
+// 			if _, ok := idxMap[bs[i]]; ok && start <= idxMap[bs[i]] {
+// 					start = idxMap[bs[i]] + 1
+// 			} else {
+// 					if maxLen < i - start + 1 {
+// 							maxLen = i - start + 1
+// 					}
+// 			}
+// 			idxMap[bs[i]] = i
 // 	}
-// 	return strings.Join(shifted, "")
-// }
-
-// func shiftChar(shift int, ascii byte) string {
-// 	newChar := int(ascii) + (shift % 26)
-// 	if newChar > 122 {
-// 		newChar = 96 + (newChar % 122)
-// 	}
-// 	return string(newChar)
+// 	return maxLen
 // }
  
-// import (
-// 	"fmt"
-// 	"io/ioutil"
-// 	"log"
-// 	"strings"
-// )
-
-// func passPhrase(passphrase string) bool {
-// 	split := strings.Split(passphrase, " ")
-// 	wordMap := make(map[string]int)
-// 	for _, word := range split {
-// 		if _, ok := wordMap[word]; ok {
-// 			fmt.Printf("%v is the repeated word in %v \n", word, passphrase)
-// 			return false
-// 		}
-// 		wordMap[word] = 1
+//there are two ways to solve this problem: a recursive way and an iterative way
+// the iterative way is more efficient, the recursive way is easier to read
+//
+// recursive:
+//
+// func findKthElement(head *Node, k int) (*Node, int) {
+// 	if head.next == nil {
+// 		return head, 1
 // 	}
-// 	return true
+// 	var node, ith = findKthElement(head.next, k)
+// 	ith++
+// 	if ith == k {
+// 		return head, ith
+// 	}
+// 	return node, ith
 // }
+//
+// iterative:
+//
+// func findKthElement(head *Node, k int) *Node {
+// 	p1 := head
+// 	p2 := head
 
-// func passPhraseAdvent() int {
-// 	phraseCount := 0
-// 	content, err := ioutil.ReadFile("./advent_input/passphrase_input.txt")
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-// 	splitByLine := strings.Split(string(content), "\n")
-// 	for _, line := range splitByLine {
-// 		if passPhrase(line) {
-// 			phraseCount++
+// 	//move p1 k nodes into the list
+// 	for i := 0; i < k; i++ {
+// 		if p1 == nil {
+// 			return nil
 // 		}
+// 		p1 = p1.next
 // 	}
-// 	return phraseCount
-// }
 
-// func passPhraseAnagram(passphrase string) bool {
-// 	split := strings.Split(passphrase, " ")
-// 	wordMap := make(map[string]int)
-// 	for _, word := range split {
-// 		sorted := SortString(word)
-// 		if _, ok := wordMap[sorted]; ok {
-// 			return false
-// 		}
-// 		wordMap[sorted] = 1
+// 	//move them at the same pace. when p1 hits the end, p2 will be at the right ele
+// 	for p1 != nil {
+// 		p1 = p1.next
+// 		p2 = p2.next
 // 	}
-// 	return true
+// 	return p2
 // }
  

@@ -1,89 +1,85 @@
 package goExercises
 
 import (
+	"fmt"
 	"testing"
 )
 
-func TestCaesarCipher(t *testing.T) {
-	test1 := caesarCipher(3, "abc")
-	test2 := caesarCipher(3, "abc xyz")
-	test3 := caesarCipher(29, "abc xyz")
+func TestLongestSubString(t *testing.T) {
+	test1 := longestSubString("abcabcbb")
+	test2 := longestSubString("bbbbb")
+	test3 := longestSubString("pwwkew")
 
-	if test1 != "def" {
-		t.Errorf("Expected caesarCipher with a shift of 3 and input of abc to be def, not %v", test1)
+	if test1 != 3 {
+		t.Errorf("Expected longestSubString of abcabcbb to be 3, not %v", test1)
 	}
 
-	if test2 != "def abc" {
-		t.Errorf("Expected caesarCipher with a shift of 3 and input of abc xyz to be def abc, not %v", test2)
+	if test2 != 1 {
+		t.Errorf("Expected longestSubString of abba to be 1, not %v", test2)
 	}
 
-	if test3 != "def abc" {
-		t.Errorf("Expected caesarCipher with a shift of 29 and input of abc xyz to be def abc, not %v", test3)
+	if test3 != 3 {
+		t.Errorf("Expected longestSubString of pwwkew to be 3, not %v", test3)
 	}
 }
 
-func TestPassPhrase(t *testing.T) {
-	test1 := passPhrase("doody goody woody")
-	test2 := passPhrase("doody doody woody")
-	test3 := passPhrase("woody goody woody")
-	test4 := passPhrase("It is not I who is the Creature!")
-	test5 := passPhrase("Hello, my name is Bill.")
-	// test6 := passPhraseAdvent()
+func TestFindKthElement(t *testing.T) {
+	input1 := []int{1, 2, 3, 3, 4, 4, 5}
+	input2 := []int{5, 8, 6, 7, 8, 9, 7, 10}
+	input3 := []int{100, 102, 101, 102, 101, 102}
 
-	if test1 != true {
-		t.Errorf("Expected answer to be true, not %v", test1)
+	list1 := createALinkedList(input1)
+	list2 := createALinkedList(input2)
+	list3 := createALinkedList(input3)
+
+	//remove _ if you are using the iterative solution
+	list1Val, _ := findKthElement(list1, 2)
+	list2Val, _ := findKthElement(list2, 5)
+	list3Val, _ := findKthElement(list3, 3)
+
+	if list1Val.val != 4 {
+		t.Errorf("Expected kthElement to find the kth element 4 not %v", list1Val.val)
+		fmt.Println("Printing list1")
+		printLL(list1)
 	}
 
-	if test2 != false {
-		t.Errorf("Expected answer to be false, not %v", test2)
+	if list2Val.val != 7 {
+		t.Errorf("Expected kthElement to find the kth element 7 not %v", list2Val.val)
+		fmt.Println("Printing list2")
+		printLL(list2)
 	}
 
-	if test3 != false {
-		t.Errorf("Expected answer to be false, not %v", test3)
+	if list3Val.val != 102 {
+		t.Errorf("Expected kthElement to find the kth element 102 not %v", list3Val.val)
+		fmt.Println("Printing list3")
+		printLL(list3)
 	}
-
-	if test4 != false {
-		t.Errorf("Expected answer to be false, not %v", test4)
-	}
-
-	if test5 != true {
-		t.Errorf("Expected answer to be true, not %v", test5)
-	}
-
-	// if test6 != 325 {
-	// 	t.Errorf("Expected answer to be 325, not %v", test6)
-	// }
 }
 
-// func TestPassPhraseAnagram(t *testing.T) {
-// 	test1 := passPhraseAnagram("abcde fghij")
-// 	test2 := passPhraseAnagram("abcde xyz ecdab")
-// 	test3 := passPhraseAnagram("a ab abc abd abf abj")
-// 	test4 := passPhraseAnagram("iiii oiii ooii oooi oooo")
-// 	test5 := passPhraseAnagram("oiii ioii iioi iiio")
-// 	test6 := passPhraseAnagramAdvent()
+//if you created your own function, comment this out!
+func createALinkedList(input []int) *Node {
+	head := &Node{
+		val:  input[0],
+		next: nil,
+	}
+	currentNode := head
+	for i := 1; i < len(input); i++ {
+		nextNode := &Node{
+			val:  input[i],
+			next: nil,
+		}
+		currentNode.next = nextNode
+		currentNode = nextNode
+	}
+	return head
+}
 
-// 	if test1 != true {
-// 		t.Errorf("Expected answer to be true, not %v", test1)
-// 	}
+func printLL(head *Node) {
+	currentNode := head
 
-// 	if test2 != false {
-// 		t.Errorf("Expected answer to be false, not %v", test2)
-// 	}
-
-// 	if test3 != true {
-// 		t.Errorf("Expected answer to be true, not %v", test3)
-// 	}
-
-// 	if test4 != true {
-// 		t.Errorf("Expected answer to be false, not %v", test4)
-// 	}
-
-// 	if test5 != false {
-// 		t.Errorf("Expected answer to be false, not %v", test5)
-// 	}
-
-// 	if test6 != 6 {
-// 		t.Errorf("Expected answer to be 6, not %v", test6)
-// 	}
-// }
+	for currentNode.next != nil {
+		fmt.Printf("  %v  ->", currentNode)
+		currentNode = currentNode.next
+	}
+	fmt.Printf("  %v  \n", currentNode)
+}
