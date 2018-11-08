@@ -1,3 +1,8 @@
+import (
+	"fmt"
+	"testing"
+)
+
 func TestTwoSum(t *testing.T) {
 	test1 := twoSum([]int{1, 3, 5, -3}, 0)
 	ans1 := []int{1, 3}
@@ -76,4 +81,14 @@ func BenchmarkTwoSumOptimized(b *testing.B) {
 			11, 123, 134, 163, 41, 12, 28, 130, 13, 101, 83, 77, 109, 114, 21, 82, 88, 74, 24, 94, 48, 33,
 			12, 161, 109, 169, 21, 24, 36, 65, 50, 2, 101, 159, 148, 54, 192, 88, 47, 11, 142, 43, 70, 182}, 0)
 	}
+}
+
+func equalityOfSlices(a []int, b []int) bool {
+	for i, v := range a {
+		if v != b[i] {
+			fmt.Println("INSIDE EQUALITY", v, "!=", b[i])
+			return false
+		}
+	}
+	return true
 }
