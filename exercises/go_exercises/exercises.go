@@ -1,44 +1,43 @@
 package goExercises
 
-//Given a string, find the length of the longest substring without repeating characters.
-func longestSubString(sentence string) int {
-	mIdxs := map[string]int{}
-	idx1 := 0
-	longestSub := 0
-	lenCurrSub := 0
-	for idx1 < len(sentence)-1 {
-		currChar := string(sentence[idx1])
-		if lastIdx, ok := mIdxs[currChar]; !ok {
-			lenCurrSub++
-		} else {
-			lenCurrSub = idx1 - lastIdx
+import "strings"
+
+//Return the indices of the elements in the arr that sum to find
+func twoSum(arr []int, find int) []int {
+	for i := 0; i < len(arr)-1; i++ {
+		for j := i + 1; j < len(arr); j++ {
+			if arr[i]+arr[j] == find {
+				return []int{i, j}
+			}
 		}
-		//keep track of longest sub
-		if lenCurrSub > longestSub {
-			longestSub = lenCurrSub
-		}
-		mIdxs[currChar] = idx1
-		idx1++
 	}
-	return longestSub
+	return []int{}
 }
 
-type Node struct {
-	val  int
-	next *Node
+//create a more optimized version of the function
+func twoSumOptimized(arr []int, find int) []int {
+	iMap := make(map[int]int)
+	for i := 0; i < len(arr)-1; i++ {
+		iMap[arr[i]] = i
+	}
+
+	for i := 0; i < len(arr)-1; i++ {
+		lookFor := find - arr[i]
+		if v, ok := iMap[lookFor]; ok {
+			return []int{i, v}
+		}
+	}
+	return []int{}
 }
 
-//find the kth to last element of a singly-linked list
-func findKthElement(head *Node, k int) (*Node, int) {
-	if head.next == nil {
-		return head, 1
-	}
+//observe the benchmark code in the tests. Try to write this code after looking at it
 
-	node, i := findKthElement(head.next, k)
-	i++
-	if i == k {
-		return head, i
+//take an array of ints of length word, and return a string with each character of word in the order of idxArray
+func scrambleString(word string, idxArray []int) string {
+	newString := []string{}
+	for i := 0; i < len(idxArray); i++ {
+		idx := idxArray[i]
+		newString = append(newString, string(word[idx]))
 	}
-
-	return node, i
+	return strings.Join(newString, "")
 }
