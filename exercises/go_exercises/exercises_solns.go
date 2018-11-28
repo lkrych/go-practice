@@ -1,46 +1,42 @@
 package goExercises
  
-// func twoSum(arr []int, find int) []int {
-// 	idxs := []int{}
-// 	for i, val1 := range arr {
-// 		for j, val2 := range arr[i+1:] {
-// 			if val1+val2 == find {
-// 				//bc you are iterating with modified slice
-// 				//you need to take into account correct j index
-// 				idxs = append(idxs, i, j+i+1)
+// import "strings"
+
+// func nearbyAZ(word string) bool {
+// 	split := strings.Split(word, "")
+// 	foundA := -2000
+// 	for i, char := range split {
+// 		if char == "a" {
+// 			foundA = i
+// 		}
+// 		if char == "z" {
+// 			if i-foundA <= 3 {
+// 				return true
 // 			}
 // 		}
 // 	}
-// 	return idxs
+// 	return false
 // }
-
-// func twoSumOptimized(arr []int, find int) []int {
-// 	sums := []int{}
-// 	idxs := map[int]int{}
-// 	//fill map
-// 	for i, val := range arr {
-// 		idxs[val] = i
-// 	}
-// 	//search for correct factors to negate the key
-// 	for key, val := range idxs {
-// 		search := find - key
-// 		if searchIdx, exists := idxs[search]; exists {
-// 			sums = append(sums, val, searchIdx)
-// 			return sums
-// 		}
-// 	}
-// 	return sums
-// }
-
  
 // import "strings"
 
-// func scrambleString(word string, idxArray []int) string {
-// 	split := strings.Split(word, "")
-// 	scrambled := []string{}
-// 	for _, el := range idxArray {
-// 		scrambled = append(scrambled, split[el])
+// func caesarCipher(shift int, sentence string) string {
+// 	shifted := []string{}
+// 	for _, ascii := range []byte(sentence) {
+// 		if ascii == 32 {
+// 			shifted = append(shifted, " ")
+// 		} else {
+// 			shifted = append(shifted, shiftChar(shift, ascii))
+// 		}
 // 	}
-// 	return strings.Join(scrambled, "")
+// 	return strings.Join(shifted, "")
+// }
+
+// func shiftChar(shift int, ascii byte) string {
+// 	newChar := int(ascii) + (shift % 26)
+// 	if newChar > 122 {
+// 		newChar = 96 + (newChar % 122)
+// 	}
+// 	return string(newChar)
 // }
  

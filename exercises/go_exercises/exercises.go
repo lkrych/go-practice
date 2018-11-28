@@ -2,42 +2,36 @@ package goExercises
 
 import "strings"
 
-//Return the indices of the elements in the arr that sum to find
-func twoSum(arr []int, find int) []int {
-	for i := 0; i < len(arr)-1; i++ {
-		for j := i + 1; j < len(arr); j++ {
-			if arr[i]+arr[j] == find {
-				return []int{i, j}
-			}
-		}
-	}
-	return []int{}
+//return true if the letter a is within two spaces of the letter z
+func nearbyAZ(word string) bool {
+
 }
 
-//create a more optimized version of the function
-func twoSumOptimized(arr []int, find int) []int {
-	iMap := make(map[int]int)
-	for i := 0; i < len(arr)-1; i++ {
-		iMap[arr[i]] = i
-	}
-
-	for i := 0; i < len(arr)-1; i++ {
-		lookFor := find - arr[i]
-		if v, ok := iMap[lookFor]; ok {
-			return []int{i, v}
+//return a string where every char in sentence is shifted by shift
+func caesarCipher(shift int, sentence string) string {
+	shifted := []string{}
+	for _, ch := range strings.Split(sentence, "") {
+		if ch == " " {
+			shifted = append(shifted, ch)
+		} else {
+			shifted = append(shifted, charShift(ch, shift))
 		}
 	}
-	return []int{}
+	return strings.Join(shifted, "")
 }
 
-//observe the benchmark code in the tests. Try to write this code after looking at it
+const alpha = []string{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"}
 
-//take an array of ints of length word, and return a string with each character of word in the order of idxArray
-func scrambleString(word string, idxArray []int) string {
-	newString := []string{}
-	for i := 0; i < len(idxArray); i++ {
-		idx := idxArray[i]
-		newString = append(newString, string(word[idx]))
+func charShift(ch string, shift int) string {
+	idx := indexOfCh(ch)
+	newIdx := (idx + shift) % 26
+	return alpha[newIdx]
+}
+
+func indexOfCh(x string) int {
+	for idx, ch := range alpha {
+		if ch == x {
+			return idx
+		}
 	}
-	return strings.Join(newString, "")
 }
