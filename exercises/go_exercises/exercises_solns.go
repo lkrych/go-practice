@@ -1,42 +1,37 @@
 package goExercises
  
-// import "strings"
-
-// func nearbyAZ(word string) bool {
-// 	split := strings.Split(word, "")
-// 	foundA := -2000
-// 	for i, char := range split {
-// 		if char == "a" {
-// 			foundA = i
-// 		}
-// 		if char == "z" {
-// 			if i-foundA <= 3 {
-// 				return true
-// 			}
+// func isPrime(n int) bool {
+// 	for i := 2; i < n/2+1; i++ {
+// 		if n%i == 0 {
+// 			return false
 // 		}
 // 	}
-// 	return false
+// 	return true
+// }
+
+// func nthPrime(nth int) int {
+// 	primeCount := 0
+// 	n := 2
+// 	for primeCount < nth {
+// 		if isPrime(n) {
+// 			primeCount++
+// 		}
+// 		n++
+// 	}
+// 	return n - 1
 // }
  
-// import "strings"
+// import "math"
 
-// func caesarCipher(shift int, sentence string) string {
-// 	shifted := []string{}
-// 	for _, ascii := range []byte(sentence) {
-// 		if ascii == 32 {
-// 			shifted = append(shifted, " ")
-// 		} else {
-// 			shifted = append(shifted, shiftChar(shift, ascii))
+// //func keep track of how far you have traveled, if you can reach the end, you made it!
+// func advancingArray(arr []int) bool {
+// 	farthestTraveled := arr[0]
+// 	for i := 0; i <= farthestTraveled; i++ {
+// 		if farthestTraveled == len(arr)-1 {
+// 			return true
 // 		}
+// 		farthestTraveled = int(math.Max(float64(farthestTraveled), float64(arr[i]+i)))
 // 	}
-// 	return strings.Join(shifted, "")
-// }
-
-// func shiftChar(shift int, ascii byte) string {
-// 	newChar := int(ascii) + (shift % 26)
-// 	if newChar > 122 {
-// 		newChar = 96 + (newChar % 122)
-// 	}
-// 	return string(newChar)
+// 	return false
 // }
  

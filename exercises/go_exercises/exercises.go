@@ -1,37 +1,19 @@
 package goExercises
-
-import "strings"
-
-//return true if the letter a is within two spaces of the letter z
-func nearbyAZ(word string) bool {
-
+ 
+//return the nth prime
+func nthPrime(nth int) int {
+	
 }
-
-//return a string where every char in sentence is shifted by shift
-func caesarCipher(shift int, sentence string) string {
-	shifted := []string{}
-	for _, ch := range strings.Split(sentence, "") {
-		if ch == " " {
-			shifted = append(shifted, ch)
-		} else {
-			shifted = append(shifted, charShift(ch, shift))
-		}
-	}
-	return strings.Join(shifted, "")
+ 
+//think of this exercise like a variation of mancala. 
+//Starting at the zeroth index, can you navigate to the last index using the number of hops given to you at each index?
+//You may use less than the number of hops given to you at each index
+//return true if you can, return false if it is impossible
+//ex [3,3,1,0,2,0,1] is true
+// hop once from 3 to 3, hop three times to two and hop twice to 1!
+//ex [3,2,0,0,2,0,1] is false
+// the farthest you can hop is to index 4
+func advancingArray(arr []int) bool {
+	
 }
-
-const alpha = []string{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"}
-
-func charShift(ch string, shift int) string {
-	idx := indexOfCh(ch)
-	newIdx := (idx + shift) % 26
-	return alpha[newIdx]
-}
-
-func indexOfCh(x string) int {
-	for idx, ch := range alpha {
-		if ch == x {
-			return idx
-		}
-	}
-}
+ 
