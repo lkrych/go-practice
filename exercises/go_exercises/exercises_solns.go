@@ -1,37 +1,29 @@
 package goExercises
  
-// func isPrime(n int) bool {
-// 	for i := 2; i < n/2+1; i++ {
-// 		if n%i == 0 {
-// 			return false
-// 		}
-// 	}
-// 	return true
-// }
+// import "strings"
 
-// func nthPrime(nth int) int {
-// 	primeCount := 0
-// 	n := 2
-// 	for primeCount < nth {
-// 		if isPrime(n) {
-// 			primeCount++
-// 		}
-// 		n++
+// func countVowels(sentence string) int {
+// 	split := strings.Split(sentence, "")
+// 	vowels := "aeiou"
+// 	count := 0
+// 	for _, chars := range split {
+// 		count += strings.Count(vowels, chars)
 // 	}
-// 	return n - 1
+
+// 	return count
 // }
  
-// import "math"
-
-// //func keep track of how far you have traveled, if you can reach the end, you made it!
-// func advancingArray(arr []int) bool {
-// 	farthestTraveled := arr[0]
-// 	for i := 0; i <= farthestTraveled; i++ {
-// 		if farthestTraveled == len(arr)-1 {
-// 			return true
+// func buyStock(arr []int) int {
+// 	low := 1000000
+// 	diff := 0
+// 	for i := 0; i < len(arr); i++ {
+// 		if arr[i] < low {
+// 			low = arr[i]
 // 		}
-// 		farthestTraveled = int(math.Max(float64(farthestTraveled), float64(arr[i]+i)))
+// 		if (arr[i] - low) > diff {
+// 			diff = arr[i] - low
+// 		}
 // 	}
-// 	return false
+// 	return diff
 // }
  
