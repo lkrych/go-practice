@@ -1,45 +1,51 @@
 package goExercises
-
-import (
-	"fmt"
-	"strings"
-)
-
-//return num of vowels in sentence
-func countVowels(sentence string) int {
-	vowels := []string{"a", "e", "i", "o", "u"}
-	vowelCount := 0
-	split := strings.Split(sentence, "")
-	for _, ch := range split {
-		for _, vowel := range vowels {
-			if ch == vowel {
-				vowelCount++
-			}
-		}
+ 
+//return sorted arr using mergesort
+func mergeSort(arr []int) []int {
+	if (len(arr) <= 1) {
+		return arr
 	}
-	return vowelCount
+
+	middle := len(arr)/2
+	arr1 := mergeSort(arr[:middle])
+	arr2 := mergeSort(arr[middle+1:]
+
+	
+	return merge(arr1, arr2)
 }
 
-//given an arr representing stock prices, return the maximum profit you could retrieve from buying and selling the stock
-//ex: [310, 315, 275, 295, 260, 270, 290, 230, 255, 250] => 30
-func buyStock(arr []int) int {
-	low := 1000000 //high number
-	high := 0 //low number
-	profit := 0
-	fmt.Printf("Arr is %v \n", arr) 
-	for _, price := range arr {
-		if price < low {
-			low = price
-			high = price
-		}
-		if price > high {
-			high = price
-		}
-		if high - low > profit {
-			profit = high - low
-		}
-		fmt.Printf("High is %v, Low is %v, Profit is %v \n", high, low, profit) 
-	}
-	return profit
+
+func merge(arr1, arr2 queue), []int {
+	merged := []int{}
+	for len(arr1
+	return merged
 }
 
+type queue struct {
+	data []int{}
+}
+
+func (q *queue) peek() {
+	if (len(q.data) > 1) {
+		return len(q.data)
+	} else {
+		return null
+	}
+}
+
+func (q *queue) push (el int) {
+	q.data = append(q.data, el)
+}
+
+func (q *queue) pop() int {
+	first = q.data[0]
+	q.data = q.data[1:]
+	return first
+}
+ 
+//In O(n) time, and using O(1) space, remove duplicates from a sorted array
+func removeDups(arr []int) []int {
+
+}
+
+ 

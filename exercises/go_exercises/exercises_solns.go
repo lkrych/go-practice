@@ -1,29 +1,43 @@
 package goExercises
  
-// import "strings"
-
-// func countVowels(sentence string) int {
-// 	split := strings.Split(sentence, "")
-// 	vowels := "aeiou"
-// 	count := 0
-// 	for _, chars := range split {
-// 		count += strings.Count(vowels, chars)
+// func mergeSort(arr []int) []int {
+// 	//make copy of array so you don't mutate input
+// 	tmp := make([]int, len(arr))
+// 	copy(tmp, arr)
+// 	if len(tmp) <= 1 {
+// 		return tmp
 // 	}
+// 	mid := len(tmp) / 2
+// 	left := mergeSort(tmp[0:mid])
+// 	right := mergeSort(tmp[mid:])
 
-// 	return count
+// 	return merge(left, right)
+// }
+
+// func merge(left []int, right []int) []int {
+// 	sorted := []int{}
+// 	for len(left) > 0 && len(right) > 0 {
+// 		if left[0] < right[0] {
+// 			sorted = append(sorted, left[0])
+// 			left = left[1:]
+// 		} else {
+// 			sorted = append(sorted, right[0])
+// 			right = right[1:]
+// 		}
+// 	}
+// 	sorted = append(sorted, left...)
+// 	sorted = append(sorted, right...)
+// 	return sorted
 // }
  
-// func buyStock(arr []int) int {
-// 	low := 1000000
-// 	diff := 0
-// 	for i := 0; i < len(arr); i++ {
-// 		if arr[i] < low {
-// 			low = arr[i]
-// 		}
-// 		if (arr[i] - low) > diff {
-// 			diff = arr[i] - low
+// func removeDups(arr []int) []int {
+// 	writeIdx := 1
+// 	for i := 1; i < len(arr); i++ {
+// 		if arr[writeIdx-1] != arr[i] {
+// 			arr[writeIdx] = arr[i]
+// 			writeIdx++
 // 		}
 // 	}
-// 	return diff
+// 	return arr[:writeIdx]
 // }
  
