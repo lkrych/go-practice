@@ -30,14 +30,21 @@ package goExercises
 // 	return sorted
 // }
  
-// func removeDups(arr []int) []int {
-// 	writeIdx := 1
-// 	for i := 1; i < len(arr); i++ {
-// 		if arr[writeIdx-1] != arr[i] {
-// 			arr[writeIdx] = arr[i]
-// 			writeIdx++
-// 		}
+// //Given a string, find the length of the longest substring without repeating characters.
+// func lengthOfLongestSubstring(s string) int {
+// 	bs := []byte(s)
+// 	var maxLen, start int
+// 	idxMap := map[byte]int{}
+// 	for i := 0; i < len(bs); i++ {
+// 			if _, ok := idxMap[bs[i]]; ok && start <= idxMap[bs[i]] {
+// 					start = idxMap[bs[i]] + 1
+// 			} else {
+// 					if maxLen < i - start + 1 {
+// 							maxLen = i - start + 1
+// 					}
+// 			}
+// 			idxMap[bs[i]] = i
 // 	}
-// 	return arr[:writeIdx]
+// 	return maxLen
 // }
  
