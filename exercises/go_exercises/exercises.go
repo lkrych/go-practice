@@ -1,64 +1,39 @@
 package goExercises
 
-import (
-	"fmt"
-	"strings"
-)
+import "strings"
 
-//return sorted arr using mergesort
-func mergeSort(arr []int) []int {
-	if len(arr) <= 1 {
-		return arr
+//return the nth prime
+func nthPrime(nth int) int {
+	primeCount := 0
+	checkI := 2
+	for primeCount < nth {
+		if isPrime(checkI) {
+			primeCount++
+		}
+		checkI++
 	}
-	// mergeSort both halfs of array and then merge
-	midIdx := len(arr) / 2
-	left := mergeSort(arr[:midIdx])
-	right := mergeSort(arr[midIdx:])
-	return merge(left, right)
+	return checkI -1
 }
 
-func merge(arr1, arr2 []int) []int {
-	//iterate and compare each element to create sorted array
-	sorted := []int{}
-	for len(arr1) > 0 && len(arr2) > 0 {
-		// if either array is empty
-		// push contents of other array into sorted
-		// and skip to next loop cycle which will exit
-		el1 := arr1[0]
-		el2 := arr2[0]
-		if el1 >= el2 {
-			sorted = append(sorted, el2)
-			arr2 = arr2[1:]
-		} else {
-			sorted = append(sorted, el1)
-			arr1 = arr1[1:]
+func isPrime(n int) bool {
+	if n == 2 {
+		return true
+	}	
+	for i := 2; i < n; i++ {
+		if n % i == 0 {
+			return false
 		}
 	}
-	sorted = append(sorted, arr1...)
-	sorted = append(sorted, arr2...)
-	return sorted
+	return true
 }
-
-//Given a string, find the length of the longest substring without repeating characters.
-func longestSubString(sentence string) int {
-	charMap := make(map[string]int)
-	longestSub := 0
-	currentSub := 0
-	fmt.Println("sentence is", sentence)
-	for idx, ch := range strings.Split(sentence, "") {
-		fmt.Println("Current Char is", ch)
-		fmt.Println("LongestSub is", longestSub)
-		fmt.Println("CurrentSub is", currentSub)
-		if prevIdx, ok := charMap[ch]; ok {
-			currentSub = idx - prevIdx
-		} else {
-			currentSub++
-		}
-		charMap[ch] = idx
-		if currentSub > longestSub {
-			longestSub = currentSub
-		}
-
+ 
+//take an array of ints of length word, and return a string with each character of word in the order of idxArray
+func scrambleString(word string, idxArray []int) string {
+	scrambled := []string{}
+	for i := 0; i < len(idxArray); i++ {
+		strIdx := idxArray[i];
+		scrambled = append(scrambled, string(word[strIdx]))
 	}
-	return longestSub
+	return strings.Join(scrambled, "")
 }
+ 
