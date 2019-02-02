@@ -2,46 +2,102 @@ package goExercises
  
 import (
 "testing"
+"github.com/google/go-cmp/cmp"
 )
  
-func TestNthPrime(t *testing.T) {
-	test1 := nthPrime(3)
-	test2 := nthPrime(4)
-	test3 := nthPrime(15)
-	test4 := nthPrime(28)
-	test5 := nthPrime(77)
-
-	if test1 != 5 {
-		t.Errorf("Expected nthPrime of 3 to be 5, not %v", test1)
+func TestMostCommonLetter(t *testing.T) {
+	test1 := mostCommonLetter("abca")
+	ans1 := []string{
+		"a", "2",
+	}
+	test2 := mostCommonLetter("abbab")
+	ans2 := []string{
+		"b", "3",
+	}
+	test3 := mostCommonLetter("guernsey was here")
+	ans3 := []string{
+		"e", "4",
 	}
 
-	if test2 != 7 {
-		t.Errorf("Expected nthPrime of 4 to be 7, not %v", test2)
+	if !cmp.Equal(test1, ans1) {
+		t.Errorf("Expected mostCommonLetter of abca to be a with a count of 2, not %v", test1)
 	}
 
-	if test3 != 47 {
-		t.Errorf("Expected nthPrime of 15 to be 47, not %v", test3)
+	if !cmp.Equal(test2, ans2) {
+		t.Errorf("Expected mostCommonLetter of abbab to be b with a count of 3, not %v", test2)
 	}
 
-	if test4 != 107 {
-		t.Errorf("Expected nthPrime of 28 to be 107, not %v", test4)
-	}
-
-	if test5 != 389 {
-		t.Errorf("Expected nthPrime of 77 to be 389, not %v", test5)
+	if !cmp.Equal(test3, ans3) {
+		t.Errorf("Expected mostCommonLetter of guernsey was here to be e with a count of 4, not %v", test3)
 	}
 }
  
-func TestScrambleString(t *testing.T) {
-	test1 := scrambleString("abcd", []int{3, 1, 2, 0})
-	test2 := scrambleString("markov", []int{5, 3, 1, 4, 2, 0})
+func TestSumLists(t *testing.T) {
+	i1 := []int{1, 2, 3}
+	i2 := []int{5, 8, 6}
+	sum1 := []int{6, 0, 0, 1}
 
-	if test1 != "dbca" {
-		t.Errorf("Expected scrambleString of 'abcd' with inputs [3,1,2,0] to be 'dcba', not %v", test1)
+	i3 := []int{3, 5}
+	i4 := []int{1, 8}
+	sum2 := []int{4, 3, 1}
+
+	i5 := []int{6, 4, 5}
+	i6 := []int{1, 1, 1}
+	sum3 := []int{7, 5, 6}
+
+	list1 := createALinkedList(i1)
+	list2 := createALinkedList(i2)
+	answer1 := listToArray(createALinkedList(sum1))
+
+	list3 := createALinkedList(i3)
+	list4 := createALinkedList(i4)
+	answer2 := listToArray(createALinkedList(sum2))
+
+	list5 := createALinkedList(i5)
+	list6 := createALinkedList(i6)
+	answer3 := listToArray(createALinkedList(sum3))
+
+	returned1 := listToArray(sumLists(list1, list2))
+	returned2 := listToArray(sumLists(list3, list4))
+	returned3 := listToArray(sumLists(list5, list6))
+
+	if !cmp.Equal(answer1, returned1) {
+		t.Errorf("Expected sumLists of %v and %v to be %v not %v", list1, list2, answer1, returned1)
+
 	}
 
-	if test2 != "vkaorm" {
-		t.Errorf("Expected scrambleString of 'markov' with inputs [5,3,1,4,2,0] to be 'vkaorm', not %v", test2)
+	if !cmp.Equal(answer2, returned2) {
+		t.Errorf("Expected sumLists of %v and %v to be %v not %v", list3, list4, answer2, returned2)
 	}
+
+	if !cmp.Equal(answer3, returned3) {
+		t.Errorf("Expected sumLists of %v and %v to be %v not %v", list5, list6, answer3, returned3)
+	}
+}
+
+func listToArray(head *Node) []int {
+	vals := []int{}
+	for head != nil {
+		vals = append(vals, head.val)
+		head = head.next
+	}
+	return vals
+}
+
+func createALinkedList(input []int) *Node {
+	head := &Node{
+		val:  input[0],
+		next: nil,
+	}
+	currentNode := head
+	for i := 1; i < len(input); i++ {
+		nextNode := &Node{
+			val:  input[i],
+			next: nil,
+		}
+		currentNode.next = nextNode
+		currentNode = nextNode
+	}
+	return head
 }
  
