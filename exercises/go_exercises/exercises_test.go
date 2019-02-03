@@ -2,102 +2,41 @@ package goExercises
  
 import (
 "testing"
-"github.com/google/go-cmp/cmp"
 )
  
-func TestMostCommonLetter(t *testing.T) {
-	test1 := mostCommonLetter("abca")
-	ans1 := []string{
-		"a", "2",
-	}
-	test2 := mostCommonLetter("abbab")
-	ans2 := []string{
-		"b", "3",
-	}
-	test3 := mostCommonLetter("guernsey was here")
-	ans3 := []string{
-		"e", "4",
+func TestSumNums(t *testing.T) {
+	test1 := sumNums(1)
+	test2 := sumNums(2)
+	test3 := sumNums(5)
+
+	if test1 != 1 {
+		t.Errorf("Expected sumNums(1) to equal 1, not %v", test1)
 	}
 
-	if !cmp.Equal(test1, ans1) {
-		t.Errorf("Expected mostCommonLetter of abca to be a with a count of 2, not %v", test1)
+	if test2 != 3 {
+		t.Errorf("Expected sumNums(2) to equal 3, not %v", test2)
 	}
 
-	if !cmp.Equal(test2, ans2) {
-		t.Errorf("Expected mostCommonLetter of abbab to be b with a count of 3, not %v", test2)
-	}
-
-	if !cmp.Equal(test3, ans3) {
-		t.Errorf("Expected mostCommonLetter of guernsey was here to be e with a count of 4, not %v", test3)
+	if test3 != 15 {
+		t.Errorf("Expected sumNums(5) to equal 15, not %v", test3)
 	}
 }
  
-func TestSumLists(t *testing.T) {
-	i1 := []int{1, 2, 3}
-	i2 := []int{5, 8, 6}
-	sum1 := []int{6, 0, 0, 1}
+func TestLongestWord(t *testing.T) {
+	test1 := longestWord("short longest")
+	test2 := longestWord("one")
+	test3 := longestWord("abc def abcde")
 
-	i3 := []int{3, 5}
-	i4 := []int{1, 8}
-	sum2 := []int{4, 3, 1}
-
-	i5 := []int{6, 4, 5}
-	i6 := []int{1, 1, 1}
-	sum3 := []int{7, 5, 6}
-
-	list1 := createALinkedList(i1)
-	list2 := createALinkedList(i2)
-	answer1 := listToArray(createALinkedList(sum1))
-
-	list3 := createALinkedList(i3)
-	list4 := createALinkedList(i4)
-	answer2 := listToArray(createALinkedList(sum2))
-
-	list5 := createALinkedList(i5)
-	list6 := createALinkedList(i6)
-	answer3 := listToArray(createALinkedList(sum3))
-
-	returned1 := listToArray(sumLists(list1, list2))
-	returned2 := listToArray(sumLists(list3, list4))
-	returned3 := listToArray(sumLists(list5, list6))
-
-	if !cmp.Equal(answer1, returned1) {
-		t.Errorf("Expected sumLists of %v and %v to be %v not %v", list1, list2, answer1, returned1)
-
+	if test1 != "longest" {
+		t.Errorf("Expected the longest word in test1 to be longest, not %v", test1)
 	}
 
-	if !cmp.Equal(answer2, returned2) {
-		t.Errorf("Expected sumLists of %v and %v to be %v not %v", list3, list4, answer2, returned2)
+	if test2 != "one" {
+		t.Errorf("Expected the longest word in test2 to be one, not %v", test2)
 	}
 
-	if !cmp.Equal(answer3, returned3) {
-		t.Errorf("Expected sumLists of %v and %v to be %v not %v", list5, list6, answer3, returned3)
+	if test3 != "abcde" {
+		t.Errorf("Expected the longest word in test3 to be abcde, not %v", test3)
 	}
-}
-
-func listToArray(head *Node) []int {
-	vals := []int{}
-	for head != nil {
-		vals = append(vals, head.val)
-		head = head.next
-	}
-	return vals
-}
-
-func createALinkedList(input []int) *Node {
-	head := &Node{
-		val:  input[0],
-		next: nil,
-	}
-	currentNode := head
-	for i := 1; i < len(input); i++ {
-		nextNode := &Node{
-			val:  input[i],
-			next: nil,
-		}
-		currentNode.next = nextNode
-		currentNode = nextNode
-	}
-	return head
 }
  
