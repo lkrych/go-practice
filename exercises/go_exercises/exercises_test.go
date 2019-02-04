@@ -1,42 +1,200 @@
 package goExercises
- 
+
 import (
-"testing"
+	"fmt"
+	"testing"
+
+	"github.com/google/go-cmp/cmp"
 )
- 
-func TestSumNums(t *testing.T) {
-	test1 := sumNums(1)
-	test2 := sumNums(2)
-	test3 := sumNums(5)
 
-	if test1 != 1 {
-		t.Errorf("Expected sumNums(1) to equal 1, not %v", test1)
+func TestIncrementArbitrary(t *testing.T) {
+	test1 := incrementArb([]int{1, 2, 9})
+	test2 := incrementArb([]int{1, 2, 9, 8, 2, 3, 4, 1, 3, 5, 0})
+	test3 := incrementArb([]int{1, 2, 5, 3, 2, 4, 6, 7, 8, 2})
+	test4 := incrementArb([]int{5, 3, 6, 3, 7, 9, 5, 0})
+	test5 := incrementArb([]int{1, 2, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9})
+	ans1 := []int{1, 3, 0}
+	ans2 := []int{1, 2, 9, 8, 2, 3, 4, 1, 3, 5, 1}
+	ans3 := []int{1, 2, 5, 3, 2, 4, 6, 7, 8, 3}
+	ans4 := []int{5, 3, 6, 3, 7, 9, 5, 1}
+	ans5 := []int{1, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+
+	if !cmp.Equal(test1, ans1) {
+		t.Errorf("Expected incrementArb to increment the array %v, instead you got %v", ans1, test1)
+	}
+	if !cmp.Equal(test2, ans2) {
+		t.Errorf("Expected incrementArb to increment the array %v, instead you got %v", ans2, test2)
 	}
 
-	if test2 != 3 {
-		t.Errorf("Expected sumNums(2) to equal 3, not %v", test2)
+	if !cmp.Equal(test3, ans3) {
+		t.Errorf("Expected incrementArb to increment the array %v, instead you got %v", ans3, test3)
 	}
 
-	if test3 != 15 {
-		t.Errorf("Expected sumNums(5) to equal 15, not %v", test3)
-	}
-}
- 
-func TestLongestWord(t *testing.T) {
-	test1 := longestWord("short longest")
-	test2 := longestWord("one")
-	test3 := longestWord("abc def abcde")
-
-	if test1 != "longest" {
-		t.Errorf("Expected the longest word in test1 to be longest, not %v", test1)
+	if !cmp.Equal(test4, ans4) {
+		t.Errorf("Expected incrementArb to increment the array %v, instead you got %v", ans4, test4)
 	}
 
-	if test2 != "one" {
-		t.Errorf("Expected the longest word in test2 to be one, not %v", test2)
-	}
-
-	if test3 != "abcde" {
-		t.Errorf("Expected the longest word in test3 to be abcde, not %v", test3)
+	if !cmp.Equal(test5, ans5) {
+		t.Errorf("Expected incrementArb to increment the array %v, instead you got %v", ans5, test5)
 	}
 }
- 
+
+func TestCreateALinkedList(t *testing.T) {
+	input1 := []int{1, 2, 3, 4, 5}
+	input2 := []int{5, 6, 7, 8, 9, 10}
+	input3 := []int{100, 101, 102}
+
+	list1 := createALinkedList(input1)
+	list2 := createALinkedList(input2)
+	list3 := createALinkedList(input3)
+
+	len1 := countLengthOfLL(list1)
+	len2 := countLengthOfLL(list2)
+	len3 := countLengthOfLL(list3)
+
+	if len1 != 5 {
+		t.Errorf("Expected createALinkedList to make a list of length 5 not %v", len1)
+	}
+	if !findValueInLL(list1, 2) {
+		t.Errorf("Expected createALinkedList to contain 2")
+	}
+	if !findValueInLL(list1, 5) {
+		t.Errorf("Expected createALinkedList to contain 5")
+	}
+	if findValueInLL(list1, 10) {
+		t.Errorf("Expected createALinkedList to not contain 10 ")
+	}
+
+	if len2 != 6 {
+		t.Errorf("Expected createALinkedList to make a list of length 6 not %v", len2)
+	}
+	if !findValueInLL(list2, 7) {
+		t.Errorf("Expected createALinkedList to contain 7")
+	}
+	if !findValueInLL(list2, 9) {
+		t.Errorf("Expected createALinkedList to contain 9")
+	}
+	if findValueInLL(list2, 101) {
+		t.Errorf("Expected createALinkedList to not contain 101 ")
+	}
+
+	if len3 != 3 {
+		t.Errorf("Expected createALinkedList to make a list of length 3 not %v", len3)
+	}
+	if !findValueInLL(list3, 101) {
+		t.Errorf("Expected createALinkedList to contain 101")
+	}
+	if !findValueInLL(list3, 102) {
+		t.Errorf("Expected createALinkedList to contain 102")
+	}
+	if findValueInLL(list1, 10) {
+		t.Errorf("Expected createALinkedList to not contain 10 ")
+	}
+
+	//testing delete
+
+	list4 := createALinkedList(input1)
+	list5 := createALinkedList(input2)
+	list6 := createALinkedList(input3)
+
+	d4 := deleteANode(list4, 3)
+	d5 := deleteANode(list5, 7)
+	d6 := deleteANode(list6, 100)
+
+	dlen4 := countLengthOfLL(d4)
+	dlen5 := countLengthOfLL(d5)
+	dlen6 := countLengthOfLL(d6)
+
+	if dlen4 != 4 {
+		t.Errorf("Expected deleteANode to make a list of length 4 not %v", dlen4)
+		fmt.Println("Printing d4")
+		printLL(d4)
+	}
+	if findValueInLL(d4, 3) {
+		t.Errorf("Expected deleteANode(3) to delete nodes with the value of 3")
+		fmt.Println("Printing d4")
+		printLL(d4)
+	}
+
+	if dlen5 != 5 {
+		t.Errorf("Expected deleteANode to make a list of length 5 not %v", dlen5)
+		fmt.Println("Printing d5")
+		printLL(d5)
+	}
+	if findValueInLL(d5, 7) {
+		t.Errorf("Expected deleteANode(7) to delete nodes with the value of 7")
+		fmt.Println("Printing d5")
+		printLL(d5)
+	}
+
+	if dlen6 != 2 {
+		t.Errorf("Expected deleteANode to make a list of length 2 not %v", dlen6)
+		fmt.Println("Printing d6")
+		printLL(d6)
+	}
+	if findValueInLL(d6, 100) {
+		t.Errorf("Expected deleteANode(100) to delete nodes with the value of 100")
+		fmt.Println("Printing d6")
+		printLL(d6)
+	}
+
+}
+
+type Node struct {
+	val  int
+	next *Node
+}
+
+//if you created your own function, comment this out!
+func createALinkedList(input []int) *Node {
+	head := &Node{
+		val:  input[0],
+		next: nil,
+	}
+	currentNode := head
+	for i := 1; i < len(input); i++ {
+		nextNode := &Node{
+			val:  input[i],
+			next: nil,
+		}
+		currentNode.next = nextNode
+		currentNode = nextNode
+	}
+	return head
+}
+
+func countLengthOfLL(head *Node) int {
+	count := 0
+	currentNode := head
+	for currentNode.next != nil {
+		count++
+		currentNode = currentNode.next
+	}
+	count++ //b/c you won't count the last one
+	return count
+}
+
+func findValueInLL(head *Node, findVal int) bool {
+	found := false
+	currentNode := head
+	for currentNode.next != nil {
+		if currentNode.val == findVal {
+			found = true
+		}
+		currentNode = currentNode.next
+	}
+	if currentNode.val == findVal { //catch the last node
+		found = true
+	}
+	return found
+}
+
+func printLL(head *Node) {
+	currentNode := head
+
+	for currentNode.next != nil {
+		fmt.Printf("  %v  ->", currentNode)
+		currentNode = currentNode.next
+	}
+	fmt.Printf("  %v  \n", currentNode)
+}
