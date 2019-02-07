@@ -1,71 +1,38 @@
 package goExercises
 
-import ("strings"; "fmt")
-//given a string, write a function to check it is a permutation of a palindrome
-func palindromePermutation(perm string) bool {
-	sorted := quickSort(strings.Split(perm, ""))
-	charMap := make(map[string]int)
-	fmt.Println("The sorted input is", sorted)
-	//sort the chars and iterate through them
-	for _, char := range sorted {
-		if char == " " { continue }
-		if count, ok := charMap[char]; ok {
-			charMap[char] = count + 1
-		} else {
-			charMap[char] = 1
-		}
-	}
-	foundOdd := false
-	fmt.Printf("charMap is %v for word %v \n", charMap, perm)
-	for _, v := range charMap {
-		
-		if v % 2 != 0 {
-			if foundOdd {
-				//there can't be more than one odd count
-				return false
-			} else {
-				foundOdd = true
-			}
-		}
-	}
-	return true
-}
-
-func quickSort(arr []string) []string {
-	if len(arr) <= 1 {
-		return arr
-	}
-
-	pivot := arr[0]
-	left := []string{}
-	right := []string{}
-
-	for i := 1; i < len(arr); i++ {
-		if arr[i] >= pivot {
-			right = append(right, arr[i])
-		} else {
-			left = append(left, arr[i])
-		}
-	}
-
-	sortedLeft := quickSort(left)
-	sortedRight := quickSort(right)
-	sorted := []string{}
-
-	sorted = append(sorted, sortedLeft...)
-	sorted = append(sorted, pivot)
-	sorted = append(sorted, sortedRight...)
-
-	return sorted
-} 
+import "fmt"
  
-//return if the word is a palindrome
-func isPalindrome(word string) bool {
-	for i,j := 0, len(word) -1; i < j; i,j = i+1, j-1 {
-		if word[i] != word[j] {
-			return false
+//given an arr representing stock prices, return the maximum profit you could retrieve from buying and selling the stock
+//ex: [310, 315, 275, 295, 260, 270, 290, 230, 255, 250] => 30
+func buyStock(arr []int) int {
+	low := 100000
+	high := 0
+	biggestProfit := 0
+
+	for _, price := range arr {
+		if price < low {
+			//reset the current window
+			low = price
+			high = low
+		}
+		if price > high {
+			high = price
+		}
+
+		if high - low > biggestProfit {
+			biggestProfit = high - low
 		}
 	}
-	return true
+	fmt.Println("Biggest profit is", biggestProfit)
+	return biggestProfit
+}
+ 
+//if the sum of digits in n is less than ten, return that sum, otherwise try to find the digital root of that sum
+func digitalRoot(n int) int {
+	digRoot := (n/10) + (n%10)
+	if digRoot < 10 {
+		return digRoot
+	}
+	return digitalRoot(digRoot)
 }
  
