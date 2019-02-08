@@ -1,23 +1,69 @@
 package goExercises
  
-// func buyStock(arr []int) int {
-// 	low := 1000000
-// 	diff := 0
-// 	for i := 0; i < len(arr); i++ {
-// 		if arr[i] < low {
-// 			low = arr[i]
+// import (
+// 	"strconv"
+// 	"strings"
+// )
+
+// func mostCommonLetter(sentence string) []string {
+// 	lettersMap := map[string]int{}
+// 	for _, char := range strings.Split(sentence, "") {
+// 		if char == " " {
+// 			continue
 // 		}
-// 		if (arr[i] - low) > diff {
-// 			diff = arr[i] - low
+// 		if lettersMap[char] >= 1 {
+// 			lettersMap[char]++
+// 		} else {
+// 			lettersMap[char] = 1
 // 		}
 // 	}
-// 	return diff
+// 	count := 0
+// 	mostCommon := []string{}
+// 	for key, val := range lettersMap {
+// 		if val > count {
+// 			count = val
+// 			mostCommon = []string{key, strconv.Itoa(val)}
+// 		}
+// 	}
+// 	return mostCommon
 // }
  
-// func digitalRoot(n int) int {
-// 	if n < 10 {
-// 		return n
-// 	}
-// 	return digitalRoot(n%10 + n/10)
+// type Node struct {
+// 	val  int
+// 	next *Node
 // }
+
+// //if you created your own function, comment this out!
+// func createALinkedList(input []int) *Node {
+// 	head := &Node{
+// 		val:  input[0],
+// 		next: nil,
+// 	}
+// 	currentNode := head
+// 	for i := 1; i < len(input); i++ {
+// 		nextNode := &Node{
+// 			val:  input[i],
+// 			next: nil,
+// 		}
+// 		currentNode.next = nextNode
+// 		currentNode = nextNode
+// 	}
+// 	return head
+// }
+
+// func deleteANode(head *Node, deleteVal int) *Node {
+// 	if head.val == deleteVal { //in case the head is the value we want to delete!
+// 		head = head.next
+// 	}
+// 	currentNode := head
+// 	for currentNode.next != nil {
+// 		if currentNode.next.val == deleteVal {
+// 			currentNode.next = currentNode.next.next
+// 		}
+// 		currentNode = currentNode.next
+// 	}
+
+// 	return head
+// }
+
  
