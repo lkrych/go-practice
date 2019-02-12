@@ -1,143 +1,73 @@
 package goExercises
-
+ 
 import (
-	"fmt"
-	"testing"
-
-	"github.com/google/go-cmp/cmp"
+"fmt"
+"testing"
+"github.com/google/go-cmp/cmp"
 )
-
-func TestMostCommonLetter(t *testing.T) {
-	test1 := mostCommonLetter("abca")
-	ans1 := []string{
-		"a", "2",
-	}
-	test2 := mostCommonLetter("abbab")
-	ans2 := []string{
-		"b", "3",
-	}
-	test3 := mostCommonLetter("guernsey was here")
-	ans3 := []string{
-		"e", "4",
-	}
-
+ 
+func TestRemoveDups(t *testing.T) {
+	test1 := removeDups([]int{1, 1, 1, 2, 3, 4, 4, 4, 5})
+	test2 := removeDups([]int{1, 1, 1, 2, 33, 102, 102})
+	test3 := removeDups([]int{1, 1, 1, 2, 3, 3, 4, 5, 6, 7, 8, 8, 9, 9})
+	test4 := removeDups([]int{1, 1, 1, 2, 3, 3, 3, 3, 3})
+	test5 := removeDups([]int{1, 1, 1, 2, 3, 3, 4, 5, 5})
+	ans1 := []int{1, 2, 3, 4, 5}
+	ans2 := []int{1, 2, 33, 102}
+	ans3 := []int{1, 2, 3, 4, 5, 6, 7, 8, 9}
+	ans4 := []int{1, 2, 3}
+	ans5 := []int{1, 2, 3, 4, 5}
 	if !cmp.Equal(test1, ans1) {
-		t.Errorf("Expected mostCommonLetter of abca to be a with a count of 2, not %v", test1)
+		t.Errorf("Expected array %v to be %v", test1, ans1)
 	}
-
 	if !cmp.Equal(test2, ans2) {
-		t.Errorf("Expected mostCommonLetter of abbab to be b with a count of 3, not %v", test2)
+		t.Errorf("Expected array %v to be %v", test2, ans2)
 	}
 
 	if !cmp.Equal(test3, ans3) {
-		t.Errorf("Expected mostCommonLetter of guernsey was here to be e with a count of 4, not %v", test3)
+		t.Errorf("Expected array %v to be %v", test4, ans3)
+	}
+
+	if !cmp.Equal(test4, ans4) {
+		t.Errorf("Expected array %v to be %v", test5, ans4)
+	}
+
+	if !cmp.Equal(test5, ans5) {
+		t.Errorf("Expected array %v to be %v", test5, ans5)
 	}
 }
 
-func TestCreateALinkedList(t *testing.T) {
-	input1 := []int{1, 2, 3, 4, 5}
-	input2 := []int{5, 6, 7, 8, 9, 10}
-	input3 := []int{100, 101, 102}
+func TestFindKthElement(t *testing.T) {
+	input1 := []int{1, 2, 3, 3, 4, 4, 5}
+	input2 := []int{5, 8, 6, 7, 8, 9, 7, 10}
+	input3 := []int{100, 102, 101, 102, 101, 102}
 
 	list1 := createALinkedList(input1)
 	list2 := createALinkedList(input2)
 	list3 := createALinkedList(input3)
 
-	len1 := countLengthOfLL(list1)
-	len2 := countLengthOfLL(list2)
-	len3 := countLengthOfLL(list3)
+	//remove _ if you are using the iterative solution
+	list1Val, _ := findKthElement(list1, 2)
+	list2Val, _ := findKthElement(list2, 5)
+	list3Val, _ := findKthElement(list3, 3)
 
-	if len1 != 5 {
-		t.Errorf("Expected createALinkedList to make a list of length 5 not %v", len1)
-	}
-	if !findValueInLL(list1, 2) {
-		t.Errorf("Expected createALinkedList to contain 2")
-	}
-	if !findValueInLL(list1, 5) {
-		t.Errorf("Expected createALinkedList to contain 5")
-	}
-	if findValueInLL(list1, 10) {
-		t.Errorf("Expected createALinkedList to not contain 10 ")
+	if list1Val.val != 4 {
+		t.Errorf("Expected kthElement to find the kth element 4 not %v", list1Val.val)
+		fmt.Println("Printing list1")
+		printLL(list1)
 	}
 
-	if len2 != 6 {
-		t.Errorf("Expected createALinkedList to make a list of length 6 not %v", len2)
-	}
-	if !findValueInLL(list2, 7) {
-		t.Errorf("Expected createALinkedList to contain 7")
-	}
-	if !findValueInLL(list2, 9) {
-		t.Errorf("Expected createALinkedList to contain 9")
-	}
-	if findValueInLL(list2, 101) {
-		t.Errorf("Expected createALinkedList to not contain 101 ")
+	if list2Val.val != 7 {
+		t.Errorf("Expected kthElement to find the kth element 7 not %v", list2Val.val)
+		fmt.Println("Printing list2")
+		printLL(list2)
 	}
 
-	if len3 != 3 {
-		t.Errorf("Expected createALinkedList to make a list of length 3 not %v", len3)
+	if list3Val.val != 102 {
+		t.Errorf("Expected kthElement to find the kth element 102 not %v", list3Val.val)
+		fmt.Println("Printing list3")
+		printLL(list3)
 	}
-	if !findValueInLL(list3, 101) {
-		t.Errorf("Expected createALinkedList to contain 101")
-	}
-	if !findValueInLL(list3, 102) {
-		t.Errorf("Expected createALinkedList to contain 102")
-	}
-	if findValueInLL(list1, 10) {
-		t.Errorf("Expected createALinkedList to not contain 10 ")
-	}
-
-	//testing delete
-
-	list4 := createALinkedList(input1)
-	list5 := createALinkedList(input2)
-	list6 := createALinkedList(input3)
-
-	d4 := deleteANode(list4, 3)
-	d5 := deleteANode(list5, 7)
-	d6 := deleteANode(list6, 100)
-
-	dlen4 := countLengthOfLL(d4)
-	dlen5 := countLengthOfLL(d5)
-	dlen6 := countLengthOfLL(d6)
-
-	if dlen4 != 4 {
-		t.Errorf("Expected deleteANode to make a list of length 4 not %v", dlen4)
-		fmt.Println("Printing d4")
-		printLL(d4)
-	}
-	if findValueInLL(d4, 3) {
-		t.Errorf("Expected deleteANode(3) to delete nodes with the value of 3")
-		fmt.Println("Printing d4")
-		printLL(d4)
-	}
-
-	if dlen5 != 5 {
-		t.Errorf("Expected deleteANode to make a list of length 5 not %v", dlen5)
-		fmt.Println("Printing d5")
-		printLL(d5)
-	}
-	if findValueInLL(d5, 7) {
-		t.Errorf("Expected deleteANode(7) to delete nodes with the value of 7")
-		fmt.Println("Printing d5")
-		printLL(d5)
-	}
-
-	if dlen6 != 2 {
-		t.Errorf("Expected deleteANode to make a list of length 2 not %v", dlen6)
-		fmt.Println("Printing d6")
-		printLL(d6)
-	}
-	if findValueInLL(d6, 100) {
-		t.Errorf("Expected deleteANode(100) to delete nodes with the value of 100")
-		fmt.Println("Printing d6")
-		printLL(d6)
-	}
-
-}
-
-type Node struct {
-	val  int
-	next *Node
 }
 
 //if you created your own function, comment this out!
@@ -158,32 +88,6 @@ func createALinkedList(input []int) *Node {
 	return head
 }
 
-func countLengthOfLL(head *Node) int {
-	count := 0
-	currentNode := head
-	for currentNode.next != nil {
-		count++
-		currentNode = currentNode.next
-	}
-	count++ //b/c you won't count the last one
-	return count
-}
-
-func findValueInLL(head *Node, findVal int) bool {
-	found := false
-	currentNode := head
-	for currentNode.next != nil {
-		if currentNode.val == findVal {
-			found = true
-		}
-		currentNode = currentNode.next
-	}
-	if currentNode.val == findVal { //catch the last node
-		found = true
-	}
-	return found
-}
-
 func printLL(head *Node) {
 	currentNode := head
 
@@ -193,3 +97,5 @@ func printLL(head *Node) {
 	}
 	fmt.Printf("  %v  \n", currentNode)
 }
+
+ 

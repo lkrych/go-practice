@@ -1,69 +1,52 @@
 package goExercises
  
-// import (
-// 	"strconv"
-// 	"strings"
-// )
-
-// func mostCommonLetter(sentence string) []string {
-// 	lettersMap := map[string]int{}
-// 	for _, char := range strings.Split(sentence, "") {
-// 		if char == " " {
-// 			continue
-// 		}
-// 		if lettersMap[char] >= 1 {
-// 			lettersMap[char]++
-// 		} else {
-// 			lettersMap[char] = 1
+// func removeDups(arr []int) []int {
+// 	writeIdx := 1
+// 	for i := 1; i < len(arr); i++ {
+// 		if arr[writeIdx-1] != arr[i] {
+// 			arr[writeIdx] = arr[i]
+// 			writeIdx++
 // 		}
 // 	}
-// 	count := 0
-// 	mostCommon := []string{}
-// 	for key, val := range lettersMap {
-// 		if val > count {
-// 			count = val
-// 			mostCommon = []string{key, strconv.Itoa(val)}
-// 		}
-// 	}
-// 	return mostCommon
+// 	return arr[:writeIdx]
 // }
  
-// type Node struct {
-// 	val  int
-// 	next *Node
-// }
-
-// //if you created your own function, comment this out!
-// func createALinkedList(input []int) *Node {
-// 	head := &Node{
-// 		val:  input[0],
-// 		next: nil,
+//there are two ways to solve this problem: a recursive way and an iterative way
+// the iterative way is more efficient, the recursive way is easier to read
+//
+// recursive:
+//
+// func findKthElement(head *Node, k int) (*Node, int) {
+// 	if head.next == nil {
+// 		return head, 1
 // 	}
-// 	currentNode := head
-// 	for i := 1; i < len(input); i++ {
-// 		nextNode := &Node{
-// 			val:  input[i],
-// 			next: nil,
+// 	var node, ith = findKthElement(head.next, k)
+// 	ith++
+// 	if ith == k {
+// 		return head, ith
+// 	}
+// 	return node, ith
+// }
+//
+// iterative:
+//
+// func findKthElement(head *Node, k int) *Node {
+// 	p1 := head
+// 	p2 := head
+
+// 	//move p1 k nodes into the list
+// 	for i := 0; i < k; i++ {
+// 		if p1 == nil {
+// 			return nil
 // 		}
-// 		currentNode.next = nextNode
-// 		currentNode = nextNode
+// 		p1 = p1.next
 // 	}
-// 	return head
+
+// 	//move them at the same pace. when p1 hits the end, p2 will be at the right ele
+// 	for p1 != nil {
+// 		p1 = p1.next
+// 		p2 = p2.next
+// 	}
+// 	return p2
 // }
-
-// func deleteANode(head *Node, deleteVal int) *Node {
-// 	if head.val == deleteVal { //in case the head is the value we want to delete!
-// 		head = head.next
-// 	}
-// 	currentNode := head
-// 	for currentNode.next != nil {
-// 		if currentNode.next.val == deleteVal {
-// 			currentNode.next = currentNode.next.next
-// 		}
-// 		currentNode = currentNode.next
-// 	}
-
-// 	return head
-// }
-
  
