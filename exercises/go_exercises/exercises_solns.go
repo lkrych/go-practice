@@ -1,52 +1,51 @@
 package goExercises
  
-// func removeDups(arr []int) []int {
-// 	writeIdx := 1
-// 	for i := 1; i < len(arr); i++ {
-// 		if arr[writeIdx-1] != arr[i] {
-// 			arr[writeIdx] = arr[i]
-// 			writeIdx++
-// 		}
-// 	}
-// 	return arr[:writeIdx]
+// type queue struct {
+// 	data []int
 // }
+
+// func (q *queue) add(item int) {
+// 	q.data = append(q.data, item)
+// }
+
+// func (q *queue) remove() int {
+// 	firstItem := q.data[0]
+// 	q.data = q.data[1:]
+// 	return firstItem
+// }
+
+// func (q *queue) peek() int {
+// 	return q.data[0]
+// }
+
+// func (q *queue) isEmpty() bool {
+// 	return len(q.data) == 0
+// }
+
  
-//there are two ways to solve this problem: a recursive way and an iterative way
-// the iterative way is more efficient, the recursive way is easier to read
-//
-// recursive:
-//
-// func findKthElement(head *Node, k int) (*Node, int) {
-// 	if head.next == nil {
-// 		return head, 1
-// 	}
-// 	var node, ith = findKthElement(head.next, k)
-// 	ith++
-// 	if ith == k {
-// 		return head, ith
-// 	}
-// 	return node, ith
-// }
-//
-// iterative:
-//
-// func findKthElement(head *Node, k int) *Node {
-// 	p1 := head
-// 	p2 := head
+// import (
+// 	"strconv"
+// 	"strings"
+// )
 
-// 	//move p1 k nodes into the list
-// 	for i := 0; i < k; i++ {
-// 		if p1 == nil {
-// 			return nil
+// func dasherizeNumber(n int) string {
+// 	dasherized := []string{}
+// 	toString := strconv.Itoa(n)
+// 	for i, el := range strings.Split(toString, "") {
+
+// 		if int, _ := strconv.Atoi(el); int%2 != 0 {
+// 			if i == 0 {
+// 				dasherized = append(dasherized, el, "-")
+// 			} else if i == len(toString)-1 {
+// 				dasherized = append(dasherized, "-", el)
+// 			} else {
+// 				dasherized = append(dasherized, "-", el, "-")
+// 			}
+// 		} else {
+// 			dasherized = append(dasherized, el)
 // 		}
-// 		p1 = p1.next
 // 	}
-
-// 	//move them at the same pace. when p1 hits the end, p2 will be at the right ele
-// 	for p1 != nil {
-// 		p1 = p1.next
-// 		p2 = p2.next
-// 	}
-// 	return p2
+// 	joined := strings.Join(dasherized, "")
+// 	return strings.Replace(joined, "--", "-", -1)
 // }
  
