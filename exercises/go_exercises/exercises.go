@@ -1,31 +1,65 @@
 package goExercises
 
-import "log"
- 
-//In O(n) time, and using O(1) space, remove duplicates from a sorted array
-func removeDups(arr []int) []int {
-	writeIdx := 1
-	for i := 1; i < len(arr); i++ {
-		if arr[i] != arr[writeIdx -1] {
-			arr[writeIdx] = arr[i]
-			writeIdx++
+import "strings"
+
+//Given a string, find the length of the longest substring without repeating characters.
+func longestSubString(sentence string) int {
+	longest := 0
+	currStartIdx := 0
+	charMap := map[string]int{}
+	for i, char := range strings.Split(sentence, "") {
+		if _, ok := charMap[char]; ok {	
+			currStartIdx = i
 		}
+		charMap[char] = i
+		if (i - currStartIdx) > longest {
+			longest = (i - currStartIdx)
+		}
+		
 	}
-	return arr[:writeIdx]
+	return longest
+}
+ 
+//implement a data structure stackOfStacks (setOfStacks really) that is composed of
+//several stacks and should create a new stack once the previous one exceeds capacity
+//push and pop should behave identically to a single stack
+type stack struct {
+	data []int
 }
 
-type Node struct {
-	val int
-	next *Node
+func (s *stack) push (x int) {
+	s.data = append([]int{x}, s.data...)
 }
- 
-//implement an algorithm to delete a node (any node but the first and last node)
-// of a singly-linked list, given only access to that list
-func deleteMiddleNode(n *Node) {
-	if n == nil || n.next == nil {
-		log.Fatal("This is not a middle node!")
+
+func (s *stack) pop () int {
+	first := s.data[0]
+	s.data = s.data[1:]
+	return first
+}
+	
+type stackOfStacks struct {
+	stacks []stack
+	capacity int
+}
+
+func (s *stackOfStacks) push (x int) {
+	topStack := s.stacks[0]
+	if len(topStack.data) >= s.capacity {
+		newStack := stack{
+			data: []int{x},
+		}
+		s.stacks = append( []stack{newStack}, s.stacks...) 
+	} else {
+		topStack.push(x)
 	}
-	n.val = n.next.val
-	n.next = n.next.next
+}
+
+func (s *stackOfStacks) pop () int {
+	topStack := s.stacks[0]
+	popped := topStack.pop()
+	if len(topStack.data) == 0 {
+		s.stacks = s.stacks[1:]
+	}
+	return popped
 }
  
